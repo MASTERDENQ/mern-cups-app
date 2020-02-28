@@ -1,0 +1,41 @@
+.CreateAccountForm{
+    width: fit-content;
+    margin: 15px;
+
+    background-color: #ffffff;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+
+    height: 30vh;
+
+    font-size: calc(10px + 2vmin);
+    color: #000000;
+    min-height: 50vh;
+    text-align: center;
+
+}
+
+button {
+    width: 15vh;
+    align-self: center;
+  }
+
+  #Title {
+    font-size: xx-large;
+    font-weight: 300;
+    font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+    padding-top: 5vh;
+}
+
+.MainDiv {
+    background-color: #ffffff;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: calc(10px + 2vmin);
+    color: #000000;
+    min-height: 50vh;
+    text-align: center;
+  }
