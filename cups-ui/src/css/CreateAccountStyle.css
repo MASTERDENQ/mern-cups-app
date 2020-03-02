@@ -39,3 +39,12 @@ button {
     min-height: 50vh;
     text-align: center;
   }
+
+.Image {
+  width: 10vw;
+  height: 20vh;
+}
+
+input {
+  margin-top: 10%;
+}

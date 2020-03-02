@@ -13,6 +13,8 @@
   .Avatar {
     height: auto;
     pointer-events: none;
+    width: 10vw;
+    height: 20vh;
   }
   
   .LoginForm {
