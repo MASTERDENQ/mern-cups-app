@@ -1,36 +1,87 @@
 import React from 'react';
 import '../css/AddItemStyle.css';
 
-const AddItem = () => <div className="MainDiv">
+import Photo from '../assets/photo.png';
+import ASL from '../assets/asl.jpg';
+import Audio from '../assets/audio.png';
 
-    <label id="Title">Add Item</label>
 
-    <form className="AddItemForm">
+const AddItem = () => 
+<div className="MainDiv">
+        <div className="title">
+            <h1>Add Item</h1>
+        </div>
 
-        <input id="ItemNameInput" type="text" placeholder="Item Name"></input>
+        <div>
+            <form className="AddItemForm">
+            <div>
+                <fieldset>
+                    
+                    <label>Item Name</label> <input id="item" type="text" placeholder="Item Name"/>
 
-        <select id="CategoryInput">
-            <option hidden   >Category</option>
-            <option value="1">CategoryOpt1</option>
-            <option value="2">CategoryOpt2</option>
-            <option value="3">CategoryOpt3</option>
-        </select>
+                    
+                    <select id="category">
+                        <option hidden   >Category</option>
+                        <option defaultChecked value="1">Beverage</option>
+                        <option value="2">Snack</option>
+                        <option value="3">Daily Surprise</option>
+                    </select>
 
-        <label>Quantity</label>
+                    <span>&nbsp;&nbsp;</span>
+                    <span>&nbsp;&nbsp;</span>
 
-        <input type="number" min="0"></input>
+                    
+                    <label>Stock Quantity</label> <input type="number" id="stock" min="0"/>
 
-        <input id="ItemIdInput" type="text" placeholder="Item ID"></input>
+                    <span>&nbsp;&nbsp;</span>
+                    <span>&nbsp;&nbsp;</span>
 
-        <input id="ItemImageInput" type="file" ></input>
+                   
+                    <label>Cost</label> <input type="text" id="cost" min="0"/>
+                </fieldset>
+            </div>
 
-        <input id="ItemSignatureImageInput" type="file" ></input>
+            <div className="threePiece" > 
+            <fieldset>
+                {/* <div class="card">
+                    <img src={Photo} alt="Photo" />
+                    <div class="container">
+                        <h4><b>Add Images</b></h4> 
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img src={ASL} alt="American Sing Language" />
+                    <div class="container">
+                        <h4><b>Add ASL</b></h4> 
+                    </div>
+                </div> 
+
+                    <div class="card">
+                        <img src={Audio} alt="Audio" />
+                        <div class="container">
+                            <h4><b>Add Audio</b></h4> 
+                        </div>
+                    </div> */}
+            
+            
+                <label>Photo</label><input id="ItemImageInput" type="file" ></input>
+
+                <label>ASL</label><input id="ItemSignatureImageInput" type="file" ></input>
+
+                <label>Audio</label><input id="ItemAudioInput" type="file" ></input>
+                    
+            </fieldset>
+            </div>
         
-        <input id="ItemAudioInput" type="file" ></input>
-
-        <button>Create Account</button>
+        <div className="card">
+            <h4>ADD ITEM</h4>
+        </div>
     </form>
+    </div>
+
 </div>
 
 
 export default AddItem;
+

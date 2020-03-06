@@ -9,6 +9,7 @@ const Login = () => <div className="MainDiv">
     <img 
         src={avatar}
         className="Image"
+        alt="Avatar"
     />
 
     <form className="CreateAccountForm">

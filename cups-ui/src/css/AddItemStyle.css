@@ -29,3 +29,17 @@
     min-height: 50vh;
     text-align: center;
   }
+
+ fieldset {
+   text-align: left;
+ }
+
+.title{
+  padding: 3em;
+}
+
+.card {
+  padding: 1em;
+  align-self: center;
+  size: 20%;
+}
