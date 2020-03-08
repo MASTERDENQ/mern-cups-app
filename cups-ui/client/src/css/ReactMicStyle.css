@@ -1,0 +1,16 @@
+.card {
+  text-align: center;
+  align-self: center;
+  align-items: center;
+  padding: 1em;
+
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: rgb(5, 68, 104);
+}
