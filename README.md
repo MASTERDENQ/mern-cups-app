@@ -1,68 +1,68 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+1. Group Members:
 
-In the project directory, you can run:
+Members ID	Members Names		Major Roles
+1706903		Tyrone Wallace		Integration Lead
+1801488		Dimitri Russell		Project Lead
+1803640		Reinaldo Pino		UI Lead
 
-### `yarn start`
+2. Project Description
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+This project is an Advance Programming Project called 'C.U.P.S'.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+The requirements of each component and overall system requirements have been included below using SCRUM user stories:
 
-### `yarn test`
+1. As a store manager, I should be able to add a new menu item to be ordered by customers. Each menu item has a name, 
+    category (beverage, snack, daily surprise), stock quantity, cost, system generated id, photo, photo of the 
+    American Sign Language (ASL) representation and audio recording of the item name in English. 
+    (See testing samples for coffee, tea and hamburger : http://bit.ly/38xYmgz )
+2. As a store manager,I should be able to access a list of all menu items and access all media (photos and audio).
+3. As a store manager, I should be able to update the stock quantity of a menu item.
+4. As a store manager, I should be able to update the cost of a menu item.
+5. As a store manager, I should be able to remove an existing menu item from the system.
+6. As a customer, I should be able to create a self service account using my first name, 
+    last name and digital id. Each account is awarded $500 by default. A digital id may be:
+a. A password
+b. An image capture of the individual doing a signature move (think #usainbolt : http://bit.ly/2RHCNnd  ) (minimum: upload image and match)
+c. A voice recording (minimum: upload mp3 and match)
+7. As a customer, I should be able to search for a menu item using:
+a. Text input (minimum: user should be able to type)
+b. Image/Video Input (minimum: upload photo of American Sign Language)
+c.Speech/Audio Input (minimum: upload mp3 of audio recording)
+8. As a customer, I should be able to make an order for several items. Each order should have my first name and quantity of each item chosen.
+9. As a customer, I should be able to access the details (quantity of each item, unit cost of each item and total cost) of my order for confirmation
+10.As a customer, I should be able to cancel my order.
+11.As a customer, I should be able to confirm my order by providing my digital id. A customer should have three (3) chances to 
+    provide their correct digital id before the order is cancelled.
+12.As a store manager, I should be able to view a chart showing the total sales (in dollars) for each menu item.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-### `yarn build`
+The following are the general system requirements:*
+1. System Name: C.U.P.S (1 mark)
+2. Client side and server side logging (3 marks)
+3. Client/Server Architecture **
+4. Database (any database vendor or ORM may be used)**^
+5. Appropriate exception handling ( 5 marks)
+6. User Friendly (7 marks)
+7. Appropriate input validation (3 marks)
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-### `yarn eject`
+3. Links of Project Design:
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+Wireframes/ UI: https://gitlab.com/MASTERQ9/ap-cups/-/tree/development/Design 
+ERD: https://gitlab.com/MASTERQ9/ap-cups/-/tree/development/Design
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+4. Project Tools/Languages/Libraries/Frameworks:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Nodejs
+Reactjs
+Expressjs
+MongoDB
+HTML
+CSS/SCSS/SASS
+Bulma
+Javascript
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `yarn build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
