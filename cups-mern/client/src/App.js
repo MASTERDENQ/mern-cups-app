@@ -1,7 +1,7 @@
 import React from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "./App.css";
+import { Container } from "reactstrap";
 
 import Home from "./components/Home";
 import Login from "./components/Login";
@@ -12,6 +12,7 @@ import AddItem from "./components/AddItem";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import ItemsList from "./components/ItemsList";
+import ItemModal from "./components/ItemModal";
 
 import { Provider } from "react-redux";
 import store from "./store";
@@ -34,7 +35,12 @@ function App() {
     <Provider store={store}>
       <div className="App">
         <NavBar />
-        <ItemsList />
+
+        <Container>
+          <AddItem />
+          {/* <ItemModal /> */}
+          <ItemsList />
+        </Container>
       </div>
     </Provider>
   );

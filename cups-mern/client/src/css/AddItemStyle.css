@@ -1,4 +1,4 @@
-.AddItemForm {
+/* .AddItemForm {
   padding: 4vh;
   height: 30vh;
   display: flex;
@@ -81,4 +81,20 @@ input {
   align-items: center;
   justify-content: center;
   justify-content: space-between;
+} */
+
+/* .card {
+  text-align: center;
+  align-self: center;
+  align-items: center;
+  padding: 1em;
+} */
+
+.audio-css {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: rgb(5, 68, 104);
 }

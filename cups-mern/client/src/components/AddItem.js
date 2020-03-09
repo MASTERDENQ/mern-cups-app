@@ -1,202 +1,268 @@
-import React, { Component } from 'react'
-import axios from 'axios'
-import ASL from '../assets/asl.jpg'
-import Photo from '../assets/photo.png';
-import '../css/AddItemStyle.css';
+import React, { Component, useState } from "react";
+import axios from "axios";
+import ASL from "../assets/asl.jpg";
+import Photo from "../assets/image.jpeg";
+import Audio from "../assets/audio.png";
+import Icon from "../assets/icon.png";
+import "../css/AddItemStyle.css";
+import MicRecorder from "mic-recorder-to-mp3";
 
-import MicRecorder from 'mic-recorder-to-mp3';
-import '../css/ReactMicStyle.css'
+import { connect } from "react-redux";
+import { addItem } from "../actions/itemActions";
+import uuid from "react-uuid";
+import {
+  Container,
+  Label,
+  Input,
+  Button,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText,
+  Card,
+  DropdownItem,
+  Dropdown,
+  Form,
+  UncontrolledDropdown,
+  DropdownMenu,
+  DropdownToggle,
+  CardImg,
+  CardText,
+  CardBody,
+  CardTitle,
+  CardSubtitle,
+  Row,
+  Col
+} from "reactstrap";
 
 // Create a new record
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
-export default class AddItemNew extends Component {
-    constructor(props) {
-        super(props)
-    
-        this.state = {
-             item: '',
-             category: '',
-             stock: '',
-             cost: '',
-             image: '',
-             asl_image: '',
-             audio: '',
+class AddItem extends Component {
+  state = {
+    name: "",
+    category: "",
+    stock: "",
+    cost: "",
+    image: "",
+    asl_image: "",
+    audio: "",
 
-             isRecording: false,
-             isBlocked: false,
-             
-             
-        }
-    }
+    isRecording: false,
+    isBlocked: false
+  };
 
+  // Handles the assignment of details about new item
+  onChange = e => {
+    this.setState({ [e.target.name]: e.target.value });
+  };
 
-    // Handles the assignment of details about new item
-    changHandler = (e) => {
-        this.setState({[e.target.name]: e.target.value})
-    }
+  // Handle the submission of new item to database
+  onSubmit = e => {
+    // Prevent Default
+    e.preventDefault();
 
-    // Handle the submission of new item to database
-    submitHandler = (e) => {
-          e.preventDefault()
-
-          // Log state to console
-          console.log(this.state)
-
-          axios
-            .post('https://jsonplaceholder.typicode.com/posts', this.state)
-            .then(response =>{console.log(response)})
-            .catch(error => {console.log(error)})
-    }
-    
-    // 
-    start = () => {
-        if (this.state.isBlocked) {
-        console.log('Permission Denied');
-        } 
-        else {
-        Mp3Recorder
-            .start()
-            .then(() => {this.setState({ isRecording: true });})
-            .catch((e) => console.error(e));
-        }
+    // Assign state to newItem variable
+    const newItem = {
+      id: uuid(),
+      name: this.state.name,
+      category: this.state.category,
+      stock: this.state.stock,
+      cost: this.state.cost,
+      image: this.state.image,
+      asl_image: this.state.asl_image,
+      audio: this.state.audio
     };
 
-    stop = () => {
-        Mp3Recorder
-        .stop()
-        .getMp3()
-        .then(([buffer, blob]) => {
-            const audio = URL.createObjectURL(blob)
-            this.setState({ audio, isRecording: false });})
-        .catch((e) => console.log(e));
+    // Add item via addItem action
+    this.props.addItem(newItem);
 
-        
-    };
+    // Log state to console
+    console.log(this.state);
 
-    componentDidMount() {
-        navigator.getUserMedia({ audio: true },
-        () => {
-            console.log('Permission Granted');
-            this.setState({ isBlocked: false });
-        },
-        () => {
-            console.log('Permission Denied');
-            this.setState({ isBlocked: true })
-        },
-        );
+    // axios
+    //   .post("https://jsonplaceholder.typicode.com/posts", this.state)
+    //   .then(response => {
+    //     console.log(response);
+    //   })
+    //   .catch(error => {
+    //     console.log(error);
+    //   });
+  };
+
+  //
+  start = () => {
+    if (this.state.isBlocked) {
+      console.log("Permission Denied");
+    } else {
+      Mp3Recorder.start()
+        .then(() => {
+          this.setState({ isRecording: true });
+        })
+        .catch(e => console.error(e));
     }
+  };
 
+  stop = () => {
+    Mp3Recorder.stop()
+      .getMp3()
+      .then(([buffer, blob]) => {
+        const audio = URL.createObjectURL(blob);
+        this.setState({ audio, isRecording: false });
+      })
+      .catch(e => console.log(e));
+  };
 
-    render() {
-        const {item, category, stock, cost, image, asl_image, audio} = this.state
+  componentDidMount() {
+    navigator.getUserMedia(
+      { audio: true },
+      () => {
+        console.log("Permission Granted");
+        this.setState({ isBlocked: false });
+      },
+      () => {
+        console.log("Permission Denied");
+        this.setState({ isBlocked: true });
+      }
+    );
+  }
 
-        return (
-            <div className="MainDiv">
-                <div className="title"> 
-                    <h1>Add Item</h1>
-                </div>
+  render() {
+    return (
+      <Container>
+        <div className="MainDiv">
+          <div className="title">
+            <h1>Add Item</h1>
+          </div>
 
-                <div>
-                    <form className="AddItemForm" onSubmit={this.submitHandler}>
-                        <fieldset>
-                        <label> ---- </label>
+          <div>
+            <Form className="AddItemForm" onSubmit={this.onSubmit}>
+              <Container>
+                {/* Add New Item */}
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Item Name</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="name"
+                    type="text"
+                    placeholder="Item Name"
+                    onChange={this.onChange}
+                  />
+                </InputGroup>
 
-                            {/* Add New Item */}
-                            <label>Item Name</label>   
-                            <input 
-                                name="item" 
-                                value={item} 
-                                type="text" 
-                                placeholder="Item Name" 
-                                onChange={this.changHandler} 
-                            />
+                {/* Enter stock quantity */}
 
-                            {/* Selection of category */}
-                            <select name="category" value={category} onChange={this.changHandler}>
-                                <option hidden   >Category</option>
-                                <option defaultChecked value="1">Beverage</option>
-                                <option value="2">Snack</option>
-                                <option value="3">Daily Surprise</option>
-                            </select>
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Stock Quantity</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="stock"
+                    type="number"
+                    min="0"
+                    onChange={this.onChange}
+                  />
+                </InputGroup>
 
-                            <label> ---- </label>
+                {/* Enter cost of item each */}
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Cost</InputGroupText>
+                    <InputGroupText>$</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="cost"
+                    type="text"
+                    min="0"
+                    onChange={this.onChange}
+                  />
+                  <InputGroupAddon addonType="append">.00</InputGroupAddon>
+                </InputGroup>
+                <br />
+                <br />
 
-                            {/* Enter stock quantity */}
-                            <label>Stock Quantity</label> 
-                            <input 
-                                name="stock" 
-                                value={stock} 
-                                type="number" 
-                                min="0" 
-                                onChange={this.changHandler} 
-                            />
+                {/* Selection of category */}
+                <Label>Category</Label>
+                <select name="category" onChange={this.onChange}>
+                  <option hidden>Category</option>
+                  <option defaultChecked>Beverage</option>
+                  <option>Snack</option>
+                  <option>Daily Surprise</option>
+                </select>
+                <br />
+                <br />
+              </Container>
 
-                            <label> ---- </label>
+              <Row>
+                <Col sm="4">
+                  <Card>
+                    <h3>Upload Photo</h3>
+                    <CardImg src={Photo} alt={Icon} />
+                    <Input name="image" type="file" onChange={this.onChange} />
+                  </Card>
+                </Col>
 
-                             {/* Enter cost of item each */}
-                            <label>Cost</label> 
-                            <input 
-                                name="cost" 
-                                value={cost} 
-                                type="money" 
-                                min="0" 
-                                onChange={this.changHandler} 
-                            />
+                <Col sm="4">
+                  <Card>
+                    <h3>Upload ASL</h3>
+                    <CardImg src={ASL} alt={Icon} />
+                    <Input
+                      name="asl_image"
+                      type="file"
+                      onChange={this.onChange}
+                    />
+                  </Card>
+                </Col>
 
-                            <label> ---- </label>
-                        </fieldset>
+                <Col sm="4">
+                  <Card>
+                    <h3>Audio</h3>
+                    <CardImg src={Audio} alt={Icon} height="50%" />
 
-                    <fieldset>
-                        <button className="card" onClick={() => this.fileInput.click()} type="button">
-                            <h3>Upload Photo</h3>
-                            <img src={Photo} alt="" />
-                            <input name="image" value={image} type="file" onChange={this.changHandler}
-                                style={{display:'none'}}
-                                ref={fileInput => this.fileInput = fileInput}
-                            />
-                        </button>
+                    <div className="audio-css">
+                      <Button
+                        onClick={this.start}
+                        disabled={this.state.isRecording}
+                        type="button"
+                      >
+                        Record
+                      </Button>
 
-                        <button className="card" onClick={() => this.fileInput.click()} type="button">
-                            <h3>Upload ASL</h3>
-                            <img src={ASL} alt="American Sing Language" />
-                            <input name="asl_image" value={asl_image} type="file" onChange={this.changHandler}
-                                style={{display:'none'}}
-                                ref={fileInput => this.fileInput = fileInput}
-                            />
-                        </button>
-                        
-                        <div className="audio">
-                        <div className="card">
-                            <h3>Audio</h3>
-                            <div className="container">
-                                <button 
-                                    onClick={this.start} 
-                                    disabled={this.state.isRecording}
-                                    type="button"
-                                >
-                                    Record
-                                </button>
+                      <Button
+                        onClick={this.stop}
+                        disabled={!this.state.isRecording}
+                        type="button"
+                      >
+                        Stop
+                      </Button>
+                      <audio
+                        name="audio"
+                        src={this.state.audio}
+                        controls="controls"
+                      />
+                    </div>
+                  </Card>
+                </Col>
+              </Row>
 
-                                <button 
-                                    onClick={this.stop} 
-                                    disabled={!this.state.isRecording}
-                                    type="button"
-                                >
-                                    Stop
-                                </button>
-                                <audio name="audio" value={audio} src={this.state.audio} controls="controls" />
-                            </div>
-                        </div>    
-                        </div> 
-                    </fieldset>
-                
-                <button className="card" type="submit">
-                    <h4>ADD ITEM</h4>
-                </button>
-            </form>
-            </div>
+              <Button
+                color="dark"
+                type="submit"
+                style={{ marginTop: "2rem" }}
+                block
+              >
+                <h4>ADD ITEM</h4>
+              </Button>
+            </Form>
+          </div>
         </div>
-        )
-    }
+      </Container>
+    );
+  }
 }
+
+const mapStateToProps = state => ({
+  item: state.item
+});
+
+export default connect(mapStateToProps, { addItem })(AddItem);

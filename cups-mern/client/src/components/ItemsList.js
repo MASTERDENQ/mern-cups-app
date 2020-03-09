@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import { Container, ListGroup, ListGroupItem, Button } from "reactstrap";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import uuid from "react-uuid";
 import { connect } from "react-redux";
-import { getItems } from "../actions/itemActions";
+import { getItems, deleteItem } from "../actions/itemActions";
 import PropTypes from "prop-types";
 
 import "../css/ItemsListStyle.css";
@@ -14,47 +13,52 @@ class ItemsList extends Component {
     this.props.getItems();
   }
 
+  onDeleteClick = id => {
+    this.props.deleteItem(id);
+  };
+
   render() {
     const { items } = this.props.item;
 
     return (
       <Container>
-        <Button
-          color="dark"
-          style={{ marginBottom: "2rem" }}
-          onClick={() => {
-            const name = prompt("Enter Item");
-            if (name) {
-              this.setState(state => ({
-                items: [...state.items, { id: uuid(), name }]
-              }));
-            }
-          }}
-        >
-          Add Item
-        </Button>
-
         <ListGroup>
           <TransitionGroup className="items-list">
-            {items.map(({ id, name }) => (
-              <CSSTransition key={id} timeout={500} classNames="fade">
-                <ListGroupItem>
-                  <Button
-                    className="remove-btn"
-                    color="danger"
-                    size="sm"
-                    onClick={() => {
-                      this.setState(state => ({
-                        items: state.items.filter(items => items.id !== id)
-                      }));
-                    }}
+            {items.map(
+              ({
+                id,
+                name,
+                stock,
+                category,
+                cost,
+                image,
+                asl_image,
+                audio
+              }) => (
+                <CSSTransition key={id} timeout={500} classNames="fade">
+                  <ListGroupItem
+                    className="container"
+                    style={{ marginRight: "4rem" }}
                   >
-                    &times;
-                  </Button>
-                  {name}
-                </ListGroupItem>
-              </CSSTransition>
-            ))}
+                    <Button
+                      className="remove-btn"
+                      color="danger"
+                      size="sm"
+                      onClick={this.onDeleteClick.bind(this, id)}
+                    >
+                      &times;
+                    </Button>
+                    {name}
+                    {category}
+                    {stock}
+                    {cost}
+                    {image}
+                    {asl_image}
+                    {audio}
+                  </ListGroupItem>
+                </CSSTransition>
+              )
+            )}
           </TransitionGroup>
         </ListGroup>
       </Container>
@@ -71,4 +75,4 @@ const mapStateToProps = state => ({
   item: state.item
 });
 
-export default connect(mapStateToProps, { getItems })(ItemsList);
+export default connect(mapStateToProps, { getItems, deleteItem })(ItemsList);
