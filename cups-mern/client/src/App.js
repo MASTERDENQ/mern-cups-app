@@ -37,8 +37,8 @@ function App() {
         <NavBar />
 
         <Container>
-          <AddItem />
-          {/* <ItemModal /> */}
+          {/* <AddItem /> */}
+          <ItemModal />
           <ItemsList />
         </Container>
       </div>

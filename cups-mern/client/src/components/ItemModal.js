@@ -12,7 +12,6 @@ import {
 } from "reactstrap";
 import { connect } from "react-redux";
 import { addItem } from "../actions/itemActions";
-import uuid from "react-uuid";
 
 class ItemModal extends Component {
   state = {
@@ -35,7 +34,6 @@ class ItemModal extends Component {
 
     // Assign state to newItem
     const newItem = {
-      id: uuid(),
       name: this.state.name,
       cost: this.state.cost
     };

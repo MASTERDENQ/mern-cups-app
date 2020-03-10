@@ -26,7 +26,7 @@ class ItemsList extends Component {
           <TransitionGroup className="items-list">
             {items.map(
               ({
-                id,
+                _id,
                 name,
                 stock,
                 category,
@@ -35,7 +35,7 @@ class ItemsList extends Component {
                 asl_image,
                 audio
               }) => (
-                <CSSTransition key={id} timeout={500} classNames="fade">
+                <CSSTransition key={_id} timeout={500} classNames="fade">
                   <ListGroupItem
                     className="container"
                     style={{ marginRight: "4rem" }}
@@ -44,7 +44,7 @@ class ItemsList extends Component {
                       className="remove-btn"
                       color="danger"
                       size="sm"
-                      onClick={this.onDeleteClick.bind(this, id)}
+                      onClick={this.onDeleteClick.bind(this, _id)}
                     >
                       &times;
                     </Button>
