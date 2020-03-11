@@ -24,11 +24,10 @@ import { Link } from "react-router-dom";
 class RegisterModal extends Component {
   state = {
     modal: false,
-    email: "",
-    password: "",
+    stock: "",
+    cost: "",
     msg: null,
-    error: null,
-    isAuthenticated: null
+    error: null
   };
 
   toggle = () => {
@@ -51,11 +50,12 @@ class RegisterModal extends Component {
     };
     // Body
     const body = {
-      email: this.state.email,
-      password: this.state.password
+      id: this.props.id,
+      stock: this.state.stock,
+      cost: this.state.cost
     };
 
-    console.log(this.state);
+    console.log(body);
 
     // Making Request
     axios
@@ -75,27 +75,10 @@ class RegisterModal extends Component {
   render() {
     return (
       <div>
-        {/* <UncontrolledDropdown nav inNavbar>
-          <DropdownToggle nav caret>
-            Login
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem onClick={this.toggle} href="#">
-              Customer
-            </DropdownItem>
-            <DropdownItem onClick={this.toggle} href="#">
-              Manager
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown> */}
         <Container>
-          <NavLink className="ml-5" onClick={this.toggle} href="#">
-            Manager Login
-          </NavLink>
-
-          <NavLink className="ml-5" onClick={this.toggle} href="#">
-            Customer Login
-          </NavLink>
+          <Link to="#" onClick={this.toggle} href="#">
+            UPDATE
+          </Link>
         </Container>
 
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
@@ -107,31 +90,31 @@ class RegisterModal extends Component {
             <Form onSubmit={this.onSubmit}>
               <FormGroup>
                 <Container>
-                  <Label for="email">Email</Label>
+                  <Label for="email">Cost</Label>
                 </Container>
 
                 <Input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Email"
+                  type="cost"
+                  name="cost"
+                  id="cost"
+                  placeholder="Cost"
                   className="mb-3"
                   onChange={this.onChange}
                 />
 
                 <Container>
-                  <Label for="password">Password</Label>
+                  <Label for="password">Stock</Label>
                 </Container>
 
                 <Input
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="Password"
+                  type="number"
+                  name="stock"
+                  id="stock"
+                  placeholder="stock"
                   className="mb-3"
                   onChange={this.onChange}
                 />
-                <Link to="/list">
+                <Link to="#">
                   <Button
                     color="dark"
                     style={{ marginTop: "2rem" }}
@@ -139,7 +122,7 @@ class RegisterModal extends Component {
                     type="submit"
                     onSubmit={this.onSubmit}
                   >
-                    Login
+                    Submit
                   </Button>
                 </Link>
               </FormGroup>

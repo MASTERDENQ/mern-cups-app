@@ -1,4 +1,4 @@
-import React, { Component, useState } from "react";
+import React, { Component } from "react";
 import axios from "axios";
 import ASL from "../assets/asl.jpg";
 import Photo from "../assets/image.jpeg";
@@ -30,6 +30,7 @@ import {
   Row,
   Col
 } from "reactstrap";
+import { Link } from "react-router-dom";
 
 // Create a new record
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
@@ -239,6 +240,16 @@ class AddItem extends Component {
               >
                 <h4>ADD ITEM</h4>
               </Button>
+              <Link to="/list">
+                <Button
+                  color="dark"
+                  type="button"
+                  style={{ marginTop: "2rem" }}
+                  block
+                >
+                  <h4>VIEW ITEMS</h4>
+                </Button>
+              </Link>
             </Form>
           </div>
         </div>

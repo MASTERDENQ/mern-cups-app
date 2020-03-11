@@ -39,7 +39,7 @@ export class NavBar extends Component {
                 </NavItem>
 
                 <NavItem>
-                  <LoginModal className="ml-5" />
+                  <LoginModal />
                 </NavItem>
 
                 <NavItem>

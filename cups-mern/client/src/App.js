@@ -7,8 +7,6 @@ import CreateAccount from "./components/CreateAccount";
 import AddItem from "./components/AddItem";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ItemsList from "./components/ItemsList";
-import ItemModal from "./components/ItemModal";
-import Item from "./components/Item";
 
 class App extends React.Component {
   render() {
@@ -16,6 +14,7 @@ class App extends React.Component {
       <Router>
         <div className="App">
           {/* NavBar rendered always as header  */}
+
           <NavBar />
           <Switch>
             <Route path="/" exact component={Home} />
@@ -23,20 +22,9 @@ class App extends React.Component {
             <Route path="/create" component={CreateAccount} />
             <Route path="/control" component={ManagerControlCenter} />
             <Route path="/list" exact component={ItemsList} />
-            <Route path="/list/item" component={Item} />
           </Switch>
         </div>
       </Router>
-
-      // <div className="App">
-      //   <NavBar />
-
-      //   <Container>
-      //     {/* <AddItem /> */}
-      //     <ItemModal />
-      //     <ItemsList />
-      //   </Container>
-      // </div>
     );
   }
 }
