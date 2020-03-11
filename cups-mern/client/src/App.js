@@ -16,34 +16,41 @@ import ItemModal from "./components/ItemModal";
 
 import { Provider } from "react-redux";
 import store from "./store";
+import { loadUser } from "./actions/authActions";
 
-function App() {
-  return (
-    // <Router>
-    //   <div className="App">
-    //     {/* NavBar rendered always as header  */}
-    //     <NavBar />
+class App extends React.Component {
+  componentDidMount() {
+    store.dispatch(loadUser());
+  }
 
-    //     <Route path="/" exact component={Home} />
-    //     <Route path="/add" component={AddItem} />
-    //     <Route path="/login" component={Login} />
-    //     <Route path="/create" component={CreateAccount} />
-    //     <Route path="/control" component={ManagerControlCenter} />
-    //     <Route path="/list" component={ItemsList} />
-    //   </div>
-    // </Router>
-    <Provider store={store}>
-      <div className="App">
-        <NavBar />
+  render() {
+    return (
+      // <Router>
+      //   <div className="App">
+      //     {/* NavBar rendered always as header  */}
+      //     <NavBar />
 
-        <Container>
-          {/* <AddItem /> */}
-          <ItemModal />
-          <ItemsList />
-        </Container>
-      </div>
-    </Provider>
-  );
+      //     <Route path="/" exact component={Home} />
+      //     <Route path="/add" component={AddItem} />
+      //     <Route path="/login" component={Login} />
+      //     <Route path="/create" component={CreateAccount} />
+      //     <Route path="/control" component={ManagerControlCenter} />
+      //     <Route path="/list" component={ItemsList} />
+      //   </div>
+      // </Router>
+      <Provider store={store}>
+        <div className="App">
+          <NavBar />
+
+          <Container>
+            {/* <AddItem /> */}
+            <ItemModal />
+            <ItemsList />
+          </Container>
+        </div>
+      </Provider>
+    );
+  }
 }
 
 export default App;
