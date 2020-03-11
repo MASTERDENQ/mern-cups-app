@@ -5,7 +5,7 @@ import "../css/HomeStyle.css";
 function Home() {
   return (
     <div className="Home">
-      <Link to="/login">
+      {/* <Link to="/login">
         <button className="card">
           <h1>
             <b>MANAGER</b>
@@ -20,7 +20,7 @@ function Home() {
             <b>CUSTOMER</b>
           </h1>
         </button>
-      </Link>
+      </Link> */}
     </div>
   );
 }

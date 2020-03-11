@@ -11,8 +11,13 @@ import {
   Input,
   Container,
   NavLink,
-  Alert
+  Alert,
+  UncontrolledDropdown,
+  DropdownToggle,
+  DropdownItem,
+  DropdownMenu
 } from "reactstrap";
+import { Link } from "react-router-dom";
 
 class RegisterModal extends Component {
   state = {
@@ -42,16 +47,20 @@ class RegisterModal extends Component {
         "Content-Type": "application/json"
       }
     };
+    // Body
+    const body = {
+      email: this.state.email,
+      password: this.state.password
+    };
 
-    const body =
-      //
-      console.log(this.state);
+    console.log(this.state);
 
     // Making Request
     axios
-      .post("https://jsonplaceholder.typicode.com/posts", this.state, config)
-      .then(response => {
-        console.log(response);
+      .post("https://jsonplaceholder.typicode.com/posts", { body }, { config })
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
       })
       .catch(error => {
         console.log(error);
@@ -64,12 +73,26 @@ class RegisterModal extends Component {
   render() {
     return (
       <div>
-        <NavLink className="mr-5" onClick={this.toggle} href="#">
-          Lgin
-        </NavLink>
+        <UncontrolledDropdown nav inNavbar>
+          <DropdownToggle nav caret>
+            Login
+          </DropdownToggle>
+          <DropdownMenu right>
+            <DropdownItem onClick={this.toggle} href="#">
+              Customer
+            </DropdownItem>
+            <DropdownItem onClick={this.toggle} href="#">
+              Manager
+            </DropdownItem>
+          </DropdownMenu>
+        </UncontrolledDropdown>
+
+        {/* <NavLink className="ml-5" onClick={this.toggle} href="#">
+          Login
+        </NavLink> */}
 
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>Register</ModalHeader>
+          <ModalHeader toggle={this.toggle}>Login</ModalHeader>
           <ModalBody>
             {this.state.msg ? (
               <Alert color="danger">{this.state.msg}</Alert>
@@ -101,10 +124,17 @@ class RegisterModal extends Component {
                   className="mb-3"
                   onChange={this.onChange}
                 />
-
-                <Button color="dark" style={{ marginTop: "2rem" }} block>
-                  Login
-                </Button>
+                <Link to="/list">
+                  <Button
+                    color="dark"
+                    style={{ marginTop: "2rem" }}
+                    block
+                    type="submit"
+                    onSubmit={this.onSubmit}
+                  >
+                    Login
+                  </Button>
+                </Link>
               </FormGroup>
             </Form>
           </ModalBody>

@@ -12,6 +12,7 @@ import {
   Container
 } from "reactstrap";
 import RegisterModal from "./auth/RegisterModal";
+import LoginModal from "./auth/LoginModal";
 import Logout from "./auth/Logout";
 
 export class NavBar extends Component {
@@ -36,6 +37,11 @@ export class NavBar extends Component {
                 <NavItem>
                   <RegisterModal />
                 </NavItem>
+
+                <NavItem>
+                  <LoginModal className="ml-5" />
+                </NavItem>
+
                 <NavItem>
                   <Logout />
                 </NavItem>
