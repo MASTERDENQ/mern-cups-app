@@ -16,7 +16,7 @@ import Logout from "./auth/Logout";
 
 export class NavBar extends Component {
   state = {
-    isOpen: false
+    isOpen: true
   };
 
   toggle = () =>

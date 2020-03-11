@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import axios from "axios";
 import {
   Button,
   Modal,
@@ -19,30 +20,12 @@ class RegisterModal extends Component {
     name: "",
     email: "",
     password: "",
-    msg: null
+    msg: null,
+    error: null,
+    isAuthenticated: null
   };
 
-  componentDidUpdate(prevProps) {
-    const { error, isAuthenticated } = this.props;
-    if (error !== prevProps.error) {
-      // Check for register error
-      if (error.id === "REGISTER_FAIL") {
-        this.setState({ msg: error.msg.msg });
-      } else {
-        this.setState({ msg: null });
-      }
-    }
-
-    // If authenticated close modal
-    if (this.state.modal) {
-      if (isAuthenticated) {
-        this.toggle();
-      }
-    }
-  }
-
   toggle = () => {
-    this.props.clearErrors();
     this.setState({ modal: !this.state.modal });
   };
 
@@ -54,24 +37,34 @@ class RegisterModal extends Component {
     // Prevent Default
     e.preventDefault();
 
-    //
-    const { name, email, password } = this.state;
-
-    // Create user object
-    const newUser = {
-      name,
-      email,
-      password
+    // Header a.k.a config info
+    const config = {
+      header: {
+        "Content-Type": "application/json"
+      }
     };
 
-    // Attempt to register
-    this.props.register(newUser);
+    //
+    console.log(this.state);
+
+    // Making Request
+    axios
+      .post("https://jsonplaceholder.typicode.com/posts", this.state, config)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    // Close modal
+    this.toggle();
   };
 
   render() {
     return (
       <div>
-        <NavLink onClick={this.toggle} href="#">
+        <NavLink className="mr-5" onClick={this.toggle} href="#">
           Register
         </NavLink>
 
@@ -133,10 +126,5 @@ class RegisterModal extends Component {
     );
   }
 }
-
-const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated,
-  error: state.error
-});
 
 export default RegisterModal;

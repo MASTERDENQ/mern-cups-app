@@ -30,15 +30,6 @@ class ItemModal extends Component {
     // Prevent Default
     e.preventDefault();
 
-    // Assign state to newItem
-    const newItem = {
-      name: this.state.name,
-      cost: this.state.cost
-    };
-
-    // Add item via addItem action
-    this.props.addItem(newItem);
-
     // Close modal
     this.toggle();
   };
