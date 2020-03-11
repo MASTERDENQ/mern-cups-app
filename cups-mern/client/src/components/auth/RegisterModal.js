@@ -12,10 +12,6 @@ import {
   NavLink,
   Alert
 } from "reactstrap";
-import { connect } from "react-redux";
-import PropTypes from "prop-types";
-import { register } from "../../actions/authActions";
-import { clearErrors } from "../../actions/errorActions";
 
 class RegisterModal extends Component {
   state = {
@@ -24,13 +20,6 @@ class RegisterModal extends Component {
     email: "",
     password: "",
     msg: null
-  };
-
-  static propTypes = {
-    isAuthenticated: PropTypes.bool,
-    error: PropTypes.object.isRequired,
-    register: PropTypes.func.isRequired,
-    clearErrors: PropTypes.func.isRequired
   };
 
   componentDidUpdate(prevProps) {
@@ -150,6 +139,4 @@ const mapStateToProps = state => ({
   error: state.error
 });
 
-export default connect(mapStateToProps, { register, clearErrors })(
-  RegisterModal
-);
+export default RegisterModal;

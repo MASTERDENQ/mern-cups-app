@@ -2,7 +2,7 @@ const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
-const items = require("./routes/api/Items");
+const items = require("../cups-mern/routes/api/Items");
 
 const app = express();
 

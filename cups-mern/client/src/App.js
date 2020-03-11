@@ -25,30 +25,29 @@ class App extends React.Component {
 
   render() {
     return (
-      // <Router>
-      //   <div className="App">
-      //     {/* NavBar rendered always as header  */}
-      //     <NavBar />
-
-      //     <Route path="/" exact component={Home} />
-      //     <Route path="/add" component={AddItem} />
-      //     <Route path="/login" component={Login} />
-      //     <Route path="/create" component={CreateAccount} />
-      //     <Route path="/control" component={ManagerControlCenter} />
-      //     <Route path="/list" component={ItemsList} />
-      //   </div>
-      // </Router>
-      <Provider store={store}>
+      <Router>
         <div className="App">
+          {/* NavBar rendered always as header  */}
           <NavBar />
 
-          <Container>
-            {/* <AddItem /> */}
-            <ItemModal />
-            <ItemsList />
-          </Container>
+          <Route path="/" exact component={Home} />
+          <Route path="/add" component={AddItem} />
+          <Route path="/login" component={Login} />
+          <Route path="/create" component={CreateAccount} />
+          <Route path="/control" component={ManagerControlCenter} />
+          <Route path="/list" component={ItemsList} />
         </div>
-      </Provider>
+      </Router>
+
+      // <div className="App">
+      //   <NavBar />
+
+      //   <Container>
+      //     {/* <AddItem /> */}
+      //     <ItemModal />
+      //     <ItemsList />
+      //   </Container>
+      // </div>
     );
   }
 }

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 // import '../css/NavBarStyle.css';
-// import avatar from '../assets/avatar.jpg';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import avatar from "../assets/avatar.jpg";
 import {
   Collapse,
   Navbar,

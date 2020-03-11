@@ -6,9 +6,6 @@ import Audio from "../assets/audio.png";
 import Icon from "../assets/icon.png";
 import "../css/AddItemStyle.css";
 import MicRecorder from "mic-recorder-to-mp3";
-
-import { connect } from "react-redux";
-import { addItem } from "../actions/itemActions";
 import uuid from "react-uuid";
 import {
   Container,
@@ -56,40 +53,27 @@ class AddItem extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  // Handle the submission of new item to database
+  /* ****  Handle the submission of new item to database **** */
+
   onSubmit = e => {
     // Prevent Default
     e.preventDefault();
 
-    // Assign state to newItem variable
-    const newItem = {
-      id: uuid(),
-      name: this.state.name,
-      category: this.state.category,
-      stock: this.state.stock,
-      cost: this.state.cost,
-      image: this.state.image,
-      asl_image: this.state.asl_image,
-      audio: this.state.audio
-    };
-
-    // Add item via addItem action
-    this.props.addItem(newItem);
-
     // Log state to console
     console.log(this.state);
 
-    // axios
-    //   .post("https://jsonplaceholder.typicode.com/posts", this.state)
-    //   .then(response => {
-    //     console.log(response);
-    //   })
-    //   .catch(error => {
-    //     console.log(error);
-    //   });
+    // Make POST Request to add Item to database
+    axios
+      .post("https://jsonplaceholder.typicode.com/posts", this.state)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
-  //
+  // Start the recording of audio
   start = () => {
     if (this.state.isBlocked) {
       console.log("Permission Denied");
@@ -102,6 +86,7 @@ class AddItem extends Component {
     }
   };
 
+  // Stop the recording of audio
   stop = () => {
     Mp3Recorder.stop()
       .getMp3()
@@ -112,6 +97,7 @@ class AddItem extends Component {
       .catch(e => console.log(e));
   };
 
+  // React-Mic
   componentDidMount() {
     navigator.getUserMedia(
       { audio: true },
@@ -261,8 +247,4 @@ class AddItem extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  item: state.item
-});
-
-export default connect(mapStateToProps, { addItem })(AddItem);
+export default AddItem;
