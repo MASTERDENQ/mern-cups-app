@@ -1,22 +1,22 @@
 {
-  "name": "cups",
+  "name": "mernstack",
   "version": "1.0.0",
-  "description": "Advance Programming C.U.P.S built with MERN stack",
+  "description": "mern stack app",
   "main": "server.js",
   "scripts": {
-    "client-install": "npm install --prefix client",
-    "start": "node server.js",
-    "server": "nodemon server.js",
-    "client": "yarn start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Programming Kings",
-  "license": "MIT",
+  "author": "Dimitri Russell",
+  "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "concurrently": "^5.1.0",
     "express": "^4.17.1",
-    "mongoose": "^5.9.3"
+    "gridfs-stream": "^1.1.1",
+    "method-override": "^3.0.0",
+    "mongodb": "^3.5.4",
+    "mongoose": "^5.9.1",
+    "multer": "^1.4.2",
+    "multer-gridfs-storage": "^4.0.2"
   },
   "devDependencies": {
     "nodemon": "^2.0.2"

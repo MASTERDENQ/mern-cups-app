@@ -1,3 +1,4 @@
 module.exports = {
-  mongoURI: "mongodb+srv://tyrone:tyrone123@ap-cups-pxhde.mongodb.net/test"
+    //mongodbConnection: 'mongodb+srv://39:sanKyuu@ap-cups-98ffm.azure.mongodb.net/test?retryWrites=true&w=majority'
+    mongoURI: 'mongodb://localhost/testdb'
 };
