@@ -11,34 +11,34 @@ import {
   Input,
   Container,
   NavLink,
-  Alert,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
-  NavItem,
-  Navbar
+  Alert
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
-class RegisterModal extends Component {
+class LoginModal extends Component {
   state = {
     modal: false,
     email: "",
     password: "",
     msg: null,
     error: null,
-    isAuthenticated: null
+    isAuthenticated: null,
+    msg: null
   };
 
+  /************  Change Dropdown  **************** */
   toggle = () => {
+    // Clear Error
+    this.setState({ error: null });
     this.setState({ modal: !this.state.modal });
   };
 
+  /************  Map values to state  **************** */
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  /************  Change Dropdown  **************** */
   onSubmit = e => {
     // Prevent Default
     e.preventDefault();
@@ -50,44 +50,50 @@ class RegisterModal extends Component {
       }
     };
     // Body
-    const body = {
+    const user = {
       email: this.state.email,
       password: this.state.password
     };
 
     console.log(this.state);
+    console.log("Body ", user);
 
     // Making Request
     axios
-      .post("https://jsonplaceholder.typicode.com/posts", { body }, { config })
+      .post("https://jsonplaceholder.typicode.com/posts", { user }, { config })
       .then(res => {
         console.log(res);
         console.log(res.data);
+        this.setState({ isAuthenticated: true });
       })
-      .catch(error => {
-        console.log(error);
+      .catch(err => {
+        console.log(err);
+        this.setState({ error: err });
       });
 
     // Close modal
-    this.toggle();
+    // this.toggle();
+  };
+
+  componentDidMount = () => {
+    // Check for register error
+    if (this.state.error) {
+      this.setState({ msg: this.state.error.msg.msg });
+    } else {
+      this.setState({ msg: null });
+    }
+
+    // If authenticated, close modal
+    if (this.state.modal) {
+      if (this.state.isAuthenticated) {
+        this.toggle();
+      }
+    }
   };
 
   render() {
     return (
       <div>
-        {/* <UncontrolledDropdown nav inNavbar>
-          <DropdownToggle nav caret>
-            Login
-          </DropdownToggle>
-          <DropdownMenu right>
-            <DropdownItem onClick={this.toggle} href="#">
-              Customer
-            </DropdownItem>
-            <DropdownItem onClick={this.toggle} href="#">
-              Manager
-            </DropdownItem>
-          </DropdownMenu>
-        </UncontrolledDropdown> */}
         <Container>
           <NavLink className="ml-5" onClick={this.toggle} href="#">
             Manager Login
@@ -104,7 +110,7 @@ class RegisterModal extends Component {
             {this.state.msg ? (
               <Alert color="danger">{this.state.msg}</Alert>
             ) : null}
-            <Form onSubmit={this.onSubmit}>
+            <Form>
               <FormGroup>
                 <Container>
                   <Label for="email">Email</Label>
@@ -131,17 +137,16 @@ class RegisterModal extends Component {
                   className="mb-3"
                   onChange={this.onChange}
                 />
-                <Link to="/list">
-                  <Button
-                    color="dark"
-                    style={{ marginTop: "2rem" }}
-                    block
-                    type="submit"
-                    onSubmit={this.onSubmit}
-                  >
-                    Login
-                  </Button>
-                </Link>
+
+                <Button
+                  color="dark"
+                  style={{ marginTop: "2rem" }}
+                  block
+                  type="submit"
+                  onSubmit={this.onSubmit}
+                >
+                  Login
+                </Button>
               </FormGroup>
             </Form>
           </ModalBody>
@@ -151,4 +156,4 @@ class RegisterModal extends Component {
   }
 }
 
-export default RegisterModal;
+export default LoginModal;
