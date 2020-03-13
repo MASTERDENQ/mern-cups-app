@@ -6,7 +6,6 @@ import Audio from "../assets/audio.png";
 import Icon from "../assets/icon.png";
 import "../css/AddItemStyle.css";
 import MicRecorder from "mic-recorder-to-mp3";
-import uuid from "react-uuid";
 import {
   Container,
   Label,
@@ -16,17 +15,17 @@ import {
   InputGroupAddon,
   InputGroupText,
   Card,
-  DropdownItem,
-  Dropdown,
-  Form,
-  UncontrolledDropdown,
-  DropdownMenu,
-  DropdownToggle,
   CardImg,
-  CardText,
-  CardBody,
-  CardTitle,
-  CardSubtitle,
+  Form,
+  // DropdownItem,
+  // Dropdown,
+  // UncontrolledDropdown,
+  // DropdownMenu,
+  // DropdownToggle,
+  // CardText,
+  // CardBody,
+  // CardTitle,
+  // CardSubtitle,
   Row,
   Col
 } from "reactstrap";
@@ -65,7 +64,7 @@ class AddItem extends Component {
 
     // Make POST Request to add Item to database
     axios
-      .post("https://jsonplaceholder.typicode.com/posts", this.state)
+      .post("", this.state)
       .then(response => {
         console.log(response);
       })

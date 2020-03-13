@@ -10,14 +10,14 @@ import {
   Label,
   Input,
   Container,
-  NavLink,
-  Alert,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
-  NavItem,
-  Navbar
+  // NavLink,
+  Alert
+  // UncontrolledDropdown,
+  // DropdownToggle,
+  // DropdownItem,
+  // DropdownMenu,
+  // NavItem,
+  // Navbar
 } from "reactstrap";
 import { Link } from "react-router-dom";
 

@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 // import '../css/NavBarStyle.css';
-import avatar from "../assets/avatar.jpg";
+// import avatar from "../assets/avatar.jpg";
 import {
   Collapse,
   Navbar,
@@ -8,11 +8,13 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink,
+  // NavLink,
   Container
 } from "reactstrap";
-import RegisterModal from "./auth/RegisterModal";
-import LoginModal from "./auth/LoginModal";
+import ManagerRegisterModal from "./auth/ManagerRegisterModal";
+import ManagerLoginModal from "./auth/ManagerLoginModal";
+import CustomerRegisterModal from "./auth/CustomerRegisterModal";
+import CustomerLoginModal from "./auth/CustomerLoginModal";
 import Logout from "./auth/Logout";
 
 export class NavBar extends Component {
@@ -35,11 +37,19 @@ export class NavBar extends Component {
             <Collapse isOpen={this.state.isOpen}>
               <Nav className="ml-auto" navbar>
                 <NavItem>
-                  <RegisterModal />
+                  <CustomerRegisterModal />
                 </NavItem>
 
                 <NavItem>
-                  <LoginModal />
+                  <CustomerLoginModal />
+                </NavItem>
+
+                <NavItem>
+                  <ManagerRegisterModal />
+                </NavItem>
+
+                <NavItem>
+                  <ManagerLoginModal />
                 </NavItem>
 
                 <NavItem>

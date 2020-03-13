@@ -146,10 +146,10 @@ import {
   Alert
 } from "reactstrap";
 
-const RegisterModal = () => {
+const ManagerRegisterModal = () => {
   const [modal, setModal] = useState(false);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
+  // const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
@@ -160,10 +160,10 @@ const RegisterModal = () => {
     setError(null);
     // Revert modal state
     setModal(!modal);
-  }, [error, modal]);
+  }, [modal]);
 
-  const handleChangeName = e => setName(e.target.value);
-  const handleChangeEmail = e => setEmail(e.target.value);
+  const handleChangeUsername = e => setUsername(e.target.value);
+  // const handleChangeEmail = e => setEmail(e.target.value);
   const handleChangePassword = e => setPassword(e.target.value);
 
   const handleOnSubmit = e => {
@@ -177,10 +177,10 @@ const RegisterModal = () => {
     };
 
     // Request body
-    const body = JSON.stringify({ name, email, password });
+    const body = JSON.stringify({ username, password });
 
     axios
-      .post("/api/auth/register", body, config)
+      .post("/testdb/add_manager", body, config)
       .then(res => {
         console.log(res);
         console.log(res.data);
@@ -192,7 +192,7 @@ const RegisterModal = () => {
         console.log("Status Response");
         console.log(err.response.status);
         setError("REGISTER_FAIL");
-        setMsg(err.response.data.msg || err.response.data.error);
+        setMsg(err.response.data.message || err.response.data.error);
       });
   };
 
@@ -217,7 +217,7 @@ const RegisterModal = () => {
       </NavLink>
 
       <Modal isOpen={modal} toggle={handleToggle}>
-        <ModalHeader toggle={handleToggle}>Register</ModalHeader>
+        <ModalHeader toggle={handleToggle}>Manager Registration</ModalHeader>
         <ModalBody>
           {msg ? <Alert color="danger">{msg}</Alert> : null}
           <Form>
@@ -229,10 +229,10 @@ const RegisterModal = () => {
                 id="name"
                 placeholder="Name"
                 className="mb-3"
-                onChange={handleChangeName}
+                onChange={handleChangeUsername}
               />
 
-              <Label for="email">Email</Label>
+              {/* <Label for="email">Email</Label>
               <Input
                 type="email"
                 name="email"
@@ -240,7 +240,7 @@ const RegisterModal = () => {
                 placeholder="Email"
                 className="mb-3"
                 onChange={handleChangeEmail}
-              />
+              /> */}
 
               <Label for="password">Password</Label>
               <Input
@@ -267,4 +267,4 @@ const RegisterModal = () => {
   );
 };
 
-export default RegisterModal;
+export default ManagerRegisterModal;
