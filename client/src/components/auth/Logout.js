@@ -3,7 +3,7 @@ import { NavLink } from "reactstrap";
 
 class Logout extends Component {
   render() {
-    return <NavLink href="#">Logout</NavLink>;
+    return <NavLink href="/">Logout</NavLink>;
   }
 }
 

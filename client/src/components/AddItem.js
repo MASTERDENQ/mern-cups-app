@@ -35,6 +35,8 @@ import { Link } from "react-router-dom";
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
 class AddItem extends Component {
+  /**************** COMPONENT STATES ******************** */
+
   state = {
     name: "",
     category: "",
@@ -43,17 +45,16 @@ class AddItem extends Component {
     image: "",
     asl_image: "",
     audio: "",
-
     isRecording: false,
     isBlocked: false
   };
 
-  // Handles the assignment of details about new item
+  /**************** STATE HANDLERS ******************** */
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  /* ****  Handle the submission of new item to database **** */
+  /**************** FORM SUBMISSION ******************** */
 
   onSubmit = e => {
     // Prevent Default
@@ -62,6 +63,7 @@ class AddItem extends Component {
     // Log state to console
     console.log(this.state);
 
+    /**************** REQUEST SUBMISSION ******************** */
     // Make POST Request to add Item to database
     axios
       .post("", this.state)
@@ -73,6 +75,7 @@ class AddItem extends Component {
       });
   };
 
+  /**************** AUDIO RECORDING ******************** */
   // Start the recording of audio
   start = () => {
     if (this.state.isBlocked) {
@@ -97,6 +100,7 @@ class AddItem extends Component {
       .catch(e => console.log(e));
   };
 
+  /**************** MIC PERMISSION CHECK ******************** */
   // React-Mic
   componentDidMount() {
     navigator.getUserMedia(
@@ -112,6 +116,7 @@ class AddItem extends Component {
     );
   }
 
+  /******************************* RENDER ******************************* */
   render() {
     return (
       <Container>
@@ -179,6 +184,7 @@ class AddItem extends Component {
                 <br />
               </Container>
 
+              {/* Selection of Photo */}
               <Row>
                 <Col sm="4">
                   <Card>
@@ -188,6 +194,7 @@ class AddItem extends Component {
                   </Card>
                 </Col>
 
+                {/* ASL Selection */}
                 <Col sm="4">
                   <Card>
                     <h3>Upload ASL</h3>
@@ -200,6 +207,7 @@ class AddItem extends Component {
                   </Card>
                 </Col>
 
+                {/* Audio Recording */}
                 <Col sm="4">
                   <Card>
                     <h3>Audio</h3>

@@ -3,6 +3,7 @@ import axios from "axios";
 import MicRecorder from "mic-recorder-to-mp3";
 import Audio from "../../assets/audio.png";
 import Icon from "../../assets/icon.png";
+import Photo from "../../assets/photo.png";
 import {
   Button,
   Modal,
@@ -23,18 +24,17 @@ import {
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
 const CustomerRegisterModal = () => {
-  /**************** STATES ******************** */
+  /**************** COMPONENT STATES ******************** */
 
   const [modal, setModal] = useState(false);
+  const [nestedPassword, setNestedPassword] = useState(false);
   const [nestedModal, setNestedModal] = useState(false);
   const [nestedImage, setNestedImage] = useState(false);
   const [nestedAudio, setNestedAudio] = useState(false);
-  const [closeAll, setCloseAll] = useState(false);
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email_address, setEmailAddress] = useState("");
   const [digital_id, setDigitalId] = useState("");
-  const [password, setPassword] = useState("");
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -43,6 +43,7 @@ const CustomerRegisterModal = () => {
 
   /**************** MODAL TOGGLERS ******************** */
 
+  // Main Toggle
   const handleToggle = useCallback(() => {
     // Clear errors
     setError(null);
@@ -50,25 +51,31 @@ const CustomerRegisterModal = () => {
     setModal(!modal);
   }, [modal]);
 
+  // Secondary Toggle
   const toggleNested = () => {
     setNestedModal(!nestedModal);
-    setCloseAll(false);
   };
+
+  // Ternary Toggle
+  const togglePassword = () => {
+    setNestedPassword(!nestedPassword);
+  };
+
+  // Ternary Toggle
   const toggleImage = () => {
     setNestedImage(!nestedImage);
-    setCloseAll(false);
   };
+
+  // Ternary Toggle
   const toggleAudio = () => {
     setNestedAudio(!nestedAudio);
-    setCloseAll(false);
   };
 
   /**************** STATE HANDLERS ******************** */
 
   const handleChangeFirstName = e => setFirstName(e.target.value);
   const handleChangeLastName = e => setLastName(e.target.value);
-  const handleChangeEmail = e => setEmail(e.target.value);
-  const handleChangePassword = e => setPassword(e.target.value);
+  const handleChangeEmailAddress = e => setEmailAddress(e.target.value);
   const handleChangeDigitalId = e => setDigitalId(e.target.value);
 
   /**************** FORM SUBMISSION ******************** */
@@ -76,38 +83,42 @@ const CustomerRegisterModal = () => {
   const handleOnSubmit = e => {
     e.preventDefault();
 
-    // Headers
-    const config = {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    };
+    // Check for empty fields
+    if (!first_name || !last_name || !email_address || !digital_id) {
+      setMsg("Sorry you have missing require(s). Check again.");
+    } else {
+      // Headers
+      const config = {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      };
 
-    // Request body
-    const body = JSON.stringify({
-      first_name,
-      last_name,
-      email,
-      digital_id,
-      password
-    });
-
-    /**************** REQUEST SUBMISSION ******************** */
-    axios
-      .post("/testdb/add_customer", body, config)
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-        setIsAuthenticated(true);
-      })
-      .catch(err => {
-        console.log("Data Response");
-        console.log(err.response.data);
-        console.log("Status Response");
-        console.log(err.response.status);
-        setError("REGISTER_FAIL");
-        setMsg(err.response.data.message || err.response.data.error);
+      // Request body
+      const body = JSON.stringify({
+        first_name,
+        last_name,
+        email_address,
+        digital_id
       });
+
+      /**************** REQUEST SUBMISSION ******************** */
+      axios
+        .post("/testdb/add_customer", body, config)
+        .then(res => {
+          console.log(res);
+          console.log(res.data);
+          setIsAuthenticated(true);
+        })
+        .catch(err => {
+          console.log("Data Response");
+          console.log(err.response.data);
+          console.log("Status Response");
+          console.log(err.response.status);
+          setError("REGISTER_FAIL");
+          setMsg(err.response.data.message || err.response.data.error);
+        });
+    }
   };
 
   /**************** RENDER AND RERENDER ******************** */
@@ -124,27 +135,29 @@ const CustomerRegisterModal = () => {
         handleToggle();
       }
     }
+  }, [error, handleToggle, isAuthenticated, modal]);
 
+  useEffect(() => {
     // React-Mic Permissions Check
     navigator.getUserMedia(
       { audio: true },
       () => {
-        console.log("\nPermission Granted");
+        console.log("\nRegistration Permission Granted");
         setIsBlocked(false);
       },
       () => {
-        console.log("\nPermission Denied");
+        console.log("\nRegistration Permission Denied");
         setIsBlocked(false);
       }
     );
-  }, [error, handleToggle, isAuthenticated, modal]);
+  }, []);
 
   /**************** AUDIO RECORDING ******************** */
 
   // Start the recording of audio
   const start = () => {
     if (isBlocked) {
-      console.log("Permission Denied");
+      console.log("Registration Permission Denied");
     } else {
       Mp3Recorder.start()
         .then(() => {
@@ -166,15 +179,21 @@ const CustomerRegisterModal = () => {
       .catch(e => console.log(e));
   };
 
+  /************************** RENDER ************************ */
   return (
     <div>
       <NavLink onClick={handleToggle} href="#">
         Customer Register
       </NavLink>
 
+      {/* ***************** PRIMARY MODAL *********************** */}
+
       <Modal isOpen={modal} toggle={handleToggle}>
+        {/* header */}
         <ModalHeader toggle={handleToggle}>Customer Registration</ModalHeader>
+        {/* body */}
         <ModalBody>
+          {/* Error display */}
           {msg ? <Alert color="danger">{msg}</Alert> : null}
           <Form>
             <FormGroup>
@@ -197,24 +216,14 @@ const CustomerRegisterModal = () => {
                 onChange={handleChangeLastName}
               />
 
-              <Label for="email">Email</Label>
+              <Label for="email_address">Email Address</Label>
               <Input
                 type="email"
-                name="email"
-                id="email"
-                placeholder="Email"
+                name="email_address"
+                id="email_address"
+                placeholder="Email Address"
                 className="mb-3"
-                onChange={handleChangeEmail}
-              />
-
-              <Label for="password">Password</Label>
-              <Input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="Password"
-                className="mb-3"
-                onChange={handleChangePassword}
+                onChange={handleChangeEmailAddress}
               />
 
               <Button
@@ -226,21 +235,27 @@ const CustomerRegisterModal = () => {
                 Digital Identication
               </Button>
 
-              <Modal
-                isOpen={nestedModal}
-                toggle={toggleNested}
-                onClosed={closeAll ? handleToggle : undefined}
-              >
+              {/* ***************** SECORDARY MODEL ********************** */}
+              <Modal isOpen={nestedModal} toggle={toggleNested}>
+                {/* header */}
                 <ModalHeader>Digital Identication</ModalHeader>
+
                 <ModalBody>Please select any one</ModalBody>
+
                 <ModalBody>
+                  <Button color="primary" onClick={togglePassword} block>
+                    Password
+                  </Button>
+
                   <Button color="primary" onClick={toggleImage} block>
                     Image
                   </Button>
+
                   <Button color="primary" onClick={toggleAudio} block>
                     Audio
                   </Button>
                 </ModalBody>
+
                 <ModalFooter>
                   <Button color="secondary" onClick={toggleNested}>
                     Done
@@ -248,16 +263,37 @@ const CustomerRegisterModal = () => {
                 </ModalFooter>
               </Modal>
 
-              {/* IMAGE MODAL */}
-              <Modal
-                isOpen={nestedImage}
-                toggle={toggleImage}
-                onClosed={closeAll ? handleToggle : undefined}
-              >
+              {/************************ TERTIARY: PASSWORD MODAL********************* */}
+              <Modal isOpen={nestedPassword} toggle={togglePassword}>
+                {/* header */}
+                <ModalHeader>Password</ModalHeader>
+
+                <ModalBody>
+                  <Label for="digital_id">Password</Label>
+                  <Input
+                    type="password"
+                    name="digital_id"
+                    id="digital_id"
+                    placeholder="Password"
+                    className="mb-3"
+                    onChange={handleChangeDigitalId}
+                  />
+                </ModalBody>
+                <ModalFooter>
+                  <Button color="primary" onClick={togglePassword}>
+                    Done
+                  </Button>
+                </ModalFooter>
+              </Modal>
+
+              {/************************ TERTIARY: IMAGE MODAL********************* */}
+              <Modal isOpen={nestedImage} toggle={toggleImage}>
+                {/* header */}
                 <ModalHeader>Image Selection</ModalHeader>
                 <ModalBody>
                   <Card>
                     <h3>Upload Photo</h3>
+                    <CardImg src={Photo} alt={Icon} height="50%" />
                     <Input
                       name="digital_id"
                       id="digital_id"
@@ -273,13 +309,11 @@ const CustomerRegisterModal = () => {
                 </ModalFooter>
               </Modal>
 
-              {/* AUDIO MODAL */}
-              <Modal
-                isOpen={nestedAudio}
-                toggle={toggleAudio}
-                onClosed={closeAll ? handleToggle : undefined}
-              >
+              {/************************ TERTIARY: AUDIO MODAL ********************* */}
+              <Modal isOpen={nestedAudio} toggle={toggleAudio}>
+                {/* header */}
                 <ModalHeader>Audio Recording</ModalHeader>
+
                 <ModalBody>
                   <Card>
                     <h3>Audio</h3>
@@ -302,13 +336,15 @@ const CustomerRegisterModal = () => {
                         Stop
                       </Button>
                       <audio
-                        name="audio"
+                        id="digital_id"
+                        name="digital_id"
                         src={digital_id}
                         controls="controls"
                       />
                     </div>
                   </Card>
                 </ModalBody>
+
                 <ModalFooter>
                   <Button color="primary" onClick={toggleAudio}>
                     Done

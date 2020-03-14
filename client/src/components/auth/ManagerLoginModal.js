@@ -15,6 +15,8 @@ import {
 } from "reactstrap";
 
 const ManagerLoginModal = () => {
+  /**************** COMPONENT STATES ******************** */
+
   const [modal, setModal] = useState(false);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -22,14 +24,20 @@ const ManagerLoginModal = () => {
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
+  /**************** MODAL TOGGLER ******************** */
+
   const handleToggle = useCallback(() => {
     // Clear errors
     setError(null);
     setModal(!modal);
   }, [modal]);
 
+  /**************** STATE HANDLERS ******************** */
+
   const handleChangeUsername = e => setUsername(e.target.value);
   const handleChangePassword = e => setPassword(e.target.value);
+
+  /**************** FORM SUBMISSION ******************** */
 
   const handleOnSubmit = e => {
     e.preventDefault();
@@ -47,6 +55,7 @@ const ManagerLoginModal = () => {
       // Request body
       const body = JSON.stringify({ username, password });
 
+      /**************** REQUEST SUBMISSION ******************** */
       axios
         .post("/testdb/login_manager", body, config)
         .then(res => {
@@ -65,6 +74,8 @@ const ManagerLoginModal = () => {
     }
   };
 
+  /**************** RENDER AND RERENDER ******************** */
+
   useEffect(() => {
     // Check for register error
     if (!(error === "LOGIN_FAIL")) {
@@ -79,6 +90,7 @@ const ManagerLoginModal = () => {
     }
   }, [error, handleToggle, isAuthenticated, modal]);
 
+  /************************** RENDER ************************ */
   return (
     <div>
       <NavLink onClick={handleToggle} href="#">
