@@ -38,13 +38,13 @@ class AddItem extends Component {
   /**************** COMPONENT STATES ******************** */
 
   state = {
-    name: "",
+    item_name: "",
     category: "",
     stock: "",
     cost: "",
-    image: "",
-    asl_image: "",
-    audio: "",
+    item_image: "",
+    sign_language: "",
+    item_audio: "",
     isRecording: false,
     isBlocked: false
   };
@@ -63,10 +63,19 @@ class AddItem extends Component {
     // Log state to console
     console.log(this.state);
 
+    // Headers
+    const config = {
+      headers: {
+        "Content-Type": "application/json"
+      }
+    };
+
+    const body = JSON.stringify(this.state);
+
     /**************** REQUEST SUBMISSION ******************** */
     // Make POST Request to add Item to database
     axios
-      .post("", this.state)
+      .post("/testdb/add_menu_item", body, config)
       .then(response => {
         console.log(response);
       })
@@ -76,6 +85,7 @@ class AddItem extends Component {
   };
 
   /**************** AUDIO RECORDING ******************** */
+
   // Start the recording of audio
   start = () => {
     if (this.state.isBlocked) {
@@ -94,8 +104,8 @@ class AddItem extends Component {
     Mp3Recorder.stop()
       .getMp3()
       .then(([buffer, blob]) => {
-        const audio = URL.createObjectURL(blob);
-        this.setState({ audio, isRecording: false });
+        const item_audio = URL.createObjectURL(blob);
+        this.setState({ item_audio, isRecording: false });
       })
       .catch(e => console.log(e));
   };
@@ -126,7 +136,11 @@ class AddItem extends Component {
           </div>
 
           <div>
-            <Form className="AddItemForm" onSubmit={this.onSubmit}>
+            <Form
+              className="AddItemForm"
+              onSubmit={this.onSubmit}
+              encType="multipart/form-data"
+            >
               <Container>
                 {/* Add New Item */}
                 <InputGroup>
@@ -134,7 +148,7 @@ class AddItem extends Component {
                     <InputGroupText>Item Name</InputGroupText>
                   </InputGroupAddon>
                   <Input
-                    name="name"
+                    name="item_name"
                     type="text"
                     placeholder="Item Name"
                     onChange={this.onChange}
@@ -190,7 +204,11 @@ class AddItem extends Component {
                   <Card>
                     <h3>Upload Photo</h3>
                     <CardImg src={Photo} alt={Icon} />
-                    <Input name="image" type="file" onChange={this.onChange} />
+                    <Input
+                      name="item_image"
+                      type="file"
+                      onChange={this.onChange}
+                    />
                   </Card>
                 </Col>
 
@@ -200,7 +218,7 @@ class AddItem extends Component {
                     <h3>Upload ASL</h3>
                     <CardImg src={ASL} alt={Icon} />
                     <Input
-                      name="asl_image"
+                      name="sign_language"
                       type="file"
                       onChange={this.onChange}
                     />
@@ -230,8 +248,8 @@ class AddItem extends Component {
                         Stop
                       </Button>
                       <audio
-                        name="audio"
-                        src={this.state.audio}
+                        name="item_audio"
+                        src={this.state.item_audio}
                         controls="controls"
                       />
                     </div>

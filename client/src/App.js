@@ -7,6 +7,10 @@ import CreateAccount from "./components/CreateAccount";
 import AddItem from "./components/AddItem";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ItemsList from "./components/ItemsList";
+import CustomerMenu from "./components/CustomerMenu";
+import ConfirmOrder from "./components/ConfirmOrder";
+import ViewEditItems from "./components/ViewEditItems";
+// import BarGraph from "./components/BarGraph";
 
 class App extends React.Component {
   render() {
@@ -22,6 +26,10 @@ class App extends React.Component {
             <Route path="/create" component={CreateAccount} />
             <Route path="/control" component={ManagerControlCenter} />
             <Route path="/list" exact component={ItemsList} />
+            <Route path="/menu" component={CustomerMenu} />
+            <Route path="/confirm" component={ConfirmOrder} />
+            <Route path="/view" component={ViewEditItems} />
+            {/* <Route path="/graph" component={BarGraph} /> */}
           </Switch>
         </div>
       </Router>
