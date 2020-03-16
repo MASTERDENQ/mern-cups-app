@@ -38,13 +38,13 @@ class AddItem extends Component {
   /**************** COMPONENT STATES ******************** */
 
   state = {
-    item_name: null,
-    category: null,
-    stock: null,
-    cost: null,
-    item_image: null,
-    sign_language: null,
-    item_audio: null,
+    item_name: "",
+    category: "",
+    stock: "",
+    cost: "",
+    item_image: "",
+    sign_language: "",
+    item_audio: "",
     isRecording: false,
     isBlocked: false
   };
