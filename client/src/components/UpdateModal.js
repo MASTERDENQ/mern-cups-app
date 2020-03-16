@@ -22,97 +22,135 @@ import {
 import { Link } from "react-router-dom";
 
 class RegisterModal extends Component {
+  /**************** COMPONENT STATES ******************** */
   state = {
     modal: false,
-    stock: "",
-    cost: "",
-    msg: null,
-    error: null
+    nestedModal: false,
+    field: "",
+    new_value: "",
+    msg: null
   };
 
+  /**************** MODAL TOGGLERS ******************** */
+  // Main Toggle
   toggle = () => {
+    console.log(this.props.id, "Update");
     this.setState({ modal: !this.state.modal });
   };
 
+  // Secondary Toggle
+  toggleNested = () => {
+    this.setState({ msg: null });
+    this.setState({ nestedModal: !this.state.nestedModal });
+  };
+
+  /**************** STATE HANDLERS ******************** */
   onChange = e => {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  setField = field => {
+    this.setState({ field: field });
+  };
+
+  /**************** FORM SUBMISSION ******************** */
   onSubmit = e => {
     // Prevent Default
     e.preventDefault();
 
-    // Header a.k.a config info
-    const config = {
-      header: {
-        "Content-Type": "application/json"
-      }
-    };
-    // Body
-    const body = {
-      id: this.props.id,
-      stock: this.state.stock,
-      cost: this.state.cost
-    };
+    if (!this.state.new_value && this.state.new_value < 0) {
+      this.setState({ msg: "Sorry, incorrect entry. Try again" });
+    } else {
+      // Header a.k.a config info
+      const config = {
+        header: {
+          "Content-Type": "application/json"
+        }
+      };
+      // Body
+      const body = {
+        id: this.props.id,
+        new_value: this.state.new_value
+      };
 
-    console.log(body);
+      console.log(body);
 
-    // Making Request
-    axios
-      .post("https://jsonplaceholder.typicode.com/posts", { body }, { config })
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-
-    // Close modal
-    this.toggle();
+      // Making Request
+      axios
+        .post(`testdb/edit_item/${this.state.field}`, body, config)
+        .then(res => {
+          console.log(res);
+          console.log(res.data);
+          // Close modal
+          this.toggle();
+        })
+        .catch(err => {
+          console.log(err);
+          console.log(err.response);
+          this.setState({ msg: err.response.data });
+        });
+    }
   };
 
   render() {
+    console.log(this.props.id);
+
     return (
       <div>
-        <Link to="#" onClick={this.toggle} href="#">
+        <Link to="#" onClick={this.toggle}>
           UPDATE
         </Link>
 
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
-          <ModalHeader toggle={this.toggle}>Login</ModalHeader>
+          <ModalHeader>Update Menu Options</ModalHeader>
+          <ModalBody>Click one to Update</ModalBody>
           <ModalBody>
-            {this.state.msg ? (
-              <Alert color="danger">{this.state.msg}</Alert>
-            ) : null}
-            <Form onSubmit={this.onSubmit}>
-              <FormGroup>
-                <Container>
-                  <Label for="email">Cost</Label>
-                </Container>
+            <Button
+              color="dark"
+              style={{ marginTop: "2rem" }}
+              block
+              onClick={() => {
+                this.toggleNested();
+                this.setField("cost");
+              }}
+            >
+              Cost Update
+            </Button>
+            <Button
+              color="dark"
+              style={{ marginTop: "2rem" }}
+              block
+              onClick={() => {
+                this.toggleNested();
+                this.setField("stock");
+              }}
+            >
+              Stock Update
+            </Button>
+          </ModalBody>
 
-                <Input
-                  type="cost"
-                  name="cost"
-                  id="cost"
-                  placeholder="Cost"
-                  className="mb-3"
-                  onChange={this.onChange}
-                />
+          <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested}>
+            <ModalHeader>Update </ModalHeader>
+            <ModalBody>
+              {this.state.msg ? (
+                <Alert color="danger">{this.state.msg}</Alert>
+              ) : null}
 
-                <Container>
-                  <Label for="password">Stock</Label>
-                </Container>
+              <Form onSubmit={this.onSubmit}>
+                <FormGroup>
+                  <Container>
+                    <Label for="new_value">New Value</Label>
+                  </Container>
 
-                <Input
-                  type="number"
-                  name="stock"
-                  id="stock"
-                  placeholder="stock"
-                  className="mb-3"
-                  onChange={this.onChange}
-                />
-                <Link to="#">
+                  <Input
+                    type="new_value"
+                    name="new_value"
+                    id="new_value"
+                    placeholder="Enter new value here."
+                    className="mb-3"
+                    onChange={this.onChange}
+                  />
+
                   <Button
                     color="dark"
                     style={{ marginTop: "2rem" }}
@@ -122,10 +160,10 @@ class RegisterModal extends Component {
                   >
                     Submit
                   </Button>
-                </Link>
-              </FormGroup>
-            </Form>
-          </ModalBody>
+                </FormGroup>
+              </Form>
+            </ModalBody>
+          </Modal>
         </Modal>
       </div>
     );

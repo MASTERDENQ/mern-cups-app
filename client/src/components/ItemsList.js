@@ -8,7 +8,8 @@ import {
   CardHeader,
   CardTitle,
   Card,
-  CardBody
+  CardBody,
+  Label
 } from "reactstrap";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../css/ItemsListStyle.css";
@@ -42,9 +43,13 @@ class ItemsList extends Component {
 
   /*********  Retrieve id for Single Request ***************/
 
-  showItem = id => {
-    this.setState({ id: id });
-    this.requestDetail(id);
+  showItem = _id => {
+    this.setState({ id: _id });
+    this.requestDetail(_id);
+  };
+
+  getId = _id => {
+    this.setState({ id: _id });
   };
 
   /*********  Request Detail For One Item ***************/
@@ -53,7 +58,7 @@ class ItemsList extends Component {
     console.log(`Request Details for Item ${id}`);
     //Request Items
     axios
-      .get(`https://jsonplaceholder.typicode.com/users/${id}`)
+      .get(`testdb/${id}`)
       .then(res => {
         console.log(res);
         this.setState({ item: res.data });
@@ -65,33 +70,33 @@ class ItemsList extends Component {
 
   /*****************  Delete Request for One Item ***************/
 
-  deleteItem = id => {
-    console.log(`Delete Request for Item ${id}`);
-    axios
-      .delete(`https://jsonplaceholder.typicode.com/users/${id}`)
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
+  // deleteItem = id => {
+  //   console.log(`Delete Request for Item ${id}`);
+  //   axios
+  //     .delete(`testdb/delete_menu_item/${id}`)
+  //     .then(res => {
+  //       console.log(res);
+  //       console.log(res.data);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // };
 
   /*********  Request to edit one Item ***************/
 
-  updateItem = (id, type) => {
-    console.log(`Delete Request for Item ${id}`, type);
-    axios
-      .patch(`https://jsonplaceholder.typicode.com/users/${id}`, type)
-      .then(res => {
-        console.log(res);
-        console.log(res.data);
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  };
+  // updateItem = (body, field) => {
+  //   console.log(`Edit Request for the ${field} of item ${id}`);
+  //   axios
+  //     .post(`testdb/edit_item/${field}`, body)
+  //     .then(res => {
+  //       console.log(res);
+  //       console.log(res.data);
+  //     })
+  //     .catch(err => {
+  //       console.log(err);
+  //     });
+  // };
 
   /************** Request To Retrieve All Items Names ***************** */
 
@@ -99,7 +104,7 @@ class ItemsList extends Component {
     console.log();
     //Request Items
     axios
-      .get("https://jsonplaceholder.typicode.com/users")
+      .get("/testdb/list_items")
       .then(res => {
         console.log(res);
         this.setState({ items: res.data });
@@ -111,7 +116,7 @@ class ItemsList extends Component {
 
   render() {
     // Destructure item
-    const { id, name, email, website } = this.state.item;
+    const { _id, item_name, category, cost } = this.state.item;
 
     return (
       <div>
@@ -126,7 +131,7 @@ class ItemsList extends Component {
           <ListGroup>
             <TransitionGroup className="items-list">
               {this.state.items.map(items => (
-                <CSSTransition key={items.id} timeout={500} classNames="fade">
+                <CSSTransition key={items._id} timeout={500} classNames="fade">
                   <ListGroupItem
                     className="container"
                     style={{ marginRight: "4rem" }}
@@ -135,22 +140,32 @@ class ItemsList extends Component {
                       className="remove-btn"
                       color="danger"
                       size="sm"
-                      onClick={this.deleteItem.bind(this, items.id)}
+                      // onClick={this.deleteItem.bind(this, items._id)}
                     >
                       &times;
                     </Button>
 
                     {/* <Link to="update" onClick={this.onClick}></Link> */}
-                    <Button className="remove-btn" color="danger" size="sm">
-                      <UpdateModal id={id} />
+                    <Button
+                      className="remove-btn"
+                      color="danger"
+                      size="sm"
+                      onClick={this.getId.bind(this, items._id)}
+                    >
+                      <UpdateModal id={this.state.id} />
                     </Button>
 
                     <Button className="remove-btn" color="danger" size="sm">
                       SALES GRAPH
                     </Button>
 
-                    <Link to="#" onClick={this.showItem.bind(this, items.id)}>
-                      {items.name}
+                    <Link to="#" onClick={this.showItem.bind(this, items._id)}>
+                      {items.item_name}
+                      &emsp;
+                      {items.category}
+                      &emsp;
+                      {items.stock}
+                      &emsp; ${items.cost}
                     </Link>
                   </ListGroupItem>
                 </CSSTransition>
@@ -163,15 +178,10 @@ class ItemsList extends Component {
 
         <Container>
           <Card>
-            <CardHeader>{id}</CardHeader>
-            <CardTitle>{name}</CardTitle>
-            <CardBody>{(email, website)} </CardBody>
+            <CardHeader>{_id}</CardHeader>
+            <CardTitle>{item_name}</CardTitle>
+            <CardBody>{(cost, category)} </CardBody>
           </Card>
-
-          {/* <Link to="update" onClick={this.onClick}></Link> */}
-          {/* <Button className="mt-4" color="dark">
-            <UpdateModal id={id} />
-          </Button> */}
         </Container>
       </div>
     );

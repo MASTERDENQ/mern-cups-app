@@ -56,7 +56,6 @@ class AddItem extends Component {
 
   onChangeImage = event => {
     console.log(event.target.files[0]);
-
     this.setState({
       item_image: event.target.files[0]
     });
@@ -64,7 +63,6 @@ class AddItem extends Component {
 
   onChangeASL = event => {
     console.log(event.target.files[0]);
-
     this.setState({
       sign_language: event.target.files[0]
     });
@@ -102,19 +100,19 @@ class AddItem extends Component {
     //   }
     // };
 
-    const image = new FormData();
-    image.append(
-      "item_image",
-      this.state.item_image,
-      this.state.item_image.name
-    );
+    // const image = new FormData();
+    // image.append(
+    //   "item_image",
+    //   this.state.item_image,
+    //   this.state.item_image.name
+    // );
 
-    const asl = new FormData();
-    asl.append(
-      "sign_language",
-      this.state.sign_language,
-      this.state.sign_language.name
-    );
+    // const asl = new FormData();
+    // asl.append(
+    //   "sign_language",
+    //   this.state.sign_language,
+    //   this.state.sign_language.name
+    // );
 
     // const audio = new FormData();
     // audio.append(
@@ -128,8 +126,8 @@ class AddItem extends Component {
       category: this.state.category,
       stock: this.state.category,
       cost: this.state.cost,
-      item_image: image,
-      sign_language: asl,
+      item_image: this.state.item_image,
+      sign_language: this.state.sign_language,
       item_audio: this.state.item_audio
     };
 
