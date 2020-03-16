@@ -15,15 +15,22 @@ import "../css/ItemsListStyle.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import UpdateModal from "./UpdateModal";
+import DeleteModal from "../reusableComponents/deleteModal";
+import EditModal from "../reusableComponents/editModal";
 
 class ItemsList extends Component {
+  /**************** COMPONENT STATES ******************** */
+
   constructor(props) {
     super(props);
 
     this.state = {
       items: [],
       id: "",
-      item: []
+      item: [],
+      isLoaded: false,
+      deleteModalVisible: false,
+      editModalVisible: false
     };
   }
 
@@ -111,6 +118,11 @@ class ItemsList extends Component {
         {/*********** Display all items here ********* */}
 
         <Container>
+          <Link to="/add">
+            <Button className="mt-4 mb-3" color="dark">
+              ADD ITEM
+            </Button>
+          </Link>
           <ListGroup>
             <TransitionGroup className="items-list">
               {this.state.items.map(items => (
@@ -128,6 +140,15 @@ class ItemsList extends Component {
                       &times;
                     </Button>
 
+                    {/* <Link to="update" onClick={this.onClick}></Link> */}
+                    <Button className="remove-btn" color="danger" size="sm">
+                      <UpdateModal id={id} />
+                    </Button>
+
+                    <Button className="remove-btn" color="danger" size="sm">
+                      SALES GRAPH
+                    </Button>
+
                     <Link to="#" onClick={this.showItem.bind(this, items.id)}>
                       {items.name}
                     </Link>
@@ -136,11 +157,6 @@ class ItemsList extends Component {
               ))}
             </TransitionGroup>
           </ListGroup>
-          <Link to="/add">
-            <Button className="mt-4" color="dark">
-              ADD ITEM
-            </Button>
-          </Link>
         </Container>
 
         {/*********** Display one items here ********* */}
@@ -151,10 +167,11 @@ class ItemsList extends Component {
             <CardTitle>{name}</CardTitle>
             <CardBody>{(email, website)} </CardBody>
           </Card>
+
           {/* <Link to="update" onClick={this.onClick}></Link> */}
-          <Button className="mt-4" color="dark">
+          {/* <Button className="mt-4" color="dark">
             <UpdateModal id={id} />
-          </Button>
+          </Button> */}
         </Container>
       </div>
     );

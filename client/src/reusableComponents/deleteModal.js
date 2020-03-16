@@ -1,5 +1,5 @@
 import React from "react";
-// import "../css/viewEditItem.css";
+import "../css/viewEditItem.css";
 
 let DeleteModal = props => {
   return (

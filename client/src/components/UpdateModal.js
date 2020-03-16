@@ -75,11 +75,9 @@ class RegisterModal extends Component {
   render() {
     return (
       <div>
-        <Container>
-          <Link to="#" onClick={this.toggle} href="#">
-            UPDATE
-          </Link>
-        </Container>
+        <Link to="#" onClick={this.toggle} href="#">
+          UPDATE
+        </Link>
 
         <Modal isOpen={this.state.modal} toggle={this.toggle}>
           <ModalHeader toggle={this.toggle}>Login</ModalHeader>

@@ -38,13 +38,13 @@ class AddItem extends Component {
   /**************** COMPONENT STATES ******************** */
 
   state = {
-    item_name: "",
-    category: "",
-    stock: "",
-    cost: "",
-    item_image: "",
-    sign_language: "",
-    item_audio: "",
+    item_name: null,
+    category: null,
+    stock: null,
+    cost: null,
+    item_image: null,
+    sign_language: null,
+    item_audio: null,
     isRecording: false,
     isBlocked: false
   };
@@ -54,6 +54,29 @@ class AddItem extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
+  onChangeImage = event => {
+    console.log(event.target.files[0]);
+
+    this.setState({
+      item_image: event.target.files[0]
+    });
+  };
+
+  onChangeASL = event => {
+    console.log(event.target.files[0]);
+
+    this.setState({
+      sign_language: event.target.files[0]
+    });
+  };
+
+  // onChangeAudio = event => {
+  //   console.log(event.target.files[0]);
+  //   this.setState({
+  //     item_audio: event.target.files[0],
+  //     loaded: 0
+  //   });
+  // };
   /**************** FORM SUBMISSION ******************** */
 
   onSubmit = e => {
@@ -64,23 +87,63 @@ class AddItem extends Component {
     console.log(this.state);
 
     // Headers
-    const config = {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    };
+    // const config = {
+    //   headers: {
+    //     "Content-Type":
+    //       "multipart/form-data; boundary=AaB03x" +
+    //       "--AaB03x" +
+    //       "Content-Disposition: file" +
+    //       "Content-Type: png" +
+    //       "Content-Transfer-Encoding: binary" +
+    //       "...data... " +
+    //       "--AaB03x--",
+    //     Accept: "application/json",
+    //     type: "formData"
+    //   }
+    // };
 
-    const body = JSON.stringify(this.state);
+    const image = new FormData();
+    image.append(
+      "item_image",
+      this.state.item_image,
+      this.state.item_image.name
+    );
+
+    const asl = new FormData();
+    asl.append(
+      "sign_language",
+      this.state.sign_language,
+      this.state.sign_language.name
+    );
+
+    // const audio = new FormData();
+    // audio.append(
+    //   "item_audio",
+    //   this.state.item_audio,
+    //   this.state.item_audio.name
+    // );
+
+    const menuItemUpload = {
+      item_name: this.state.item_name,
+      category: this.state.category,
+      stock: this.state.category,
+      cost: this.state.cost,
+      item_image: image,
+      sign_language: asl,
+      item_audio: this.state.item_audio
+    };
 
     /**************** REQUEST SUBMISSION ******************** */
     // Make POST Request to add Item to database
     axios
-      .post("/testdb/add_menu_item", body, config)
-      .then(response => {
-        console.log(response);
+      .post("/testdb/add_menu_item", menuItemUpload)
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
       })
       .catch(error => {
         console.log(error);
+        console.log(error.response);
       });
   };
 
@@ -131,10 +194,12 @@ class AddItem extends Component {
     return (
       <Container>
         <div className="MainDiv">
+          {/* Title */}
           <div className="title">
             <h1>Add Item</h1>
           </div>
 
+          {/* Form */}
           <div>
             <Form
               className="AddItemForm"
@@ -207,7 +272,7 @@ class AddItem extends Component {
                     <Input
                       name="item_image"
                       type="file"
-                      onChange={this.onChange}
+                      onChange={this.onChangeImage}
                     />
                   </Card>
                 </Col>
@@ -220,7 +285,7 @@ class AddItem extends Component {
                     <Input
                       name="sign_language"
                       type="file"
-                      onChange={this.onChange}
+                      onChange={this.onChangeASL}
                     />
                   </Card>
                 </Col>
@@ -244,6 +309,7 @@ class AddItem extends Component {
                         onClick={this.stop}
                         disabled={!this.state.isRecording}
                         type="button"
+                        // onChange={this.onChangeAudio}
                       >
                         Stop
                       </Button>
@@ -265,6 +331,7 @@ class AddItem extends Component {
               >
                 <h4>ADD ITEM</h4>
               </Button>
+
               <Link to="/list">
                 <Button
                   color="dark"
