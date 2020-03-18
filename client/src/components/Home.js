@@ -27,6 +27,7 @@ class Home extends Component {
     return (
       <div className="Home">
         <h1>{this.state.signal}</h1>
+        <h1 style={{ textAlign: "center" }}>HOME PAGE</h1>
       </div>
     );
   }

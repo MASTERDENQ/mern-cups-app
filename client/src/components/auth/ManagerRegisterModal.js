@@ -91,7 +91,7 @@ const ManagerRegisterModal = () => {
   return (
     <div>
       <NavLink onClick={handleToggle} href="#">
-        Register
+        Manager Register
       </NavLink>
 
       <Modal isOpen={modal} toggle={handleToggle}>

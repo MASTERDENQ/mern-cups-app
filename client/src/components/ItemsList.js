@@ -70,18 +70,18 @@ class ItemsList extends Component {
 
   /*****************  Delete Request for One Item ***************/
 
-  // deleteItem = id => {
-  //   console.log(`Delete Request for Item ${id}`);
-  //   axios
-  //     .delete(`testdb/delete_menu_item/${id}`)
-  //     .then(res => {
-  //       console.log(res);
-  //       console.log(res.data);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // };
+  deleteItem = id => {
+    console.log(`Delete Request for Item ${id}`);
+    axios
+      .delete(`testdb/delete_menu_item/${id}`)
+      .then(res => {
+        console.log(res);
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
 
   /*********  Request to edit one Item ***************/
 
@@ -140,7 +140,7 @@ class ItemsList extends Component {
                       className="remove-btn"
                       color="danger"
                       size="sm"
-                      // onClick={this.deleteItem.bind(this, items._id)}
+                      onClick={this.deleteItem.bind(this, items._id)}
                     >
                       &times;
                     </Button>

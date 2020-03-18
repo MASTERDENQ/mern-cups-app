@@ -94,7 +94,7 @@ const ManagerLoginModal = () => {
   return (
     <div>
       <NavLink onClick={handleToggle} href="#">
-        Login
+        Manager Login
       </NavLink>
 
       <Modal isOpen={modal} toggle={handleToggle}>
