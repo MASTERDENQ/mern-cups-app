@@ -9,7 +9,7 @@ import {
   CardTitle,
   Card,
   CardBody,
-  Label
+  Alert
 } from "reactstrap";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../css/ItemsListStyle.css";
@@ -17,7 +17,6 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import UpdateModal from "./UpdateModal";
 import DeleteModal from "../reusableComponents/deleteModal";
-import EditModal from "../reusableComponents/editModal";
 
 class ItemsList extends Component {
   /**************** COMPONENT STATES ******************** */
@@ -31,7 +30,8 @@ class ItemsList extends Component {
       item: [],
       isLoaded: false,
       deleteModalVisible: false,
-      editModalVisible: false
+      editModalVisible: false,
+      msg: null
     };
   }
 
@@ -79,7 +79,8 @@ class ItemsList extends Component {
         console.log(res.data);
       })
       .catch(err => {
-        console.log(err);
+        console.log(err.response);
+        this.setState({ msg: err.response.data });
       });
   };
 
@@ -128,6 +129,10 @@ class ItemsList extends Component {
               ADD ITEM
             </Button>
           </Link>
+          {/* Error display */}
+          {this.state.msg ? (
+            <Alert color="danger">{this.state.msg}</Alert>
+          ) : null}
           <ListGroup>
             <TransitionGroup className="items-list">
               {this.state.items.map(items => (
