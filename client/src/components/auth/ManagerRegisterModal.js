@@ -66,7 +66,7 @@ const ManagerRegisterModal = () => {
         console.log("Status Response");
         console.log(err.response.status);
         setError("REGISTER_FAIL");
-        setMsg(err.response.data.message || err.response.data.error);
+        setMsg(err.response.data);
       });
   };
 

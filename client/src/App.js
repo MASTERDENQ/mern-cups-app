@@ -10,6 +10,9 @@ import ItemsList from "./components/ItemsList";
 import CustomerMenu from "./components/CustomerMenu";
 import ConfirmOrder from "./components/ConfirmOrder";
 import ViewEditItems from "./components/ViewEditItems";
+import Test from "./components/auth/TestUpload";
+import AddItemTest from "./components/AddItemTest";
+
 // import BarGraph from "./components/BarGraph";
 
 class App extends React.Component {
@@ -29,6 +32,8 @@ class App extends React.Component {
             <Route path="/menu" component={CustomerMenu} />
             <Route path="/confirm" component={ConfirmOrder} />
             <Route path="/view" component={ViewEditItems} />
+            <Route path="/test" component={Test} />
+            <Route path="/add1" component={AddItemTest} />
             {/* <Route path="/graph" component={BarGraph} /> */}
           </Switch>
         </div>

@@ -18,7 +18,7 @@ import {
   Alert,
   Card,
   CardImg,
-  ModalFooter
+  ModalFooter,
 } from "reactstrap";
 
 // Create a new record
@@ -74,12 +74,12 @@ const CustomerLoginModal = () => {
 
   /**************** STATE HANDLERS ******************** */
 
-  const handleChangeEmailAddress = e => setEmailAddress(e.target.value);
-  const handleChangeDigitalId = e => setDigitalId(e.target.value);
+  const handleChangeEmailAddress = (e) => setEmailAddress(e.target.value);
+  const handleChangeDigitalId = (e) => setDigitalId(e.target.value);
 
   /**************** FORM SUBMISSION ******************** */
 
-  const handleOnSubmit = e => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
 
     // Check for empty fields
@@ -87,30 +87,30 @@ const CustomerLoginModal = () => {
       setMsg("Please enter email and digital id.");
     } else {
       // Headers
-      const config = {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      };
+      // const config = {
+      //   headers: {
+      //     "Content-Type": "application/json"
+      //   }
+      // };
 
       // Request body
       const body = JSON.stringify({ email_address, digital_id });
 
       /**************** REQUEST SUBMISSION ******************** */
       axios
-        .post("/testdb/login_customer", body, config)
-        .then(res => {
+        .post("testdb/login_customer", body)
+        .then((res) => {
           console.log(res);
           console.log(res.data);
           setIsAuthenticated(true);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("\nData Response");
-          console.log(err.response.data);
+          console.log(err.response);
           console.log("\nStatus Response");
-          console.log(err.response.status);
+          console.log(err.response);
           setError("LOGIN_FAIL");
-          setMsg(err.response.data || err.response.data.error);
+          setMsg(err.response);
         });
     }
   };
@@ -157,7 +157,7 @@ const CustomerLoginModal = () => {
         .then(() => {
           setIsRecording(true);
         })
-        .catch(e => console.error(e));
+        .catch((e) => console.error(e));
     }
   };
 
@@ -170,7 +170,7 @@ const CustomerLoginModal = () => {
         setDigitalId(digital_id);
         setIsRecording(false);
       })
-      .catch(e => console.log(e));
+      .catch((e) => console.log(e));
   };
 
   /************************* RENDER ***************************** */

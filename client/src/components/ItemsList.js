@@ -9,7 +9,7 @@ import {
   CardTitle,
   Card,
   CardBody,
-  Alert
+  Alert,
 } from "reactstrap";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../css/ItemsListStyle.css";
@@ -31,11 +31,11 @@ class ItemsList extends Component {
       isLoaded: false,
       deleteModalVisible: false,
       editModalVisible: false,
-      msg: null
+      msg: null,
     };
   }
 
-  onClick = e => {
+  onClick = (e) => {
     if (!this.state.id) {
       e.preventDefault();
     }
@@ -43,42 +43,42 @@ class ItemsList extends Component {
 
   /*********  Retrieve id for Single Request ***************/
 
-  showItem = _id => {
+  showItem = (_id) => {
     this.setState({ id: _id });
     this.requestDetail(_id);
   };
 
-  getId = _id => {
+  getId = (_id) => {
     this.setState({ id: _id });
   };
 
   /*********  Request Detail For One Item ***************/
 
-  requestDetail = id => {
+  requestDetail = (id) => {
     console.log(`Request Details for Item ${id}`);
     //Request Items
     axios
       .get(`testdb/${id}`)
-      .then(res => {
+      .then((res) => {
         console.log(res);
         this.setState({ item: res.data });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   };
 
   /*****************  Delete Request for One Item ***************/
 
-  deleteItem = id => {
-    console.log(`Delete Request for Item ${id}`);
+  deleteItem = (_id) => {
+    console.log(`Delete Request for Item ${_id}`);
     axios
-      .delete(`testdb/delete_menu_item/${id}`)
-      .then(res => {
+      .delete(`testdb/delete_menu_item/${_id}`)
+      .then((res) => {
         console.log(res);
         console.log(res.data);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err.response);
         this.setState({ msg: err.response.data });
       });
@@ -106,11 +106,11 @@ class ItemsList extends Component {
     //Request Items
     axios
       .get("/testdb/list_items")
-      .then(res => {
+      .then((res) => {
         console.log(res);
         this.setState({ items: res.data });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
       });
   }
@@ -135,7 +135,7 @@ class ItemsList extends Component {
           ) : null}
           <ListGroup>
             <TransitionGroup className="items-list">
-              {this.state.items.map(items => (
+              {this.state.items.map((items) => (
                 <CSSTransition key={items._id} timeout={500} classNames="fade">
                   <ListGroupItem
                     className="container"

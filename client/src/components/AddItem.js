@@ -28,7 +28,7 @@ import {
   // CardTitle,
   // CardSubtitle,
   Row,
-  Col
+  Col,
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
@@ -51,20 +51,20 @@ const AddItem = () => {
 
   /**************** STATE HANDLERS ******************** */
 
-  const handleChangeItemName = e => setItemName(e.target.value);
-  const handleChangeCategory = e => setCategory(e.target.value);
-  const handleChangeStock = e => setStock(e.target.value);
-  const handleChangeCost = e => setCost(e.target.value);
-  const handleChangeItemImage = e => {
+  const handleChangeItemName = (e) => setItemName(e.target.value);
+  const handleChangeCategory = (e) => setCategory(e.target.value);
+  const handleChangeStock = (e) => setStock(e.target.value);
+  const handleChangeCost = (e) => setCost(e.target.value);
+  const handleChangeItemImage = (e) => {
     setItem_Image(e.target.files[0]);
     console.log(item_image);
   };
-  const handleChangeSignLanguage = e => setSignLanguage(e.target.files[0]);
+  const handleChangeSignLanguage = (e) => setSignLanguage(e.target.files[0]);
   // const handleChangeItemAudio = e => setItemAudio(e.target.value);
 
   /**************** FORM SUBMISSION ******************** */
 
-  const handleOnSubmit = e => {
+  const handleOnSubmit = (e) => {
     // Prevent Default
     e.preventDefault();
 
@@ -79,58 +79,29 @@ const AddItem = () => {
     ) {
       setMsg("Sorry you have missing require(s). Check again.");
     } else {
-      // Headers
-      // const config = {
-      //   headers: {
-      //     "Content-Type":
-      //       "multipart/form-data; boundary=AaB03x" +
-      //       "--AaB03x" +
-      //       "Content-Disposition: file" +
-      //       "Content-Type: png" +
-      //       "Content-Transfer-Encoding: binary" +
-      //       "...data... " +
-      //       "--AaB03x--",
-      //     Accept: "application/json",
-      //     type: "formData"
-      //   }
-      // };
-
-      // const config = {
-      //   headers: {
-      //     "Content-Type": "multipart/form-data",
-      //     Accept: "application/json",
-      //     type: "formData"
-      //   }
-      // };
-
-      const item_image = new FormData();
-      item_image.append("item_image", item_image);
-
-      const sign_language = new FormData();
-      sign_language.append("sign_language", sign_language);
-
-      // const item_audio = new FormData();
-      // item_audio.append("item_audio", item_audio);
-
-      const body = JSON.stringify({
+      const body = {
         item_name,
         category,
         stock,
         cost,
         item_image,
         sign_language,
-        item_audio
-      });
+        item_audio,
+      };
 
       /**************** REQUEST SUBMISSION ******************** */
       // Make POST Request to add Item to database
-      axios
-        .post("/testdb/add_menu_item", body)
-        .then(res => {
+      axios({
+        method: "POST",
+        url: "/testdb/add_menu_item",
+        encType: "multipart/form-data",
+        data: body,
+      })
+        .then((res) => {
           console.log(res);
           console.log(res.data);
         })
-        .catch(error => {
+        .catch((error) => {
           console.log(error);
           console.log(error.response);
           setMsg(error.response.status);
@@ -149,7 +120,7 @@ const AddItem = () => {
         .then(() => {
           setIsRecording(true);
         })
-        .catch(e => console.error(e));
+        .catch((e) => console.error(e));
     }
   };
 
@@ -162,7 +133,7 @@ const AddItem = () => {
         setItemAudio(item_audio);
         setIsRecording(false);
       })
-      .catch(e => console.log(e));
+      .catch((e) => console.log(e));
   };
 
   /**************** MIC PERMISSION CHECK ******************** */
@@ -195,7 +166,12 @@ const AddItem = () => {
 
         {/* Form */}
         <div>
-          <Form className="AddItemForm" encType="multipart/form-data">
+          <Form
+            className="AddItemForm"
+            method="POST"
+            action="/testdb/add_menu_item"
+            encType="multipart/form-data"
+          >
             <Container>
               {/* Add New Item */}
               <InputGroup>

@@ -17,7 +17,7 @@ import {
   Alert,
   Card,
   CardImg,
-  ModalFooter
+  ModalFooter,
 } from "reactstrap";
 
 // Create a new record
@@ -34,7 +34,8 @@ const CustomerRegisterModal = () => {
   const [first_name, setFirstName] = useState("");
   const [last_name, setLastName] = useState("");
   const [email_address, setEmailAddress] = useState("");
-  const [digital_id, setDigitalId] = useState("");
+  const [password, setPassword] = useState("");
+  const [file, setFile] = useState("");
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -73,50 +74,72 @@ const CustomerRegisterModal = () => {
 
   /**************** STATE HANDLERS ******************** */
 
-  const handleChangeFirstName = e => setFirstName(e.target.value);
-  const handleChangeLastName = e => setLastName(e.target.value);
-  const handleChangeEmailAddress = e => setEmailAddress(e.target.value);
-  const handleChangeDigitalId = e => setDigitalId(e.target.value);
+  const handleChangeFirstName = (e) => setFirstName(e.target.value);
+  const handleChangeLastName = (e) => setLastName(e.target.value);
+  const handleChangeEmailAddress = (e) => setEmailAddress(e.target.value);
+
+  const handleChangePassword = (e) => {
+    setPassword(e.target.value);
+    console.log(password);
+  };
+
+  const handleChangeFile = (e) => {
+    setFile(e.target.files[0]);
+    console.log(file);
+  };
 
   /**************** FORM SUBMISSION ******************** */
 
-  const handleOnSubmit = e => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
 
+    console.log(
+      first_name,
+      "\n",
+      last_name,
+      "\n",
+      email_address,
+      "\n",
+      password,
+      "\n",
+      file
+    );
+
     // Check for empty fields
-    if (!first_name || !last_name || !email_address || !digital_id) {
+    if (!first_name || !last_name || !email_address || !(password || file)) {
       setMsg("Sorry you have missing require(s). Check again.");
     } else {
-      // Headers
-      const config = {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      };
+      // const file = new FormData();
+      // file.append("file", file);
 
       // Request body
-      const body = JSON.stringify({
+      const body = {
         first_name,
         last_name,
         email_address,
-        digital_id
-      });
+        password,
+        file,
+      };
 
       /**************** REQUEST SUBMISSION ******************** */
-      axios
-        .post("/testdb/add_customer", body, config)
-        .then(res => {
+      axios({
+        method: "POST",
+        url: "/testdb/add_customer",
+        encType: "multipart/form-data",
+        data: body,
+      })
+        .then((res) => {
           console.log(res);
           console.log(res.data);
           setIsAuthenticated(true);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("Data Response");
           console.log(err.response.data);
           console.log("Status Response");
           console.log(err.response.status);
           setError("REGISTER_FAIL");
-          setMsg(err.response.data.message || err.response.data.error);
+          setMsg(err.response.data);
         });
     }
   };
@@ -163,7 +186,7 @@ const CustomerRegisterModal = () => {
         .then(() => {
           setIsRecording(true);
         })
-        .catch(e => console.error(e));
+        .catch((e) => console.error(e));
     }
   };
 
@@ -172,11 +195,12 @@ const CustomerRegisterModal = () => {
     Mp3Recorder.stop()
       .getMp3()
       .then(([buffer, blob]) => {
-        const digital_id = URL.createObjectURL(blob);
-        setDigitalId(digital_id);
+        const file = URL.createObjectURL(blob);
+        setFile(file);
         setIsRecording(false);
+        console.log(file);
       })
-      .catch(e => console.log(e));
+      .catch((e) => console.log(e));
   };
 
   /************************** RENDER ************************ */
@@ -195,11 +219,15 @@ const CustomerRegisterModal = () => {
         <ModalBody>
           {/* Error display */}
           {msg ? <Alert color="danger">{msg}</Alert> : null}
-          <Form>
+          <Form
+            action="/testdb/add_customer"
+            method="POST"
+            encType="multipart/form-data"
+          >
             <FormGroup>
-              <Label for="fist_name">First Name</Label>
+              <Label for="fistname">First Name</Label>
               <Input
-                type="first_name"
+                type="text"
                 name="first_name"
                 id="first_name"
                 placeholder="First Name"
@@ -208,7 +236,7 @@ const CustomerRegisterModal = () => {
               />
               <Label for="last_name">Last Name</Label>
               <Input
-                type="last_name"
+                type="text"
                 name="last_name"
                 id="last_name"
                 placeholder="Last Name"
@@ -269,14 +297,14 @@ const CustomerRegisterModal = () => {
                 <ModalHeader>Password</ModalHeader>
 
                 <ModalBody>
-                  <Label for="digital_id">Password</Label>
+                  <Label for="password">Password</Label>
                   <Input
                     type="password"
-                    name="digital_id"
-                    id="digital_id"
+                    name="password"
+                    id="password"
                     placeholder="Password"
                     className="mb-3"
-                    onChange={handleChangeDigitalId}
+                    onChange={handleChangePassword}
                   />
                 </ModalBody>
                 <ModalFooter>
@@ -291,14 +319,15 @@ const CustomerRegisterModal = () => {
                 {/* header */}
                 <ModalHeader>Image Selection</ModalHeader>
                 <ModalBody>
+                  <Label for="file">File</Label>
                   <Card>
                     <h3>Upload Photo</h3>
                     <CardImg src={Photo} alt={Icon} height="50%" />
                     <Input
-                      name="digital_id"
-                      id="digital_id"
+                      name="file"
+                      id="file"
                       type="file"
-                      onChange={handleChangeDigitalId}
+                      onChange={handleChangeFile}
                     />
                   </Card>
                 </ModalBody>
@@ -336,9 +365,9 @@ const CustomerRegisterModal = () => {
                         Stop
                       </Button>
                       <audio
-                        id="digital_id"
-                        name="digital_id"
-                        src={digital_id}
+                        id="file"
+                        name="file"
+                        src={file}
                         controls="controls"
                       />
                     </div>
