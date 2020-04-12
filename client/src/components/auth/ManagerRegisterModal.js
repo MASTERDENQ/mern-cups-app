@@ -10,7 +10,7 @@ import {
   Label,
   Input,
   NavLink,
-  Alert
+  Alert,
 } from "reactstrap";
 
 const ManagerRegisterModal = () => {
@@ -34,19 +34,19 @@ const ManagerRegisterModal = () => {
 
   /**************** STATE HANDLERS ******************** */
 
-  const handleChangeUsername = e => setUsername(e.target.value);
-  const handleChangePassword = e => setPassword(e.target.value);
+  const handleChangeUsername = (e) => setUsername(e.target.value);
+  const handleChangePassword = (e) => setPassword(e.target.value);
 
   /**************** FORM SUBMISSION ******************** */
 
-  const handleOnSubmit = e => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
 
     // Headers
     const config = {
       headers: {
-        "Content-Type": "application/json"
-      }
+        "Content-Type": "application/json",
+      },
     };
 
     // Request body
@@ -54,13 +54,13 @@ const ManagerRegisterModal = () => {
 
     /**************** REQUEST SUBMISSION ******************** */
     axios
-      .post("/testdb/add_manager", body, config)
-      .then(res => {
+      .post("/add_manager", body, config)
+      .then((res) => {
         console.log(res);
         console.log(res.data);
         setIsAuthenticated(true);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log("Data Response");
         console.log(err.response.data);
         console.log("Status Response");

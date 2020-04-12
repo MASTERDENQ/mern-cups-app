@@ -11,7 +11,7 @@ import {
   Label,
   Input,
   NavLink,
-  Alert
+  Alert,
 } from "reactstrap";
 
 const ManagerLoginModal = () => {
@@ -34,12 +34,12 @@ const ManagerLoginModal = () => {
 
   /**************** STATE HANDLERS ******************** */
 
-  const handleChangeUsername = e => setUsername(e.target.value);
-  const handleChangePassword = e => setPassword(e.target.value);
+  const handleChangeUsername = (e) => setUsername(e.target.value);
+  const handleChangePassword = (e) => setPassword(e.target.value);
 
   /**************** FORM SUBMISSION ******************** */
 
-  const handleOnSubmit = e => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
 
     if (!username || !password) {
@@ -48,8 +48,8 @@ const ManagerLoginModal = () => {
       // Headers
       const config = {
         headers: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       };
 
       // Request body
@@ -57,13 +57,13 @@ const ManagerLoginModal = () => {
 
       /**************** REQUEST SUBMISSION ******************** */
       axios
-        .post("/testdb/login_manager", body, config)
-        .then(res => {
+        .post("/login_manager", body, config)
+        .then((res) => {
           console.log(res);
           console.log(res.data);
           setIsAuthenticated(true);
         })
-        .catch(err => {
+        .catch((err) => {
           console.log("\nData Response");
           console.log(err.response.data);
           console.log("\nStatus Response");

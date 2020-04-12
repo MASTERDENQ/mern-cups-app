@@ -93,7 +93,7 @@ const AddItem = () => {
       // Make POST Request to add Item to database
       axios({
         method: "POST",
-        url: "/testdb/add_menu_item",
+        url: "/add_menu_item",
         encType: "multipart/form-data",
         data: body,
       })

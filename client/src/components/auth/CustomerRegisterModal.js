@@ -124,7 +124,7 @@ const CustomerRegisterModal = () => {
       /**************** REQUEST SUBMISSION ******************** */
       axios({
         method: "POST",
-        url: "/testdb/add_customer",
+        url: "/add_customer",
         encType: "multipart/form-data",
         data: body,
       })

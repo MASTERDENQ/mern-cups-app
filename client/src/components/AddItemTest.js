@@ -86,7 +86,7 @@ const AddItemTest = () => {
   return (
     <div>
       <form
-        action="/testdb/add_menu_item"
+        action="/add_menu_item"
         method="POST"
         encType="multipart/form-data"
         href="#"

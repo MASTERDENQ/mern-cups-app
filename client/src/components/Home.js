@@ -5,19 +5,19 @@ import axios from "axios";
 
 class Home extends Component {
   state = {
-    signal: ""
+    signal: "",
   };
 
   componentDidMount() {
     //Request Items
     axios
-      .get("/testdb")
-      .then(res => {
-        console.log("Connected to Database");
+      .get("/")
+      .then((res) => {
+        console.log("Conn to Database");
         console.log(res);
-        this.setState({ signal: res.data });
+        this.setState({ signal: "Conn to Database" });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         this.setState({ signal: "Not Connected" });
       });

@@ -73,7 +73,7 @@ class ItemsList extends Component {
   deleteItem = (_id) => {
     console.log(`Delete Request for Item ${_id}`);
     axios
-      .delete(`testdb/delete_menu_item/${_id}`)
+      .delete(`/delete_menu_item/${_id}`)
       .then((res) => {
         console.log(res);
         console.log(res.data);
@@ -105,7 +105,7 @@ class ItemsList extends Component {
     console.log();
     //Request Items
     axios
-      .get("/testdb/list_items")
+      .get("/list_items")
       .then((res) => {
         console.log(res);
         this.setState({ items: res.data });

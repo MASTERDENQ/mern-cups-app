@@ -98,7 +98,7 @@ const CustomerLoginModal = () => {
 
       /**************** REQUEST SUBMISSION ******************** */
       axios
-        .post("testdb/login_customer", body)
+        .post("/login_customer", body)
         .then((res) => {
           console.log(res);
           console.log(res.data);
