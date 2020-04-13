@@ -10,43 +10,43 @@ class CustomerMenu extends Component {
       items: [],
       isLoaded: false,
       orderedItems: [],
-      review: false
+      review: false,
     };
   }
 
   componentDidMount() {
     fetch("https://jsonplaceholder.typicode.com/users")
-      .then(res => res.json())
-      .then(json => {
+      .then((res) => res.json())
+      .then((json) => {
         this.setState({
           isLoaded: true,
-          items: json
+          items: json,
         });
       });
   }
 
   changeView() {
     this.setState({
-      review: !this.state.review
+      review: !this.state.review,
     });
   }
 
   changeHandler = (id, name, value) => {
-    let res = this.state.orderedItems.find(item => item.id === id);
+    let res = this.state.orderedItems.find((item) => item.id === id);
 
     if (res === undefined) {
       let obj = {
         name,
         id,
-        value
+        value,
       };
 
       this.setState({
-        orderedItems: [...this.state.orderedItems, obj]
+        orderedItems: [...this.state.orderedItems, obj],
       });
     } else {
       let obj = this.state.orderedItems.splice(
-        this.state.orderedItems.findIndex(item => item.id === id),
+        this.state.orderedItems.findIndex((item) => item.id === id),
         1
       );
 
@@ -56,7 +56,7 @@ class CustomerMenu extends Component {
       temp.push(...obj);
 
       this.setState({
-        orderedItems: temp
+        orderedItems: temp,
       });
     }
   };
@@ -71,7 +71,7 @@ class CustomerMenu extends Component {
     } else {
       return this.state.review === false ? (
         <div id="MainBody">
-          {this.state.items.map(item => (
+          {this.state.items.map((item) => (
             <div key={item.id} className="MenuItem">
               <input
                 name="quantity"

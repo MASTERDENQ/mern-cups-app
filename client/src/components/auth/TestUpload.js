@@ -1,17 +1,6 @@
 import React from "react";
 
 const Test = () => {
-  // var body = new FormData();
-
-  // axios
-  //   .post("/testdb/add_customer", body)
-  //   .then(res => {
-  //     console.log(res);
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //   });
-
   return (
     <div>
       <form

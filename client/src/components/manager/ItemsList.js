@@ -16,7 +16,7 @@ import "../css/ItemsListStyle.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import UpdateModal from "./UpdateModal";
-import DeleteModal from "../reusableComponents/deleteModal";
+import DeleteModal from "../../reusableComponents/deleteModal";
 
 class ItemsList extends Component {
   /**************** COMPONENT STATES ******************** */

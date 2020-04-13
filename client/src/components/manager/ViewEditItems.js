@@ -2,8 +2,8 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
 //import modal
-import DeleteModal from "../reusableComponents/deleteModal";
-import EditModal from "../reusableComponents/editModal";
+import DeleteModal from "../../reusableComponents/deleteModal";
+import EditModal from "../../reusableComponents/editModal";
 
 class ViewEditItems extends Component {
   constructor(props) {
@@ -13,7 +13,7 @@ class ViewEditItems extends Component {
       isLoaded: false,
       deleteModalVisible: false,
       editModalVisible: false,
-      itemId: null
+      itemId: null,
     };
   }
 
@@ -29,7 +29,7 @@ class ViewEditItems extends Component {
    *
    * @param {String} id
    */
-  getId = id => {
+  getId = (id) => {
     this.setState({ itemId: id });
   };
 
@@ -37,7 +37,7 @@ class ViewEditItems extends Component {
     let temp = this.state.items;
 
     temp.splice(
-      temp.findIndex(item => item.id === this.state.itemId),
+      temp.findIndex((item) => item.id === this.state.itemId),
       1
     );
 
@@ -48,7 +48,7 @@ class ViewEditItems extends Component {
     let temp = this.state.items;
 
     let toEdit = temp.splice(
-      temp.findIndex(item => item.id === this.state.itemId),
+      temp.findIndex((item) => item.id === this.state.itemId),
       1
     );
 
@@ -62,11 +62,11 @@ class ViewEditItems extends Component {
 
   componentDidMount() {
     fetch("/testdb/list_items")
-      .then(res => res.json())
-      .then(json => {
+      .then((res) => res.json())
+      .then((json) => {
         this.setState({
           isLoaded: true,
-          items: json
+          items: json,
         });
       });
   }
@@ -81,7 +81,7 @@ class ViewEditItems extends Component {
     } else {
       return (
         <div>
-          {this.state.items.map(item => (
+          {this.state.items.map((item) => (
             <div key={item.id}>
               <button
                 onClick={() => {

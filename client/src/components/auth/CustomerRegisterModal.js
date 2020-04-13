@@ -107,7 +107,7 @@ const CustomerRegisterModal = () => {
 
     // Check for empty fields
     if (!first_name || !last_name || !email_address || !(password || file)) {
-      setMsg("Sorry you have missing require(s). Check again.");
+      setMsg("Sorry you have missing requirement(s). Check all fields again.");
     } else {
       // const file = new FormData();
       // file.append("file", file);
@@ -220,9 +220,9 @@ const CustomerRegisterModal = () => {
           {/* Error display */}
           {msg ? <Alert color="danger">{msg}</Alert> : null}
           <Form
-            action="/testdb/add_customer"
-            method="POST"
-            encType="multipart/form-data"
+          // action="/add_customer"
+          // method="POST"
+          // encType="multipart/form-data"
           >
             <FormGroup>
               <Label for="fistname">First Name</Label>
@@ -307,6 +307,7 @@ const CustomerRegisterModal = () => {
                     onChange={handleChangePassword}
                   />
                 </ModalBody>
+
                 <ModalFooter>
                   <Button color="primary" onClick={togglePassword}>
                     Done
