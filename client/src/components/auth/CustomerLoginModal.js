@@ -24,7 +24,7 @@ import {
 // Create a new record
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
-const CustomerLoginModal = () => {
+const CustomerLoginModal = (props) => {
   /**************** COMPONENT STATES ******************** */
 
   const [modal, setModal] = useState(false);
@@ -33,7 +33,8 @@ const CustomerLoginModal = () => {
   const [nestedImage, setNestedImage] = useState(false);
   const [nestedAudio, setNestedAudio] = useState(false);
   const [email_address, setEmailAddress] = useState("");
-  const [digital_id, setDigitalId] = useState("");
+  const [password, setPassword] = useState("");
+  const [file, setFile] = useState("");
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -75,7 +76,16 @@ const CustomerLoginModal = () => {
   /**************** STATE HANDLERS ******************** */
 
   const handleChangeEmailAddress = (e) => setEmailAddress(e.target.value);
-  const handleChangeDigitalId = (e) => setDigitalId(e.target.value);
+
+  const handleChangePassword = (e) => {
+    setPassword(e.target.value);
+    console.log(password);
+  };
+
+  const handleChangeFile = (e) => {
+    setFile(e.target.files[0]);
+    console.log(file);
+  };
 
   /**************** FORM SUBMISSION ******************** */
 
@@ -83,7 +93,7 @@ const CustomerLoginModal = () => {
     e.preventDefault();
 
     // Check for empty fields
-    if (!email_address || !digital_id) {
+    if (!email_address || !(file || password)) {
       setMsg("Please enter email and digital id.");
     } else {
       // Headers
@@ -94,7 +104,7 @@ const CustomerLoginModal = () => {
       // };
 
       // Request body
-      const body = JSON.stringify({ email_address, digital_id });
+      const body = JSON.stringify({ email_address, password, file });
 
       /**************** REQUEST SUBMISSION ******************** */
       axios
@@ -103,14 +113,20 @@ const CustomerLoginModal = () => {
           console.log(res);
           console.log(res.data);
           setIsAuthenticated(true);
+          // localStorage.setItem("isAuthenticated", true);
+          // localStorage.setItem("username", email_address);
+          if (res.data.status === 201) {
+            props.handleSuccessfulAuth(res.data);
+          }
         })
         .catch((err) => {
-          console.log("\nData Response");
+          console.log("err", err);
+          console.log("\nResponse");
           console.log(err.response);
           console.log("\nStatus Response");
-          console.log(err.response);
+          console.log(err.response.status);
           setError("LOGIN_FAIL");
-          setMsg(err.response);
+          setMsg(err.response.data);
         });
     }
   };
@@ -166,8 +182,8 @@ const CustomerLoginModal = () => {
     Mp3Recorder.stop()
       .getMp3()
       .then(([buffer, blob]) => {
-        const digital_id = URL.createObjectURL(blob);
-        setDigitalId(digital_id);
+        const file = URL.createObjectURL(blob);
+        setFile(file);
         setIsRecording(false);
       })
       .catch((e) => console.log(e));
@@ -248,11 +264,11 @@ const CustomerLoginModal = () => {
                   <Label for="digital_id">Password</Label>
                   <Input
                     type="password"
-                    name="digital_id"
-                    id="digital_id"
+                    name="password"
+                    id="password"
                     placeholder="Password"
                     className="mb-3"
-                    onChange={handleChangeDigitalId}
+                    onChange={handleChangePassword}
                   />
                 </ModalBody>
                 <ModalFooter>
@@ -271,10 +287,10 @@ const CustomerLoginModal = () => {
                     <h3>Upload Photo</h3>
                     <CardImg src={Photo} alt={Icon} height="50%" />
                     <Input
-                      name="digital_id"
-                      id="digital_id"
+                      name="file"
+                      id="file"
                       type="file"
-                      onChange={handleChangeDigitalId}
+                      onChange={handleChangeFile}
                     />
                   </Card>
                 </ModalBody>
@@ -312,9 +328,9 @@ const CustomerLoginModal = () => {
                         Stop
                       </Button>
                       <audio
-                        id="digital_id"
-                        name="digital_id"
-                        src={digital_id}
+                        id="file"
+                        name="file"
+                        src={file}
                         controls="controls"
                       />
                     </div>

@@ -23,7 +23,7 @@ import {
 // Create a new record
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
-const CustomerRegisterModal = () => {
+const CustomerRegisterModal = (props) => {
   /**************** COMPONENT STATES ******************** */
 
   const [modal, setModal] = useState(false);
@@ -131,13 +131,14 @@ const CustomerRegisterModal = () => {
         .then((res) => {
           console.log(res);
           console.log(res.data);
+          // console.log(res.config.data.last_name);
+          // setUsername(res.data.first_name)
           setIsAuthenticated(true);
+          props.handleSuccessfulAuth(res.data);
         })
         .catch((err) => {
           console.log("Data Response");
-          console.log(err.response.data);
-          console.log("Status Response");
-          console.log(err.response.status);
+          console.log(err);
           setError("REGISTER_FAIL");
           setMsg(err.response.data);
         });
@@ -156,9 +157,11 @@ const CustomerRegisterModal = () => {
     if (modal) {
       if (isAuthenticated) {
         handleToggle();
+        // localStorage.setItem("isAuthenticated", true);
+        // localStorage.getItem("username", email_address);
       }
     }
-  }, [error, handleToggle, isAuthenticated, modal]);
+  }, [error, handleToggle, isAuthenticated, modal, email_address]);
 
   useEffect(() => {
     // React-Mic Permissions Check
@@ -219,11 +222,7 @@ const CustomerRegisterModal = () => {
         <ModalBody>
           {/* Error display */}
           {msg ? <Alert color="danger">{msg}</Alert> : null}
-          <Form
-          // action="/add_customer"
-          // method="POST"
-          // encType="multipart/form-data"
-          >
+          <Form>
             <FormGroup>
               <Label for="fistname">First Name</Label>
               <Input
@@ -255,7 +254,7 @@ const CustomerRegisterModal = () => {
               />
 
               <Button
-                color="dark"
+                color="primary"
                 style={{ marginTop: "2rem" }}
                 block
                 onClick={toggleNested}

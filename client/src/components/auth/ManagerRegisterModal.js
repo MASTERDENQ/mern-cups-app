@@ -82,10 +82,11 @@ const ManagerRegisterModal = () => {
     if (modal) {
       if (isAuthenticated) {
         handleToggle();
+        // localStorage.setItem("isAuthenticated", true);
+        // localStorage.getItem("username", username);
       }
     }
-  }, [error, handleToggle, isAuthenticated, modal]);
-
+  }, [error, handleToggle, isAuthenticated, modal, username]);
   /************************** RENDER ************************ */
 
   return (

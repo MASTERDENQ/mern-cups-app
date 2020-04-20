@@ -1,34 +1,8 @@
 import React, { useState, useEffect } from "react";
-// import ASL from "../assets/asl.jpg";
-// import Photo from "../assets/image.jpeg";
-import Audio from "../assets/audio.png";
-import Icon from "../assets/icon.png";
-import "../css/AddItemStyle.css";
+
+import "../../css/AddItemStyle.css";
 import MicRecorder from "mic-recorder-to-mp3";
-import {
-  //   Container,
-  //   Label,
-  //   Input,
-  Button,
-  //   InputGroup,
-  //   InputGroupAddon,
-  //   InputGroupText,
-  Card,
-  CardImg,
-  //   Form,
-  //   Alert,
-  // DropdownItem,
-  // Dropdown,
-  // UncontrolledDropdown,
-  // DropdownMenu,
-  // DropdownToggle,
-  // CardText,
-  // CardBody,
-  // CardTitle,
-  // CardSubtitle,
-  //   Row,
-  Col,
-} from "reactstrap";
+import { Button, Card, CardImg, Col } from "reactstrap";
 // import { Link } from "react-router-dom";
 
 // Create a new record
@@ -116,10 +90,10 @@ const AddItemTest = () => {
         <input name="item_audio" id="item_audio" type="file" />
 
         {/* Audio Recording */}
-        {/* <Col sm="4">
+        <Col sm="4">
           <Card>
             <h3>Audio</h3>
-            <CardImg src={Audio} alt={Icon} height="50%" />
+            <CardImg src={Audio} alt="Icon" height="50%" />
 
             <div className="audio-css">
               <Button onClick={start} disabled={isRecording} type="button">
@@ -132,7 +106,7 @@ const AddItemTest = () => {
               <audio name="item_audio" src={item_audio} controls="controls" />
             </div>
           </Card>
-        </Col> */}
+        </Col>
 
         <input
           type="submit"

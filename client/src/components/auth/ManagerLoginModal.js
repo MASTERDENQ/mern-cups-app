@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 // import { Link } from "react-router-dom";
+import ItemsList from "../manager/ItemsList";
 import {
   Button,
   Modal,
@@ -13,6 +14,7 @@ import {
   NavLink,
   Alert,
 } from "reactstrap";
+import NavBar from "../NavBar";
 
 const ManagerLoginModal = () => {
   /**************** COMPONENT STATES ******************** */
@@ -86,6 +88,8 @@ const ManagerLoginModal = () => {
     if (modal) {
       if (isAuthenticated) {
         handleToggle();
+        // localStorage.setItem("isAuthenticated", true);
+        // localStorage.getItem("username", username);
       }
     }
   }, [error, handleToggle, isAuthenticated, modal]);
@@ -101,6 +105,8 @@ const ManagerLoginModal = () => {
         <ModalHeader toggle={handleToggle}>Manager Login</ModalHeader>
         <ModalBody>
           {msg ? <Alert color="danger">{msg}</Alert> : null}
+          {isAuthenticated ? <NavBar isAuthenticated /> : null}
+          {isAuthenticated ? <ItemsList /> : null}
           <Form>
             <FormGroup>
               <Label for="email">Username</Label>

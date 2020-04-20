@@ -1,12 +1,23 @@
 import React, { Component } from "react";
-// import { Link } from "react-router-dom";
 import "../css/HomeStyle.css";
 import axios from "axios";
+import CustomerRegisterModal from "./auth/CustomerRegisterModal";
 
 class Home extends Component {
-  state = {
-    signal: "",
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      signal: "",
+    };
+
+    this.handleSuccessfulAuth = this.handleSuccessfulAuth.bind(this);
+  }
+
+  handleSuccessfulAuth(data) {
+    // TODO update parent component
+    this.props.history.push("/list");
+  }
 
   componentDidMount() {
     //Request Items
@@ -28,25 +39,12 @@ class Home extends Component {
       <div className="Home">
         <h1>{this.state.signal}</h1>
         <h1 style={{ textAlign: "center" }}>HOME PAGE</h1>
+        <h1>Status: {this.props.loggedInStatus}</h1>
+        <CustomerRegisterModal
+          handleSuccessfulAuth={this.handleSuccessfulAuth}
+        />
       </div>
     );
   }
 }
-
-/* <Link to="/login">
-        <button className="card">
-          <h1>
-            <b>MANAGER</b>
-          </h1>
-        </button>
-      </Link>
-      <br />
-      <br />
-      <Link to="/create">
-        <button className="card">
-          <h1>
-            <b>CUSTOMER</b>
-          </h1>
-        </button>
-      </Link> */
 export default Home;

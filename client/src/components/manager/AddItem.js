@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import ASL from "../assets/asl.jpg";
-import Photo from "../assets/image.jpeg";
-import Audio from "../assets/audio.png";
-import Icon from "../assets/icon.png";
-import "../css/AddItemStyle.css";
+import ASL from "../../assets/asl.jpg";
+import Photo from "../../assets/image.jpeg";
+import Audio from "../../assets/audio.png";
+import Icon from "../../assets/icon.png";
+import "../../css/AddItemStyle.css";
 import MicRecorder from "mic-recorder-to-mp3";
 import {
   Container,

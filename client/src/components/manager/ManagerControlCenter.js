@@ -1,8 +1,8 @@
 import React from "react";
-import "../css/ManagerControlStyle.css";
-import add from "../assets/add-item.png";
-import viewEdit from "../assets/view-edit.png";
-import graph from "../assets/graph.png";
+import "../../css/ManagerControlStyle.css";
+import add from "../../assets/add-item.png";
+import viewEdit from "../../assets/view-edit.png";
+import graph from "../../assets/graph.png";
 
 import { Link } from "react-router-dom";
 

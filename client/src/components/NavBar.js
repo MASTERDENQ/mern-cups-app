@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Fragment, useEffect, useState, useCallback } from "react";
 // import '../css/NavBarStyle.css';
 // import avatar from "../assets/avatar.jpg";
 import {
@@ -9,77 +9,84 @@ import {
   Nav,
   NavItem,
   // NavLink,
-  Container
+  Container,
 } from "reactstrap";
 import ManagerRegisterModal from "./auth/ManagerRegisterModal";
+// import TestUpload from "./auth/TestUpload";
 import ManagerLoginModal from "./auth/ManagerLoginModal";
 import CustomerRegisterModal from "./auth/CustomerRegisterModal";
 import CustomerLoginModal from "./auth/CustomerLoginModal";
 import Logout from "./auth/Logout";
 
-export class NavBar extends Component {
-  state = {
-    isOpen: true
-  };
+const NavBar = () => {
+  const [isOpen, setIsOpen] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [username, setUsername] = useState("");
 
-  toggle = () =>
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
+  const toggle = useCallback(() => {
+    setIsOpen(!isOpen);
+  }, [isOpen]);
 
-  render() {
-    return (
-      <div>
-        <Navbar color="dark" dark expand="sm" className="mb-5">
-          <Container>
-            <NavbarBrand href="/">C.U.P.S</NavbarBrand>
-            <NavbarToggler onClick={this.toggle} />
-            <Collapse isOpen={this.state.isOpen}>
-              <Nav className="ml-auto" navbar>
-                <NavItem>
-                  <CustomerRegisterModal />
-                </NavItem>
+  const authLinks = (
+    <Fragment>
+      <NavItem>
+        <span className="navbar-text mr-3">
+          <strong>
+            {username ? `Welcome ${username}` : "Welcome Customer"}
+          </strong>
+        </span>
+      </NavItem>
 
-                <NavItem>
-                  <CustomerLoginModal />
-                </NavItem>
+      <NavItem>
+        <Logout />
+      </NavItem>
+    </Fragment>
+  );
 
-                <NavItem>
-                  <ManagerRegisterModal />
-                </NavItem>
+  const guestLinks = (
+    <Fragment>
+      <NavItem>
+        <CustomerRegisterModal />
+        {/* <TestUpload /> */}
+      </NavItem>
 
-                <NavItem>
-                  <ManagerLoginModal />
-                </NavItem>
+      <NavItem>
+        <CustomerLoginModal />
+      </NavItem>
 
-                <NavItem>
-                  <Logout />
-                </NavItem>
-              </Nav>
-            </Collapse>
-          </Container>
-        </Navbar>
-      </div>
-    );
-  }
-}
+      <NavItem>
+        <ManagerRegisterModal />
+      </NavItem>
 
-// const NavBar = () => {
-//     return (
-//         <nav className="NavBar">
+      <NavItem>
+        <ManagerLoginModal />
+      </NavItem>
+    </Fragment>
+  );
 
-//             <p className="Username">
-//                 Username
-//             </p>
+  // useEffect(() => {
+  //   setIsAuthenticated(localStorage.getItem("isAuthenticated"));
+  //   setUsername(localStorage.getItem("username"));
 
-//             <img
-//                 src={avatar}
-//                 className="NavBarAvatar"
-//                 alt="Avatar"
-//             />
+  //   console.log(isAuthenticated, username);
+  // }, [isAuthenticated, username]);
 
-//         </nav>
-//     );
-// };
+  return (
+    <div>
+      <Navbar color="dark" dark expand="sm" className="mb-5">
+        <Container>
+          <NavbarBrand href="/">C.U.P.S</NavbarBrand>
 
+          <NavbarToggler onClick={toggle} />
+
+          <Collapse isOpen={isOpen}>
+            <Nav className="ml-auto" navbar>
+              {isAuthenticated ? authLinks : guestLinks}
+            </Nav>
+          </Collapse>
+        </Container>
+      </Navbar>
+    </div>
+  );
+};
 export default NavBar;

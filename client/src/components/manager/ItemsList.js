@@ -12,11 +12,11 @@ import {
   Alert,
 } from "reactstrap";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
-import "../css/ItemsListStyle.css";
+import "../../css/ItemsListStyle.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import UpdateModal from "./UpdateModal";
-import DeleteModal from "../../reusableComponents/deleteModal";
+// import DeleteModal from "../../reusableComponents/deleteModal";
 
 class ItemsList extends Component {
   /**************** COMPONENT STATES ******************** */
@@ -58,7 +58,7 @@ class ItemsList extends Component {
     console.log(`Request Details for Item ${id}`);
     //Request Items
     axios
-      .get(`testdb/${id}`)
+      .get(`/${id}`)
       .then((res) => {
         console.log(res);
         this.setState({ item: res.data });
