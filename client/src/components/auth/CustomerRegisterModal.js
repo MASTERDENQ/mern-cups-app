@@ -13,12 +13,13 @@ import {
   FormGroup,
   Label,
   Input,
-  NavLink,
+  // NavLink,
   Alert,
   Card,
   CardImg,
   ModalFooter,
 } from "reactstrap";
+// import { Link } from "react-router-dom";
 
 // Create a new record
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
@@ -36,6 +37,9 @@ const CustomerRegisterModal = (props) => {
   const [email_address, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [file, setFile] = useState("");
+  const [filename, setFilename] = useState("Choose File");
+  // const [uploadedFile, setUploadedFile] = useState({});
+
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -86,11 +90,14 @@ const CustomerRegisterModal = (props) => {
   const handleChangeFile = (e) => {
     setFile(e.target.files[0]);
     console.log(file);
+
+    setFilename(e.target.files[0].name);
+    console.log(filename);
   };
 
   /**************** FORM SUBMISSION ******************** */
 
-  const handleOnSubmit = (e) => {
+  const handleOnSubmit = async (e) => {
     e.preventDefault();
 
     console.log(
@@ -109,36 +116,38 @@ const CustomerRegisterModal = (props) => {
     if (!first_name || !last_name || !email_address || !(password || file)) {
       setMsg("Sorry you have missing requirement(s). Check all fields again.");
     } else {
-      // const file = new FormData();
-      // file.append("file", file);
-
       // Request body
       const body = {
         first_name,
         last_name,
         email_address,
         password,
-        file,
       };
 
+      const formData = new FormData();
+      formData.append("body", body);
+      formData.append("file", file);
+      console.log(formData);
+
       /**************** REQUEST SUBMISSION ******************** */
-      axios({
-        method: "POST",
-        url: "/add_customer",
-        encType: "multipart/form-data",
-        data: body,
-      })
+      // axios({
+      //   method: "POST",
+      //   url: "/add_customer",
+      //   encType: "multipart/form-data",
+      //   data: { body, formData },
+      // })
+      await axios
+        .post("/add_customer", formData, { encType: "multipart/form-data" })
         .then((res) => {
           console.log(res);
           console.log(res.data);
-          // console.log(res.config.data.last_name);
-          // setUsername(res.data.first_name)
           setIsAuthenticated(true);
-          props.handleSuccessfulAuth(res.data);
+          props.handleSuccessfulAuth(res.config.data, first_name);
         })
         .catch((err) => {
-          console.log("Data Response");
           console.log(err);
+          console.log("Data Response");
+          console.log(err.response.data);
           setError("REGISTER_FAIL");
           setMsg(err.response.data);
         });
@@ -157,8 +166,6 @@ const CustomerRegisterModal = (props) => {
     if (modal) {
       if (isAuthenticated) {
         handleToggle();
-        // localStorage.setItem("isAuthenticated", true);
-        // localStorage.getItem("username", email_address);
       }
     }
   }, [error, handleToggle, isAuthenticated, modal, email_address]);
@@ -209,9 +216,13 @@ const CustomerRegisterModal = (props) => {
   /************************** RENDER ************************ */
   return (
     <div>
-      <NavLink onClick={handleToggle} href="#">
+      {/* <NavLink onClick={handleToggle} href="#" color="dark">
         Customer Register
-      </NavLink>
+      </NavLink> */}
+
+      <Button onClick={handleToggle} className="mt-4 mb-3" color="dark" block>
+        <h1>Customer Register</h1>
+      </Button>
 
       {/* ***************** PRIMARY MODAL *********************** */}
 
@@ -222,7 +233,7 @@ const CustomerRegisterModal = (props) => {
         <ModalBody>
           {/* Error display */}
           {msg ? <Alert color="danger">{msg}</Alert> : null}
-          <Form>
+          <Form onSubmit={handleOnSubmit}>
             <FormGroup>
               <Label for="fistname">First Name</Label>
               <Input
@@ -385,7 +396,7 @@ const CustomerRegisterModal = (props) => {
                 color="dark"
                 style={{ marginTop: "2rem" }}
                 block
-                onClick={handleOnSubmit}
+                type="submit"
               >
                 Register
               </Button>

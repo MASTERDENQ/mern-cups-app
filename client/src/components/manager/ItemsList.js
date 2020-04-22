@@ -124,6 +124,7 @@ class ItemsList extends Component {
         {/*********** Display all items here ********* */}
 
         <Container>
+          <h1>Status: {this.props.loggedInStatus}</h1>
           <Link to="/add">
             <Button className="mt-4 mb-3" color="dark">
               ADD ITEM

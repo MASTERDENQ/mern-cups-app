@@ -7,8 +7,6 @@ import AddItem from "./components/manager/AddItem";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ItemsList from "./components/manager/ItemsList";
 import CustomerMenu from "./components/customer/CustomerMenu";
-import ConfirmOrder from "./components/customer/ReviewOrder";
-import ViewEditItems from "./components/manager/ViewEditItems";
 import Test from "./components/auth/TestUpload";
 import AddItemTest from "./components/manager/AddItemTest";
 // import BarGraph from "./components/BarGraph";
@@ -20,7 +18,18 @@ class App extends React.Component {
     this.state = {
       loggedInStatus: "NOT_LOGGED_IN",
       user: {},
+      username: "",
     };
+
+    this.handleLogin = this.handleLogin.bind(this);
+  }
+
+  handleLogin(data, username) {
+    this.setState({
+      loggedInStatus: "LOGGED_IN",
+      user: data,
+      username: username,
+    });
   }
 
   render() {
@@ -29,24 +38,68 @@ class App extends React.Component {
         <div className="App">
           {/* NavBar rendered always as header  */}
 
-          <NavBar />
+          <NavBar
+            loggedInStatus={this.state.loggedInStatus}
+            username={this.state.username}
+          />
 
           <Switch>
             <Route
               exact
               path={"/"}
               render={(props) => (
-                <Home {...props} loggedInStatus={this.state.loggedInStatus} />
+                <Home
+                  {...props}
+                  handleLogin={this.handleLogin}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
               )}
             />
 
-            <Route path="/add" component={AddItem} />
-
-            <Route path="/control" component={ManagerControlCenter} />
+            <Route
+              exact
+              path={"/add"}
+              render={(props) => (
+                <AddItem
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
 
             <Route
               exact
-              path="/list"
+              path={"/test"}
+              render={(props) => (
+                <Test {...props} loggedInStatus={this.state.loggedInStatus} />
+              )}
+            />
+
+            <Route
+              exact
+              path={"/add1"}
+              render={(props) => (
+                <AddItemTest
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
+
+            <Route
+              exact
+              path={"/control"}
+              render={(props) => (
+                <ManagerControlCenter
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
+
+            <Route
+              exact
+              path={"/list"}
               render={(props) => (
                 <ItemsList
                   {...props}
@@ -55,13 +108,18 @@ class App extends React.Component {
               )}
             />
 
-            <Route path="/menu" component={CustomerMenu} />
+            <Route
+              exact
+              path={"/menu"}
+              render={(props) => (
+                <CustomerMenu
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
 
-            <Route path="/confirm" component={ConfirmOrder} />
-
-            <Route path="/view" component={ViewEditItems} />
-            <Route path="/test" component={Test} />
-            <Route path="/add1" component={AddItemTest} />
+            {/* <Route path="*" return={Page_Not_Found_404} /> */}
             {/* <Route path="/graph" component={BarGraph} /> */}
           </Switch>
         </div>

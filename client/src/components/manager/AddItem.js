@@ -35,7 +35,7 @@ import { Link } from "react-router-dom";
 // Create a new record
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
-const AddItem = () => {
+const AddItem = (props) => {
   /**************** COMPONENT STATES ******************** */
 
   const [item_name, setItemName] = useState("");
@@ -153,166 +153,178 @@ const AddItem = () => {
     );
   }, []);
 
+  const pass = props.loggedInStatus;
+
   /******************************* RENDER ******************************* */
-  return (
-    <Container>
-      <div className="MainDiv">
-        {/* Title */}
-        <div className="title">
-          <h1>Add Item</h1>
-        </div>
-        {/* Error display */}
-        {msg ? <Alert color="danger">{msg}</Alert> : null}
+  if (pass === "NOT_LOGGED_IN") {
+    return (
+      <div>
+        <h1 style={{ textAlign: "center" }}>
+          YOU ARE NOT LOGGED IN. PLEASE <Link to="/">LOGIN</Link>
+        </h1>
+      </div>
+    );
+  } else {
+    return (
+      <Container>
+        <div className="MainDiv">
+          {/* Title */}
+          <div className="title">
+            <h1>Add Item</h1>
+          </div>
+          {/* Error display */}
+          {msg ? <Alert color="danger">{msg}</Alert> : null}
 
-        {/* Form */}
-        <div>
-          <Form
-            className="AddItemForm"
-            method="POST"
-            action="/testdb/add_menu_item"
-            encType="multipart/form-data"
-          >
-            <Container>
-              {/* Add New Item */}
-              <InputGroup>
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>Item Name</InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  name="item_name"
-                  type="text"
-                  placeholder="Item Name"
-                  onChange={handleChangeItemName}
-                />
-              </InputGroup>
-
-              {/* Enter stock quantity */}
-
-              <InputGroup>
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>Stock Quantity</InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  name="stock"
-                  type="number"
-                  min="0"
-                  onChange={handleChangeStock}
-                />
-              </InputGroup>
-
-              {/* Enter cost of item each */}
-              <InputGroup>
-                <InputGroupAddon addonType="prepend">
-                  <InputGroupText>Cost</InputGroupText>
-                  <InputGroupText>$</InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  name="cost"
-                  type="text"
-                  min="0"
-                  onChange={handleChangeCost}
-                />
-                <InputGroupAddon addonType="append">.00</InputGroupAddon>
-              </InputGroup>
-              <br />
-              <br />
-
-              {/* Selection of category */}
-              <Label>Category</Label>
-              <select name="category" onChange={handleChangeCategory}>
-                <option hidden>Category</option>
-                <option defaultChecked>Beverage</option>
-                <option>Snack</option>
-                <option>Daily Surprise</option>
-              </select>
-              <br />
-              <br />
-            </Container>
-
-            {/* Selection of Photo */}
-            <Row>
-              <Col sm="4">
-                <Card>
-                  <h3>Upload Photo</h3>
-                  <CardImg src={Photo} alt={Icon} />
-                  <Input
-                    name="item_image"
-                    type="file"
-                    onChange={handleChangeItemImage}
-                  />
-                </Card>
-              </Col>
-
-              {/* ASL Selection */}
-              <Col sm="4">
-                <Card>
-                  <h3>Upload ASL</h3>
-                  <CardImg src={ASL} alt={Icon} />
-                  <Input
-                    name="sign_language"
-                    type="file"
-                    onChange={handleChangeSignLanguage}
-                  />
-                </Card>
-              </Col>
-
-              {/* Audio Recording */}
-              <Col sm="4">
-                <Card>
-                  <h3>Audio</h3>
-                  <CardImg src={Audio} alt={Icon} height="50%" />
-
-                  <div className="audio-css">
-                    <Button
-                      onClick={start}
-                      disabled={isRecording}
-                      type="button"
-                    >
-                      Record
-                    </Button>
-
-                    <Button
-                      onClick={stop}
-                      disabled={!isRecording}
-                      type="button"
-                    >
-                      Stop
-                    </Button>
-                    <audio
-                      name="item_audio"
-                      src={item_audio}
-                      controls="controls"
-                    />
-                  </div>
-                </Card>
-              </Col>
-            </Row>
-
-            <Button
-              color="dark"
-              type="submit"
-              style={{ marginTop: "2rem" }}
-              block
-              onClick={handleOnSubmit}
+          {/* Form */}
+          <div>
+            <Form
+              className="AddItemForm"
+              method="POST"
+              action="/testdb/add_menu_item"
+              encType="multipart/form-data"
             >
-              <h4>ADD ITEM</h4>
-            </Button>
+              <Container>
+                {/* Add New Item */}
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Item Name</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="item_name"
+                    type="text"
+                    placeholder="Item Name"
+                    onChange={handleChangeItemName}
+                  />
+                </InputGroup>
 
-            <Link to="/list">
+                {/* Enter stock quantity */}
+
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Stock Quantity</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="stock"
+                    type="number"
+                    min="0"
+                    onChange={handleChangeStock}
+                  />
+                </InputGroup>
+
+                {/* Enter cost of item each */}
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Cost</InputGroupText>
+                    <InputGroupText>$</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    name="cost"
+                    type="text"
+                    min="0"
+                    onChange={handleChangeCost}
+                  />
+                  <InputGroupAddon addonType="append">.00</InputGroupAddon>
+                </InputGroup>
+                <br />
+                <br />
+
+                {/* Selection of category */}
+                <Label>Category</Label>
+                <select name="category" onChange={handleChangeCategory}>
+                  <option hidden>Category</option>
+                  <option defaultChecked>Beverage</option>
+                  <option>Snack</option>
+                  <option>Daily Surprise</option>
+                </select>
+                <br />
+                <br />
+              </Container>
+
+              {/* Selection of Photo */}
+              <Row>
+                <Col sm="4">
+                  <Card>
+                    <h3>Upload Photo</h3>
+                    <CardImg src={Photo} alt={Icon} />
+                    <Input
+                      name="item_image"
+                      type="file"
+                      onChange={handleChangeItemImage}
+                    />
+                  </Card>
+                </Col>
+
+                {/* ASL Selection */}
+                <Col sm="4">
+                  <Card>
+                    <h3>Upload ASL</h3>
+                    <CardImg src={ASL} alt={Icon} />
+                    <Input
+                      name="sign_language"
+                      type="file"
+                      onChange={handleChangeSignLanguage}
+                    />
+                  </Card>
+                </Col>
+
+                {/* Audio Recording */}
+                <Col sm="4">
+                  <Card>
+                    <h3>Audio</h3>
+                    <CardImg src={Audio} alt={Icon} height="50%" />
+
+                    <div className="audio-css">
+                      <Button
+                        onClick={start}
+                        disabled={isRecording}
+                        type="button"
+                      >
+                        Record
+                      </Button>
+
+                      <Button
+                        onClick={stop}
+                        disabled={!isRecording}
+                        type="button"
+                      >
+                        Stop
+                      </Button>
+                      <audio
+                        name="item_audio"
+                        src={item_audio}
+                        controls="controls"
+                      />
+                    </div>
+                  </Card>
+                </Col>
+              </Row>
+
               <Button
                 color="dark"
-                type="button"
+                type="submit"
                 style={{ marginTop: "2rem" }}
                 block
+                onClick={handleOnSubmit}
               >
-                <h4>VIEW ITEMS</h4>
+                <h4>ADD ITEM</h4>
               </Button>
-            </Link>
-          </Form>
+
+              <Link to="/list">
+                <Button
+                  color="dark"
+                  type="button"
+                  style={{ marginTop: "2rem" }}
+                  block
+                >
+                  <h4>VIEW ITEMS</h4>
+                </Button>
+              </Link>
+            </Form>
+          </div>
         </div>
-      </div>
-    </Container>
-  );
+      </Container>
+    );
+  }
 };
 
 export default AddItem;

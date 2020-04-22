@@ -14,7 +14,7 @@ import {
   FormGroup,
   Label,
   Input,
-  NavLink,
+  // NavLink,
   Alert,
   Card,
   CardImg,
@@ -96,28 +96,25 @@ const CustomerLoginModal = (props) => {
     if (!email_address || !(file || password)) {
       setMsg("Please enter email and digital id.");
     } else {
-      // Headers
-      // const config = {
-      //   headers: {
-      //     "Content-Type": "application/json"
-      //   }
-      // };
-
       // Request body
-      const body = JSON.stringify({ email_address, password, file });
+      const body = {
+        email_address,
+        password,
+        file,
+      };
 
       /**************** REQUEST SUBMISSION ******************** */
-      axios
-        .post("/login_customer", body)
+      axios({
+        method: "POST",
+        url: "/login_customer",
+        encType: "multipart/form-data",
+        data: body,
+      })
         .then((res) => {
           console.log(res);
           console.log(res.data);
           setIsAuthenticated(true);
-          // localStorage.setItem("isAuthenticated", true);
-          // localStorage.setItem("username", email_address);
-          if (res.data.status === 201) {
-            props.handleSuccessfulAuth(res.data);
-          }
+          props.handleSuccessfulAuth(res.config.data, email_address);
         })
         .catch((err) => {
           console.log("err", err);
@@ -193,9 +190,13 @@ const CustomerLoginModal = (props) => {
 
   return (
     <div>
-      <NavLink onClick={handleToggle} href="#">
+      {/* <NavLink onClick={handleToggle} href="#">
         Customer Login
-      </NavLink>
+      </NavLink> */}
+
+      <Button onClick={handleToggle} className="mt-4 mb-3" color="dark" block>
+        <h1>Customer Login</h1>
+      </Button>
 
       {/* ***************** PRIMARY MODAL *********************** */}
 

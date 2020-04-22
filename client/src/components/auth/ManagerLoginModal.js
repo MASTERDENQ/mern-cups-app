@@ -11,12 +11,12 @@ import {
   FormGroup,
   Label,
   Input,
-  NavLink,
+  // NavLink,
   Alert,
 } from "reactstrap";
 import NavBar from "../NavBar";
 
-const ManagerLoginModal = () => {
+const ManagerLoginModal = (props) => {
   /**************** COMPONENT STATES ******************** */
 
   const [modal, setModal] = useState(false);
@@ -64,6 +64,7 @@ const ManagerLoginModal = () => {
           console.log(res);
           console.log(res.data);
           setIsAuthenticated(true);
+          props.handleSuccessfulAuth(res.config.data, username);
         })
         .catch((err) => {
           console.log("\nData Response");
@@ -97,9 +98,13 @@ const ManagerLoginModal = () => {
   /************************** RENDER ************************ */
   return (
     <div>
-      <NavLink onClick={handleToggle} href="#">
+      {/* <NavLink onClick={handleToggle} href="#">
         Manager Login
-      </NavLink>
+      </NavLink> */}
+
+      <Button onClick={handleToggle} className="mt-4 mb-3" color="dark" block>
+        <h1>Manager Login</h1>
+      </Button>
 
       <Modal isOpen={modal} toggle={handleToggle}>
         <ModalHeader toggle={handleToggle}>Manager Login</ModalHeader>

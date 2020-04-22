@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect, useState, useCallback } from "react";
-// import '../css/NavBarStyle.css';
+import React, { Fragment, useState } from "react";
 // import avatar from "../assets/avatar.jpg";
 import {
   Collapse,
@@ -8,31 +7,33 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  // NavLink,
   Container,
 } from "reactstrap";
-import ManagerRegisterModal from "./auth/ManagerRegisterModal";
-// import TestUpload from "./auth/TestUpload";
-import ManagerLoginModal from "./auth/ManagerLoginModal";
-import CustomerRegisterModal from "./auth/CustomerRegisterModal";
-import CustomerLoginModal from "./auth/CustomerLoginModal";
 import Logout from "./auth/Logout";
 
-const NavBar = () => {
+const NavBar = (props) => {
   const [isOpen, setIsOpen] = useState(true);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState("");
 
-  const toggle = useCallback(() => {
+  const toggle = () => {
     setIsOpen(!isOpen);
-  }, [isOpen]);
+  };
 
-  const authLinks = (
+  const guestDisplay = (
+    <Fragment>
+      <NavItem>
+        <span className="navbar-text mr-3">
+          <strong>{"Welcome"}</strong>
+        </span>
+      </NavItem>
+    </Fragment>
+  );
+
+  const authDisplay = (
     <Fragment>
       <NavItem>
         <span className="navbar-text mr-3">
           <strong>
-            {username ? `Welcome ${username}` : "Welcome Customer"}
+            {props.username ? `Welcome ${props.username}` : "Welcome Customer"}
           </strong>
         </span>
       </NavItem>
@@ -42,34 +43,6 @@ const NavBar = () => {
       </NavItem>
     </Fragment>
   );
-
-  const guestLinks = (
-    <Fragment>
-      <NavItem>
-        <CustomerRegisterModal />
-        {/* <TestUpload /> */}
-      </NavItem>
-
-      <NavItem>
-        <CustomerLoginModal />
-      </NavItem>
-
-      <NavItem>
-        <ManagerRegisterModal />
-      </NavItem>
-
-      <NavItem>
-        <ManagerLoginModal />
-      </NavItem>
-    </Fragment>
-  );
-
-  // useEffect(() => {
-  //   setIsAuthenticated(localStorage.getItem("isAuthenticated"));
-  //   setUsername(localStorage.getItem("username"));
-
-  //   console.log(isAuthenticated, username);
-  // }, [isAuthenticated, username]);
 
   return (
     <div>
@@ -81,7 +54,7 @@ const NavBar = () => {
 
           <Collapse isOpen={isOpen}>
             <Nav className="ml-auto" navbar>
-              {isAuthenticated ? authLinks : guestLinks}
+              {props.username ? authDisplay : guestDisplay}
             </Nav>
           </Collapse>
         </Container>
@@ -89,4 +62,104 @@ const NavBar = () => {
     </div>
   );
 };
+
+// class NavBar extends React.Component {
+//   constructor(props) {
+//     super(props);
+
+//     this.state = {
+//       loggedInStatus: "NOT_LOGGED_IN",
+//       user: {},
+//       username: "",
+//       isOpen: true,
+//     };
+//     this.handleLogin = this.handleLogin.bind(this);
+//     this.handleSuccessfulAuth = this.handleSuccessfulAuth.bind(this);
+//   }
+
+//   handleLogin(data, username) {
+//     this.setState({
+//       loggedInStatus: "LOGGED_IN",
+//       user: data,
+//       username: username,
+//     });
+//   }
+
+//   toggle() {
+//     this.setState({
+//       isOpen: !this.state.isOpen,
+//     });
+//   }
+
+//   authLinks = (
+//     <Fragment>
+//       {/* <NavItem>
+//         <span className="navbar-text mr-3">
+//           <strong>
+//             {this.state.username
+//               ? `Welcome ${this.state.username}`
+//               : "Welcome Customer"}
+//           </strong>
+//         </span>
+//       </NavItem> */}
+
+//       <NavItem>
+//         <Logout />
+//       </NavItem>
+//     </Fragment>
+//   );
+
+//   guestLinks = (
+//     <Fragment>
+//       <NavItem>
+//         <Route
+//           render={(props) => (
+//             <CustomerRegisterModal
+//               {...props}
+//               handleLogin={this.handleLogin}
+//               loggedInStatus={this.state.loggedInStatus}
+//             />
+//           )}
+//         />
+
+//         {/* <TestUpload /> */}
+//       </NavItem>
+
+//       <NavItem>
+//         <CustomerLoginModal />
+//       </NavItem>
+
+//       <NavItem>
+//         <ManagerRegisterModal />
+//       </NavItem>
+
+//       <NavItem>
+//         <ManagerLoginModal />
+//       </NavItem>
+//     </Fragment>
+//   );
+
+//   render() {
+//     return (
+//       <div>
+//         <Navbar color="dark" dark expand="sm" className="mb-5">
+//           <Container>
+//             <NavbarBrand href="/">C.U.P.S</NavbarBrand>
+
+//             <NavbarToggler onClick={this.toggle} />
+
+//             <Collapse isOpen={this.state.isOpen}>
+//               <Nav className="ml-auto" navbar>
+//                 {this.state.loggedInStatus === "LOGGED_IN"
+//                   ? this.authLinks
+//                   : this.guestLinks}
+//               </Nav>
+//             </Collapse>
+//           </Container>
+//         </Navbar>
+//       </div>
+//     );
+//   }
+// }
+
 export default NavBar;

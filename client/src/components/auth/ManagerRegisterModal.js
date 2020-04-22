@@ -9,11 +9,11 @@ import {
   FormGroup,
   Label,
   Input,
-  NavLink,
+  // NavLink,
   Alert,
 } from "reactstrap";
 
-const ManagerRegisterModal = () => {
+const ManagerRegisterModal = (props) => {
   /**************** COMPONENT STATES ******************** */
 
   const [modal, setModal] = useState(false);
@@ -59,6 +59,7 @@ const ManagerRegisterModal = () => {
         console.log(res);
         console.log(res.data);
         setIsAuthenticated(true);
+        props.handleSuccessfulAuth(res.config.data, username);
       })
       .catch((err) => {
         console.log("Data Response");
@@ -91,9 +92,13 @@ const ManagerRegisterModal = () => {
 
   return (
     <div>
-      <NavLink onClick={handleToggle} href="#">
+      {/* <NavLink onClick={handleToggle} href="#">
         Manager Register
-      </NavLink>
+      </NavLink> */}
+
+      <Button onClick={handleToggle} className="mt-4 mb-3" color="dark" block>
+        <h1>Manager Register</h1>
+      </Button>
 
       <Modal isOpen={modal} toggle={handleToggle}>
         <ModalHeader toggle={handleToggle}>Manager Registration</ModalHeader>
