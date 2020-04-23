@@ -1,0 +1,100 @@
+/* .AddItemForm {
+  padding: 4vh;
+  height: 30vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+button {
+  width: 15vh;
+  align-self: center;
+}
+
+.title {
+  font-size: xx-large;
+  font-weight: 300;
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  padding-top: 5vh;
+}
+
+.MainDiv {
+  background-color: #ffffff;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: #000000;
+  min-height: 50vh;
+  text-align: center;
+}
+
+fieldset {
+  text-align: center;
+}
+
+.title {
+  padding: 4em;
+}
+
+img {
+  height: 30%;
+  width: 30%;
+  border-radius: 90%;
+}
+
+form {
+  position: relative;
+  padding-top: 2em;
+}
+
+input {
+  padding: 12px 20px;
+  margin: 8px 0;
+  box-sizing: border-box;
+  border: solid skyblue;
+}
+
+.card {
+  display: table-row-group;
+  text-align: center;
+  align-self: center;
+  align-items: center;
+  padding: 1em;
+  flex-direction: row;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: rgb(5, 68, 104);
+  justify-content: space-between;
+}
+
+.audio {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  justify-content: space-between;
+} */
+
+/* .card {
+  text-align: center;
+  align-self: center;
+  align-items: center;
+  padding: 1em;
+} */
+
+.audio-css {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: rgb(5, 68, 104);
+}

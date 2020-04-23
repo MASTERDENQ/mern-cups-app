@@ -1,0 +1,23 @@
+/* .NavBar {
+  background-color: #1cd4d4;
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: flex-end;
+  font-size: calc(10px + 2vmin);
+  color: #000000;
+  min-height: 10vh;
+  text-align: center;
+  margin-bottom: 10px;
+  border-bottom: 1em;
+}
+
+.NavBarAvatar {
+  border-radius: 50%;
+  width: 70px;
+  height: auto;
+  margin: 7px;
+}
+
+.Username {
+  margin-right: 5px;
+} */
