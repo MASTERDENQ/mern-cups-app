@@ -116,6 +116,7 @@ The project may be a web, mobile or desktop application. Feel free to utilize ex
 
 ## Popular Frameworks (See stackoverflow developer survey 2019) include:
 
+```
 Angular,
 React JS/Native
 Backbone
@@ -129,6 +130,7 @@ Flutter
 TreeFrog C++ Framework
 Ruby on Rails
 NB, these are optional.
+```
 
 ## Research Project Deliverables:
 
