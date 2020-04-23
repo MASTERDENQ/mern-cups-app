@@ -4,13 +4,17 @@
   "description": "mern stack app",
   "main": "index.js",
   "scripts": {
+    "mern-install": "npm install && cd .. && cd client && yarn install",
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "server": "nodemon index.js",
+    "client": "cd .. && cd client && yarn start",
+    "mern": "concurrently \"npm run server\" \"npm run client\""
   },
-  "author": "Dimitri Russell",
+  "author": "Programming Kings",
   "license": "ISC",
   "dependencies": {
     "body-parser": "1.19.0",
+    "concurrently": "^5.1.0",
     "express": "4.17.1",
     "gridfs-stream": "1.1.1",
     "method-override": "3.0.0",

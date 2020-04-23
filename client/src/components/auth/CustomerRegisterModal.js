@@ -13,23 +13,22 @@ import {
   FormGroup,
   Label,
   Input,
-  // NavLink,
   Alert,
   Card,
   CardImg,
   ModalFooter,
 } from "reactstrap";
-// import { Link } from "react-router-dom";
 
 // Create a new record
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
+/********************** COMPONENT ********************** */
 const CustomerRegisterModal = (props) => {
   /**************** COMPONENT STATES ******************** */
 
   const [modal, setModal] = useState(false);
-  const [nestedPassword, setNestedPassword] = useState(false);
   const [nestedModal, setNestedModal] = useState(false);
+  const [nestedPassword, setNestedPassword] = useState(false);
   const [nestedImage, setNestedImage] = useState(false);
   const [nestedAudio, setNestedAudio] = useState(false);
   const [first_name, setFirstName] = useState("");
@@ -37,10 +36,9 @@ const CustomerRegisterModal = (props) => {
   const [email_address, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [file, setFile] = useState("");
-  const [filename, setFilename] = useState("Choose File");
   const [Url, setUrl] = useState("");
+  // const [filename, setFilename] = useState("Choose File");
   // const [uploadedFile, setUploadedFile] = useState({});
-
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -82,18 +80,13 @@ const CustomerRegisterModal = (props) => {
   const handleChangeFirstName = (e) => setFirstName(e.target.value);
   const handleChangeLastName = (e) => setLastName(e.target.value);
   const handleChangeEmailAddress = (e) => setEmailAddress(e.target.value);
-
-  const handleChangePassword = (e) => {
-    setPassword(e.target.value);
-    console.log(password);
-  };
+  const handleChangePassword = (e) => setPassword(e.target.value);
 
   const handleChangeFile = (e) => {
     setFile(e.target.files[0]);
     console.log(file);
-
-    setFilename(e.target.files[0].name);
-    console.log(filename);
+    // setFilename(e.target.files[0].name);
+    // console.log(filename);
   };
 
   /**************** FORM SUBMISSION ******************** */
@@ -133,8 +126,6 @@ const CustomerRegisterModal = (props) => {
         encType: "multipart/form-data",
         data: formData,
       })
-        // await axios
-        //   .post("/add_customer", formData, { encType: "multipart/form-data" })
         .then((res) => {
           console.log(res);
           console.log(res.data);

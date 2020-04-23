@@ -5,22 +5,20 @@ connect to your desired database change connection string in server/config/keys.
 
 ## Install dependency:
 
+Install all the required dependencies and devDependencies for both frontend and backend.
+
 ```bash
-$ cd server; npm install
-$ cd ..
-$ cd client; yarn install
+$ cd server
+$ npm run mern-install
+$ npm i -D nodemon
 ```
 
 ## Run Application
 
-```bash
-$ cd server; npm start
-```
-
-Open another terminal (can be done in vs code) then `cd ..`
+Runs both the frontend and backend concurrently.
 
 ```bash
-$ cd client; yarn start
+$ npm run mern
 ```
 
 # Group Members

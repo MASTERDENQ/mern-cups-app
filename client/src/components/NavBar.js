@@ -22,7 +22,7 @@ const NavBar = (props) => {
     <Fragment>
       <NavItem>
         <span className="navbar-text mr-3">
-          <strong>{"Welcome"}</strong>
+          <strong>{"Please Signup or Signin."}</strong>
         </span>
       </NavItem>
     </Fragment>

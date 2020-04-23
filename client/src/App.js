@@ -119,7 +119,8 @@ class App extends React.Component {
               )}
             />
 
-            {/* <Route path="*" return={Page_Not_Found_404} /> */}
+            <Route path="*" component={Page_Not_Found_404} />
+
             {/* <Route path="/graph" component={BarGraph} /> */}
           </Switch>
         </div>

@@ -4,7 +4,6 @@ import MicRecorder from "mic-recorder-to-mp3";
 import Audio from "../../assets/audio.png";
 import Icon from "../../assets/icon.png";
 import Photo from "../../assets/photo.png";
-// import { Link } from "react-router-dom";
 import {
   Button,
   Modal,
@@ -14,7 +13,6 @@ import {
   FormGroup,
   Label,
   Input,
-  // NavLink,
   Alert,
   Card,
   CardImg,
@@ -24,24 +22,24 @@ import {
 // Create a new record
 const Mp3Recorder = new MicRecorder({ bitRate: 128 });
 
+/********************** COMPONENT ********************** */
 const CustomerLoginModal = (props) => {
   /**************** COMPONENT STATES ******************** */
 
   const [modal, setModal] = useState(false);
-  const [nestedPassword, setNestedPassword] = useState(false);
   const [nestedModal, setNestedModal] = useState(false);
+  const [nestedPassword, setNestedPassword] = useState(false);
   const [nestedImage, setNestedImage] = useState(false);
   const [nestedAudio, setNestedAudio] = useState(false);
   const [email_address, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [file, setFile] = useState("");
+  const [Url, setUrl] = useState("");
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
-
-  /**************** MODAL TOGGLER ******************** */
 
   /**************** MODAL TOGGLERS ******************** */
 
@@ -76,11 +74,7 @@ const CustomerLoginModal = (props) => {
   /**************** STATE HANDLERS ******************** */
 
   const handleChangeEmailAddress = (e) => setEmailAddress(e.target.value);
-
-  const handleChangePassword = (e) => {
-    setPassword(e.target.value);
-    console.log(password);
-  };
+  const handleChangePassword = (e) => setPassword(e.target.value);
 
   const handleChangeFile = (e) => {
     setFile(e.target.files[0]);
@@ -97,18 +91,18 @@ const CustomerLoginModal = (props) => {
       setMsg("Please enter email and digital id.");
     } else {
       // Request body
-      const body = {
-        email_address,
-        password,
-        file,
-      };
+      const formData = new FormData();
+      formData.append("email_address", email_address);
+      formData.append("password", password);
+      formData.append("file", file);
+      console.log(formData);
 
       /**************** REQUEST SUBMISSION ******************** */
       axios({
         method: "POST",
         url: "/login_customer",
         encType: "multipart/form-data",
-        data: body,
+        data: formData,
       })
         .then((res) => {
           console.log(res);
@@ -149,11 +143,11 @@ const CustomerLoginModal = (props) => {
     navigator.getUserMedia(
       { audio: true },
       () => {
-        console.log("\nRegistration Permission Granted");
+        console.log("\nLogin Permission Granted");
         setIsBlocked(false);
       },
       () => {
-        console.log("\nRegistration Permission Denied");
+        console.log("\nLogin Permission Denied");
         setIsBlocked(false);
       }
     );
@@ -175,13 +169,19 @@ const CustomerLoginModal = (props) => {
   };
 
   // Stop the recording of audio
-  const stop = () => {
+  const stop = (e) => {
     Mp3Recorder.stop()
       .getMp3()
       .then(([buffer, blob]) => {
-        const file = URL.createObjectURL(blob);
-        setFile(file);
+        const data = new File(buffer, "audio.mp3", {
+          type: blob.type,
+          lastModified: Date.now(),
+        });
+        const fileLink = URL.createObjectURL(blob);
+        setUrl(fileLink);
+        setFile(data);
         setIsRecording(false);
+        console.log(file);
       })
       .catch((e) => console.log(e));
   };
@@ -220,7 +220,7 @@ const CustomerLoginModal = (props) => {
               />
 
               <Button
-                color="dark"
+                color="primary"
                 style={{ marginTop: "2rem" }}
                 block
                 onClick={toggleNested}
@@ -331,7 +331,7 @@ const CustomerLoginModal = (props) => {
                       <audio
                         id="file"
                         name="file"
-                        src={file}
+                        src={Url}
                         controls="controls"
                       />
                     </div>
