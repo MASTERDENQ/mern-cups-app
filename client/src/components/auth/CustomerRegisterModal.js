@@ -38,6 +38,7 @@ const CustomerRegisterModal = (props) => {
   const [password, setPassword] = useState("");
   const [file, setFile] = useState("");
   const [filename, setFilename] = useState("Choose File");
+  const [Url, setUrl] = useState("");
   // const [uploadedFile, setUploadedFile] = useState({});
 
   const [msg, setMsg] = useState(null);
@@ -117,27 +118,23 @@ const CustomerRegisterModal = (props) => {
       setMsg("Sorry you have missing requirement(s). Check all fields again.");
     } else {
       // Request body
-      const body = {
-        first_name,
-        last_name,
-        email_address,
-        password,
-      };
-
       const formData = new FormData();
-      formData.append("body", body);
+      formData.append("first_name", first_name);
+      formData.append("last_name", last_name);
+      formData.append("email_address", email_address);
+      formData.append("password", password);
       formData.append("file", file);
       console.log(formData);
 
       /**************** REQUEST SUBMISSION ******************** */
-      // axios({
-      //   method: "POST",
-      //   url: "/add_customer",
-      //   encType: "multipart/form-data",
-      //   data: { body, formData },
-      // })
-      await axios
-        .post("/add_customer", formData, { encType: "multipart/form-data" })
+      axios({
+        method: "POST",
+        url: "/add_customer",
+        encType: "multipart/form-data",
+        data: formData,
+      })
+        // await axios
+        //   .post("/add_customer", formData, { encType: "multipart/form-data" })
         .then((res) => {
           console.log(res);
           console.log(res.data);
@@ -201,12 +198,17 @@ const CustomerRegisterModal = (props) => {
   };
 
   // Stop the recording of audio
-  const stop = () => {
+  const stop = (e) => {
     Mp3Recorder.stop()
       .getMp3()
       .then(([buffer, blob]) => {
-        const file = URL.createObjectURL(blob);
-        setFile(file);
+        const data = new File(buffer, "audio.mp3", {
+          type: blob.type,
+          lastModified: Date.now(),
+        });
+        const fileLink = URL.createObjectURL(blob);
+        setUrl(fileLink);
+        setFile(data);
         setIsRecording(false);
         console.log(file);
       })
@@ -233,7 +235,7 @@ const CustomerRegisterModal = (props) => {
         <ModalBody>
           {/* Error display */}
           {msg ? <Alert color="danger">{msg}</Alert> : null}
-          <Form onSubmit={handleOnSubmit}>
+          <Form onSubmit={handleOnSubmit} id="form">
             <FormGroup>
               <Label for="fistname">First Name</Label>
               <Input
@@ -378,7 +380,7 @@ const CustomerRegisterModal = (props) => {
                       <audio
                         id="file"
                         name="file"
-                        src={file}
+                        src={Url}
                         controls="controls"
                       />
                     </div>

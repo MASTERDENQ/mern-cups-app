@@ -15,6 +15,11 @@ $ cd client; yarn install
 
 ```bash
 $ cd server; npm start
+```
+
+Open another terminal (can be done in vs code) then `cd ..`
+
+```bash
 $ cd client; yarn start
 ```
 
