@@ -28,7 +28,7 @@ $ cd client; yarn start
 | Members ID | Members Names   | Major Roles      |
 | ---------- | --------------- | ---------------- |
 | 1706903    | Tyrone Wallace  | Integration Lead |
-| 1801488    | Dimitri Russell | Project Lead     |
+| 1801488    | Dimitri Russell | Backend Lead     |
 | 1803640    | Reinaldo Pino   | UI Lead          |
 
 # Links of Project Design:
