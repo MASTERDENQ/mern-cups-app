@@ -1,15 +1,19 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Home from "./components/Home";
-import ManagerControlCenter from "./components/manager/ManagerControlCenter";
 import NavBar from "./components/NavBar";
 import AddItem from "./components/manager/AddItem";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ItemsList from "./components/manager/ItemsList";
 import CustomerMenu from "./components/customer/CustomerMenu";
-import Test from "./components/auth/TestUpload";
-import AddItemTest from "./components/manager/AddItemTest";
-// import BarGraph from "./components/BarGraph";
+
+const NotFound = () => (
+  <div>
+    <h1 style={{ textAlign: "center" }}>
+      This page connot be found. Error Code: 404
+    </h1>
+  </div>
+);
 
 class App extends React.Component {
   constructor(props) {
@@ -69,36 +73,6 @@ class App extends React.Component {
 
             <Route
               exact
-              path={"/test"}
-              render={(props) => (
-                <Test {...props} loggedInStatus={this.state.loggedInStatus} />
-              )}
-            />
-
-            <Route
-              exact
-              path={"/add1"}
-              render={(props) => (
-                <AddItemTest
-                  {...props}
-                  loggedInStatus={this.state.loggedInStatus}
-                />
-              )}
-            />
-
-            <Route
-              exact
-              path={"/control"}
-              render={(props) => (
-                <ManagerControlCenter
-                  {...props}
-                  loggedInStatus={this.state.loggedInStatus}
-                />
-              )}
-            />
-
-            <Route
-              exact
               path={"/list"}
               render={(props) => (
                 <ItemsList
@@ -119,9 +93,7 @@ class App extends React.Component {
               )}
             />
 
-            <Route path="*" component={Page_Not_Found_404} />
-
-            {/* <Route path="/graph" component={BarGraph} /> */}
+            <Route path="*" component={NotFound} />
           </Switch>
         </div>
       </Router>
