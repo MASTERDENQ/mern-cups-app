@@ -5,14 +5,18 @@ connect to your desired database change connection string in server/config/keys.
 
 ## Install dependency:
 
-`cd server; npm install`
-`cd ..`
-`cd client; yarn install`
+```bash
+$ cd server; npm install
+$ cd ..
+$ cd client; yarn install
+```
 
 ## Run Application
 
-`cd server; npm start`
-`cd client; yarn start`
+```bash
+$ cd server; npm start
+$ cd client; yarn start
+```
 
 # Group Members
 
@@ -24,11 +28,12 @@ connect to your desired database change connection string in server/config/keys.
 
 # Links of Project Design:
 
-Wireframes/ UI: https://gitlab.com/MASTERQ9/ap-cups/-/tree/development/Design
-ERD: https://gitlab.com/MASTERQ9/ap-cups/-/tree/development/Design
+- [Wireframes/ UI](https://gitlab.com/MASTERQ9/ap-cups/-/tree/development/Design)
+- [ERD](https://gitlab.com/MASTERQ9/ap-cups/-/tree/development/Design)
 
 # Project Tools/Languages/Libraries/Frameworks:
 
+```
 Nodejs
 Reactjs
 Expressjs
@@ -37,6 +42,7 @@ HTML
 CSS/SCSS/SASS
 Reactstap
 Javascript
+```
 
 # Project Description
 
@@ -73,7 +79,7 @@ The requirements of each component and overall system requirements have been inc
 1. System Name: C.U.P.S (1 mark)
 2. Client side and server side logging (3 marks)
 3. Client/Server Architecture \*\*
-4. Database (any database vendor or ORM may be used)\*\*^
+4. Database (any database vendor or ORM may be used)\*\*
 5. Appropriate exception handling ( 5 marks)
 6. User Friendly (7 marks)
 7. Appropriate input validation (3 marks)
