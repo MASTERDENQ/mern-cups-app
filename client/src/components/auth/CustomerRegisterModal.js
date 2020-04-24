@@ -94,18 +94,6 @@ const CustomerRegisterModal = (props) => {
   const handleOnSubmit = async (e) => {
     e.preventDefault();
 
-    console.log(
-      first_name,
-      "\n",
-      last_name,
-      "\n",
-      email_address,
-      "\n",
-      password,
-      "\n",
-      file
-    );
-
     // Check for empty fields
     if (!first_name || !last_name || !email_address || !(password || file)) {
       setMsg("Sorry you have missing requirement(s). Check all fields again.");
@@ -226,7 +214,7 @@ const CustomerRegisterModal = (props) => {
         <ModalBody>
           {/* Error display */}
           {msg ? <Alert color="danger">{msg}</Alert> : null}
-          <Form onSubmit={handleOnSubmit} id="form">
+          <Form onSubmit={handleOnSubmit}>
             <FormGroup>
               <Label for="fistname">First Name</Label>
               <Input

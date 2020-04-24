@@ -42,12 +42,14 @@ const AddItem = (props) => {
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState("");
   const [cost, setCost] = useState("");
-  const [item_image, setItem_Image] = useState("");
+  const [item_image, setItemImage] = useState("");
   const [sign_language, setSignLanguage] = useState("");
   const [item_audio, setItemAudio] = useState("");
+  const [Url, setUrl] = useState("");
   const [isRecording, setIsRecording] = useState(false);
   const [isBlocked, setIsBlocked] = useState(false);
   const [msg, setMsg] = useState(null);
+  const [files, setFiles] = useState([]);
 
   /**************** STATE HANDLERS ******************** */
 
@@ -55,12 +57,9 @@ const AddItem = (props) => {
   const handleChangeCategory = (e) => setCategory(e.target.value);
   const handleChangeStock = (e) => setStock(e.target.value);
   const handleChangeCost = (e) => setCost(e.target.value);
-  const handleChangeItemImage = (e) => {
-    setItem_Image(e.target.files[0]);
-    console.log(item_image);
-  };
+  const handleChangeItemImage = (e) => setItemImage(e.target.files[0]);
   const handleChangeSignLanguage = (e) => setSignLanguage(e.target.files[0]);
-  // const handleChangeItemAudio = e => setItemAudio(e.target.value);
+  const handleChangeItemAudio = (e) => setItemAudio(e.target.files[0]);
 
   /**************** FORM SUBMISSION ******************** */
 
@@ -79,15 +78,24 @@ const AddItem = (props) => {
     ) {
       setMsg("Sorry you have missing require(s). Check again.");
     } else {
-      const body = {
-        item_name,
-        category,
-        stock,
-        cost,
-        item_image,
-        sign_language,
-        item_audio,
-      };
+      setFiles([{ item_image }, { sign_language }, { item_audio }]);
+      console.log(files);
+
+      // Request body
+      const formData = new FormData();
+      formData.append("item_name", item_name);
+      formData.append("category", category);
+      formData.append("stock", stock);
+
+      // formData.append("files[]", files);
+
+      // formData.append("file[item_image]", item_image);
+      // formData.append("file[sign_language]", sign_language);
+      // formData.append("file[item_audio]", item_audio);
+
+      formData.append("item_image", item_image);
+      formData.append("sign_language", sign_language);
+      formData.append("item_audio", item_audio);
 
       /**************** REQUEST SUBMISSION ******************** */
       // Make POST Request to add Item to database
@@ -95,7 +103,7 @@ const AddItem = (props) => {
         method: "POST",
         url: "/add_menu_item",
         encType: "multipart/form-data",
-        data: body,
+        data: formData,
       })
         .then((res) => {
           console.log(res);
@@ -104,7 +112,7 @@ const AddItem = (props) => {
         .catch((error) => {
           console.log(error);
           console.log(error.response);
-          setMsg(error.response.status);
+          setMsg(error.response.data);
         });
     }
   };
@@ -129,9 +137,15 @@ const AddItem = (props) => {
     Mp3Recorder.stop()
       .getMp3()
       .then(([buffer, blob]) => {
-        const item_audio = URL.createObjectURL(blob);
-        setItemAudio(item_audio);
+        const data = new File(buffer, "audio.mp3", {
+          type: blob.type,
+          lastModified: Date.now(),
+        });
+        const fileLink = URL.createObjectURL(blob);
+        setUrl(fileLink);
+        setItemAudio(data);
         setIsRecording(false);
+        console.log(item_audio);
       })
       .catch((e) => console.log(e));
   };
@@ -156,7 +170,7 @@ const AddItem = (props) => {
   const pass = props.loggedInStatus;
 
   /******************************* RENDER ******************************* */
-  if (pass === "NOT_LOGGED_IN") {
+  if (pass === "NOT_ LOGGED_IN") {
     return (
       <div>
         <h1 style={{ textAlign: "center" }}>
@@ -167,7 +181,14 @@ const AddItem = (props) => {
   } else {
     return (
       <Container>
-        <div className="MainDiv">
+        <div
+          className="MainDiv"
+          style={{
+            // overflow: "auto",
+            // height: "inherit",
+            display: "block",
+          }}
+        >
           {/* Title */}
           <div className="title">
             <h1>Add Item</h1>
@@ -177,12 +198,7 @@ const AddItem = (props) => {
 
           {/* Form */}
           <div>
-            <Form
-              className="AddItemForm"
-              method="POST"
-              action="/testdb/add_menu_item"
-              encType="multipart/form-data"
-            >
+            <Form onSubmit={handleOnSubmit}>
               <Container>
                 {/* Add New Item */}
                 <InputGroup>
@@ -190,6 +206,7 @@ const AddItem = (props) => {
                     <InputGroupText>Item Name</InputGroupText>
                   </InputGroupAddon>
                   <Input
+                    id="item_name"
                     name="item_name"
                     type="text"
                     placeholder="Item Name"
@@ -204,9 +221,9 @@ const AddItem = (props) => {
                     <InputGroupText>Stock Quantity</InputGroupText>
                   </InputGroupAddon>
                   <Input
+                    id="stock"
                     name="stock"
                     type="number"
-                    min="0"
                     onChange={handleChangeStock}
                   />
                 </InputGroup>
@@ -218,9 +235,9 @@ const AddItem = (props) => {
                     <InputGroupText>$</InputGroupText>
                   </InputGroupAddon>
                   <Input
+                    id="cost"
                     name="cost"
                     type="text"
-                    min="0"
                     onChange={handleChangeCost}
                   />
                   <InputGroupAddon addonType="append">.00</InputGroupAddon>
@@ -230,7 +247,11 @@ const AddItem = (props) => {
 
                 {/* Selection of category */}
                 <Label>Category</Label>
-                <select name="category" onChange={handleChangeCategory}>
+                <select
+                  id="category"
+                  name="category"
+                  onChange={handleChangeCategory}
+                >
                   <option hidden>Category</option>
                   <option defaultChecked>Beverage</option>
                   <option>Snack</option>
@@ -247,6 +268,7 @@ const AddItem = (props) => {
                     <h3>Upload Photo</h3>
                     <CardImg src={Photo} alt={Icon} />
                     <Input
+                      id="item_image"
                       name="item_image"
                       type="file"
                       onChange={handleChangeItemImage}
@@ -260,9 +282,24 @@ const AddItem = (props) => {
                     <h3>Upload ASL</h3>
                     <CardImg src={ASL} alt={Icon} />
                     <Input
+                      id="sign_language"
                       name="sign_language"
                       type="file"
                       onChange={handleChangeSignLanguage}
+                    />
+                  </Card>
+                </Col>
+
+                {/* Audio Recording */}
+                <Col sm="4">
+                  <Card>
+                    <h3>Audio</h3>
+                    <CardImg src={Audio} alt={Icon} height="50%" />
+                    <Input
+                      id="item_audio"
+                      name="item_audio"
+                      type="file"
+                      onChange={handleChangeItemAudio}
                     />
                   </Card>
                 </Col>
@@ -289,11 +326,7 @@ const AddItem = (props) => {
                       >
                         Stop
                       </Button>
-                      <audio
-                        name="item_audio"
-                        src={item_audio}
-                        controls="controls"
-                      />
+                      <audio name="item_audio" src={Url} controls="controls" />
                     </div>
                   </Card>
                 </Col>
@@ -304,14 +337,13 @@ const AddItem = (props) => {
                 type="submit"
                 style={{ marginTop: "2rem" }}
                 block
-                onClick={handleOnSubmit}
               >
                 <h4>ADD ITEM</h4>
               </Button>
 
               <Link to="/list">
                 <Button
-                  color="dark"
+                  color="primary"
                   type="button"
                   style={{ marginTop: "2rem" }}
                   block

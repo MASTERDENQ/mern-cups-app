@@ -6,6 +6,7 @@ import AddItem from "./components/manager/AddItem";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ItemsList from "./components/manager/ItemsList";
 import CustomerMenu from "./components/customer/CustomerMenu";
+import AddItemTest from "./components/manager/AddItemTest";
 
 const NotFound = () => (
   <div>
@@ -65,6 +66,17 @@ class App extends React.Component {
               path={"/add"}
               render={(props) => (
                 <AddItem
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
+
+            <Route
+              exact
+              path={"/add1"}
+              render={(props) => (
+                <AddItemTest
                   {...props}
                   loggedInStatus={this.state.loggedInStatus}
                 />
