@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import ASL from "../../assets/asl.jpg";
 import Photo from "../../assets/image.jpeg";
 import Audio from "../../assets/audio.png";
 import Icon from "../../assets/icon.png";
 import "../../css/AddItemStyle.css";
-import MicRecorder from "mic-recorder-to-mp3";
 import {
   Container,
   Label,
@@ -32,9 +31,6 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 
-// Create a new record
-const Mp3Recorder = new MicRecorder({ bitRate: 128 });
-
 const AddItem = (props) => {
   /**************** COMPONENT STATES ******************** */
 
@@ -45,11 +41,8 @@ const AddItem = (props) => {
   const [item_image, setItemImage] = useState("");
   const [sign_language, setSignLanguage] = useState("");
   const [item_audio, setItemAudio] = useState("");
-  const [Url, setUrl] = useState("");
-  const [isRecording, setIsRecording] = useState(false);
-  const [isBlocked, setIsBlocked] = useState(false);
-  const [msg, setMsg] = useState(null);
-  const [files, setFiles] = useState([]);
+  const [msg, setMsg] = useState("Fill out all available fields.");
+  const [error, setError] = useState("");
 
   /**************** STATE HANDLERS ******************** */
 
@@ -57,9 +50,84 @@ const AddItem = (props) => {
   const handleChangeCategory = (e) => setCategory(e.target.value);
   const handleChangeStock = (e) => setStock(e.target.value);
   const handleChangeCost = (e) => setCost(e.target.value);
-  const handleChangeItemImage = (e) => setItemImage(e.target.files[0]);
-  const handleChangeSignLanguage = (e) => setSignLanguage(e.target.files[0]);
-  const handleChangeItemAudio = (e) => setItemAudio(e.target.files[0]);
+
+  const handleChangeItemImage = (e) => {
+    // Check if file extention is correct.
+    if (checkMimeImageType(e)) {
+      setItemImage(e.target.files[0]);
+    }
+  };
+
+  const handleChangeSignLanguage = (e) => {
+    // Check if file extention is correct.
+    if (checkMimeImageType(e)) {
+      setSignLanguage(e.target.files[0]);
+    }
+  };
+
+  const handleChangeItemAudio = (e) => {
+    if (checkMimeAudioType(e)) {
+      setItemAudio(e.target.files[0]);
+    }
+  };
+
+  /**************** EXTENSION VALIDATION ******************** */
+  const checkMimeImageType = (event) => {
+    //getting file object
+    let file = event.target.files[0];
+
+    //define message container
+    let err = "";
+
+    // list allow mime type
+    const types = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
+
+    // compare file type find doesn't match
+    if (types.every((type) => file.type !== type)) {
+      // create error message and assign to container
+      err +=
+        file.type +
+        " is not supported. Supported Image Formats: ---png---jpg--jpeg---gif---";
+    }
+
+    // if message not same old that mean has error
+    if (err !== "") {
+      setError(err);
+      // discard selected file
+      event.target.value = null;
+      console.log(err);
+      return false;
+    }
+    return true;
+  };
+
+  const checkMimeAudioType = (event) => {
+    //getting file object
+    let file = event.target.files[0];
+
+    //define message container
+    let err = "";
+
+    // list allow mime type
+    const types = ["audio/x-m4a", "audio/mpeg"];
+
+    // compare file type find doesn't match
+    if (types.every((type) => file.type !== type)) {
+      // create error message and assign to container
+      err +=
+        file.type +
+        " is not supported. Supported Image Formats: ---png---jpg--jpeg---gif---";
+    }
+
+    // if message not same old that mean has error
+    if (err !== "") {
+      setError(err);
+      event.target.value = null; // discard selected file
+      console.log(err);
+      return false;
+    }
+    return true;
+  };
 
   /**************** FORM SUBMISSION ******************** */
 
@@ -76,23 +144,22 @@ const AddItem = (props) => {
       !sign_language ||
       !item_audio
     ) {
-      setMsg("Sorry you have missing require(s). Check again.");
+      setError(`Sorry you have missing requirement(s).
+       You have the following fields missing:\n
+       ${item_name ? "" : "---Item Name---"}\n
+       ${category ? "" : "---Category---"}\n
+       ${stock ? "" : "---Stock---"}\n
+       ${cost ? "" : "---Cost---"}\n
+       ${item_image ? "" : "---Upload Photo---"}\n
+       ${sign_language ? "" : "---Upload ASL---"}\n
+       ${item_audio ? "" : "---Audio---"}.`);
     } else {
-      setFiles([{ item_image }, { sign_language }, { item_audio }]);
-      console.log(files);
-
       // Request body
       const formData = new FormData();
       formData.append("item_name", item_name);
       formData.append("category", category);
       formData.append("stock", stock);
-
-      // formData.append("files[]", files);
-
-      // formData.append("file[item_image]", item_image);
-      // formData.append("file[sign_language]", sign_language);
-      // formData.append("file[item_audio]", item_audio);
-
+      formData.append("cost", cost);
       formData.append("item_image", item_image);
       formData.append("sign_language", sign_language);
       formData.append("item_audio", item_audio);
@@ -108,64 +175,15 @@ const AddItem = (props) => {
         .then((res) => {
           console.log(res);
           console.log(res.data);
+          setMsg("New menu item was successfully added.");
         })
-        .catch((error) => {
-          console.log(error);
-          console.log(error.response);
-          setMsg(error.response.data);
+        .catch((err) => {
+          console.log(err);
+          console.log(err.response);
+          setError(err.response.data);
         });
     }
   };
-
-  /**************** AUDIO RECORDING ******************** */
-
-  // Start the recording of audio
-  const start = () => {
-    if (isBlocked) {
-      console.log("Add Item Permission Denied");
-    } else {
-      Mp3Recorder.start()
-        .then(() => {
-          setIsRecording(true);
-        })
-        .catch((e) => console.error(e));
-    }
-  };
-
-  // Stop the recording of audio
-  const stop = () => {
-    Mp3Recorder.stop()
-      .getMp3()
-      .then(([buffer, blob]) => {
-        const data = new File(buffer, "audio.mp3", {
-          type: blob.type,
-          lastModified: Date.now(),
-        });
-        const fileLink = URL.createObjectURL(blob);
-        setUrl(fileLink);
-        setItemAudio(data);
-        setIsRecording(false);
-        console.log(item_audio);
-      })
-      .catch((e) => console.log(e));
-  };
-
-  /**************** MIC PERMISSION CHECK ******************** */
-  // React-Mic
-  useEffect(() => {
-    // React-Mic Permissions Check
-    navigator.getUserMedia(
-      { audio: true },
-      () => {
-        console.log("\nAdd Item Permission Granted");
-        setIsBlocked(false);
-      },
-      () => {
-        console.log("\nAdd Item Permission Denied");
-        setIsBlocked(false);
-      }
-    );
-  }, []);
 
   const pass = props.loggedInStatus;
 
@@ -194,7 +212,11 @@ const AddItem = (props) => {
             <h1>Add Item</h1>
           </div>
           {/* Error display */}
-          {msg ? <Alert color="danger">{msg}</Alert> : null}
+          {error ? (
+            <Alert color="danger">{error}</Alert>
+          ) : (
+            <Alert color="success">{msg}</Alert>
+          )}
 
           {/* Form */}
           <div>
@@ -301,33 +323,6 @@ const AddItem = (props) => {
                       type="file"
                       onChange={handleChangeItemAudio}
                     />
-                  </Card>
-                </Col>
-
-                {/* Audio Recording */}
-                <Col sm="4">
-                  <Card>
-                    <h3>Audio</h3>
-                    <CardImg src={Audio} alt={Icon} height="50%" />
-
-                    <div className="audio-css">
-                      <Button
-                        onClick={start}
-                        disabled={isRecording}
-                        type="button"
-                      >
-                        Record
-                      </Button>
-
-                      <Button
-                        onClick={stop}
-                        disabled={!isRecording}
-                        type="button"
-                      >
-                        Stop
-                      </Button>
-                      <audio name="item_audio" src={Url} controls="controls" />
-                    </div>
                   </Card>
                 </Col>
               </Row>
