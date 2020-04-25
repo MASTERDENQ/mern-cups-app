@@ -17,7 +17,6 @@ const ViewFile = (props) => {
   const [nestedImage, setNestedImage] = useState(false);
   const [nestedASL, setNestedASL] = useState(false);
   const [nestedAudio, setNestedAudio] = useState(false);
-  const [file, setFile] = useState("");
   const [Url, setUrl] = useState("");
   const [msg, setMsg] = useState(null);
 
@@ -50,7 +49,6 @@ const ViewFile = (props) => {
       .get(`/menu_item/${props.id}/${field}`)
       .then((res) => {
         console.log(res);
-        setFile(res);
         setUrl(`http://localhost:5000/menu_item/${props.id}/${field}`);
         setMsg("LOADED_SUCCESSFULLY");
         console.log(msg);

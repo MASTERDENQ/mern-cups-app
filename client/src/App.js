@@ -7,6 +7,8 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ItemsList from "./components/manager/ItemsList";
 import CustomerMenu from "./components/customer/CustomerMenu";
 import AddItemTest from "./components/manager/AddItemTest";
+import ManagerControlCenter from "./components/manager/ManagerControlCenter";
+import Chart from "./components/manager/Chart";
 
 const NotFound = () => (
   <div>
@@ -102,6 +104,25 @@ class App extends React.Component {
                   {...props}
                   loggedInStatus={this.state.loggedInStatus}
                 />
+              )}
+            />
+
+            <Route
+              exact
+              path={"/control"}
+              render={(props) => (
+                <ManagerControlCenter
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
+
+            <Route
+              exact
+              path={"/chart"}
+              render={(props) => (
+                <Chart {...props} loggedInStatus={this.state.loggedInStatus} />
               )}
             />
 

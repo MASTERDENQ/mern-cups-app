@@ -36,7 +36,7 @@ const ManagerControlCenter = () => {
       </Link>
 
       {/* Gragh Button */}
-      <Link to="/graph">
+      <Link to="/chart">
         <div class="card">
           <img src={graph} alt="Avatar" />
 
