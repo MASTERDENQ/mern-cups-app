@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import {
   Button,
@@ -10,98 +10,85 @@ import {
   Label,
   Input,
   Container,
-  // NavLink,
-  Alert
-  // UncontrolledDropdown,
-  // DropdownToggle,
-  // DropdownItem,
-  // DropdownMenu,
-  // NavItem,
-  // Navbar
+  Alert,
 } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
-class RegisterModal extends Component {
+const UpdateModal = (props) => {
   /**************** COMPONENT STATES ******************** */
-  state = {
-    modal: false,
-    nestedModal: false,
-    field: "",
-    new_value: "",
-    msg: null
-  };
+  const [modal, setModal] = useState(false);
+  const [nestedModal, setNestedModal] = useState(false);
+  const [field, setField] = useState("");
+  const [new_value, setNewValue] = useState("");
+  const [msg, setMsg] = useState(null);
 
   /**************** MODAL TOGGLERS ******************** */
   // Main Toggle
-  toggle = () => {
-    console.log(this.props.id, "Update");
-    this.setState({ modal: !this.state.modal });
+  const toggle = () => {
+    console.log(props.id, "Update");
+    setModal(!modal);
   };
 
   // Secondary Toggle
-  toggleNested = () => {
-    this.setState({ msg: null });
-    this.setState({ nestedModal: !this.state.nestedModal });
+  const toggleNested = () => {
+    setMsg(null);
+    setNestedModal(!nestedModal);
   };
 
   /**************** STATE HANDLERS ******************** */
-  onChange = e => {
-    this.setState({ [e.target.name]: e.target.value });
-  };
-
-  setField = field => {
-    this.setState({ field: field });
-  };
+  const onChange = (e) => setNewValue(e.target.value);
+  const setFieldValue = (field) => setField(field);
 
   /**************** FORM SUBMISSION ******************** */
-  onSubmit = e => {
+  const onSubmit = (e) => {
     // Prevent Default
     e.preventDefault();
 
-    if (!this.state.new_value && this.state.new_value < 0) {
-      this.setState({ msg: "Sorry, incorrect entry. Try again" });
+    if (!new_value && new_value < 0) {
+      setMsg("Sorry, incorrect entry. Try again");
     } else {
       // Header a.k.a config info
       const config = {
         header: {
-          "Content-Type": "application/json"
-        }
+          "Content-Type": "application/json",
+        },
       };
       // Body
       const body = {
-        id: this.props.id,
-        new_value: this.state.new_value
+        id: props.id,
+        new_value: new_value,
       };
 
       console.log(body);
 
       // Making Request
       axios
-        .post(`testdb/edit_item/${this.state.field}`, body, config)
-        .then(res => {
+        .post(`/edit_item/${field}`, body, config)
+        .then((res) => {
           console.log(res);
           console.log(res.data);
+          setMsg("UPDATE_SUCCESSFUL");
           // Close modal
-          this.toggle();
+          toggle();
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           console.log(err.response);
-          this.setState({ msg: err.response.data });
+          setMsg(err.response.data);
         });
     }
   };
 
-  render() {
-    console.log(this.props.id);
-
+  if (msg === "UPDATE_SUCCESSFUL") {
+    return <Redirect to="/list" />;
+  } else {
     return (
       <div>
-        <Link to="#" onClick={this.toggle}>
+        <Link to="#" onClick={toggle}>
           UPDATE
         </Link>
 
-        <Modal isOpen={this.state.modal} toggle={this.toggle}>
+        <Modal isOpen={modal} toggle={toggle}>
           <ModalHeader>Update Menu Options</ModalHeader>
           <ModalBody>Click one to Update</ModalBody>
           <ModalBody>
@@ -110,8 +97,8 @@ class RegisterModal extends Component {
               style={{ marginTop: "2rem" }}
               block
               onClick={() => {
-                this.toggleNested();
-                this.setField("cost");
+                toggleNested();
+                setFieldValue("cost");
               }}
             >
               Cost Update
@@ -121,22 +108,20 @@ class RegisterModal extends Component {
               style={{ marginTop: "2rem" }}
               block
               onClick={() => {
-                this.toggleNested();
-                this.setField("stock");
+                toggleNested();
+                setFieldValue("stock");
               }}
             >
               Stock Update
             </Button>
           </ModalBody>
 
-          <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested}>
+          <Modal isOpen={nestedModal} toggle={toggleNested}>
             <ModalHeader>Update </ModalHeader>
             <ModalBody>
-              {this.state.msg ? (
-                <Alert color="danger">{this.state.msg}</Alert>
-              ) : null}
+              {msg ? <Alert color="danger">msg</Alert> : null}
 
-              <Form onSubmit={this.onSubmit}>
+              <Form onSubmit={onSubmit}>
                 <FormGroup>
                   <Container>
                     <Label for="new_value">New Value</Label>
@@ -148,7 +133,7 @@ class RegisterModal extends Component {
                     id="new_value"
                     placeholder="Enter new value here."
                     className="mb-3"
-                    onChange={this.onChange}
+                    onChange={onChange}
                   />
 
                   <Button
@@ -156,7 +141,6 @@ class RegisterModal extends Component {
                     style={{ marginTop: "2rem" }}
                     block
                     type="submit"
-                    onSubmit={this.onSubmit}
                   >
                     Submit
                   </Button>
@@ -168,6 +152,6 @@ class RegisterModal extends Component {
       </div>
     );
   }
-}
+};
 
-export default RegisterModal;
+export default UpdateModal;

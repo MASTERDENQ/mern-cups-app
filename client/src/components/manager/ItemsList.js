@@ -15,7 +15,8 @@ import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../../css/ItemsListStyle.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import UpdateModal from "./UpdateModal";
+import ViewFile from "./itemModels/ViewFile";
+import UpdateModal from "./itemModels/UpdateModal";
 // import DeleteModal from "../../reusableComponents/deleteModal";
 
 class ItemsList extends Component {
@@ -52,13 +53,13 @@ class ItemsList extends Component {
     this.setState({ id: _id });
   };
 
-  /*********  Request Detail For One Item ***************/
+  /*********  Request One File For One Item ***************/
 
-  requestDetail = (id) => {
+  requestDetail = (id, field) => {
     console.log(`Request Details for Item ${id}`);
     //Request Items
     axios
-      .get(`/${id}`)
+      .get(`/menu_item/${id}/${field}`)
       .then((res) => {
         console.log(res);
         this.setState({ item: res.data });
@@ -73,7 +74,7 @@ class ItemsList extends Component {
   deleteItem = (_id) => {
     console.log(`Delete Request for Item ${_id}`);
     axios
-      .delete(`/delete_menu_item/${_id}`)
+      .post(`/delete_menu_item/${_id}`)
       .then((res) => {
         console.log(res);
         console.log(res.data);
@@ -142,6 +143,7 @@ class ItemsList extends Component {
                     className="container"
                     style={{ marginRight: "4rem" }}
                   >
+                    {/* DELETE BUTTON */}
                     <Button
                       className="remove-btn"
                       color="danger"
@@ -150,7 +152,6 @@ class ItemsList extends Component {
                     >
                       &times;
                     </Button>
-
                     {/* <Link to="update" onClick={this.onClick}></Link> */}
                     <Button
                       className="remove-btn"
@@ -160,34 +161,22 @@ class ItemsList extends Component {
                     >
                       <UpdateModal id={this.state.id} />
                     </Button>
-
-                    <Button className="remove-btn" color="danger" size="sm">
-                      SALES GRAPH
+                    <Button
+                      className="remove-btn"
+                      color="danger"
+                      size="sm"
+                      onClick={this.getId.bind(this, items._id)}
+                    >
+                      <ViewFile id={this.state.id} />
                     </Button>
-
-                    <Link to="#" onClick={this.showItem.bind(this, items._id)}>
-                      {items.item_name}
-                      &emsp;
-                      {items.category}
-                      &emsp;
-                      {items.stock}
-                      &emsp; ${items.cost}
-                    </Link>
+                    NAME: {items.item_name} ** &emsp; CATEGORY: {items.category}{" "}
+                    ** &emsp; STOCK: {items.stock} ** &emsp; COST: ${items.cost}{" "}
+                    **
                   </ListGroupItem>
                 </CSSTransition>
               ))}
             </TransitionGroup>
           </ListGroup>
-        </Container>
-
-        {/*********** Display one items here ********* */}
-
-        <Container>
-          <Card>
-            <CardHeader>{_id}</CardHeader>
-            <CardTitle>{item_name}</CardTitle>
-            <CardBody>{(cost, category)} </CardBody>
-          </Card>
         </Container>
       </div>
     );
