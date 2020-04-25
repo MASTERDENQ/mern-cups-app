@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import MicRecorder from "mic-recorder-to-mp3";
 import Audio from "../../assets/audio.png";
 import Icon from "../../assets/icon.png";
 import Photo from "../../assets/photo.png";
@@ -19,9 +18,6 @@ import {
   ModalFooter,
 } from "reactstrap";
 
-// Create a new record
-const Mp3Recorder = new MicRecorder({ bitRate: 128 });
-
 /********************** COMPONENT ********************** */
 const CustomerLoginModal = (props) => {
   /**************** COMPONENT STATES ******************** */
@@ -34,12 +30,10 @@ const CustomerLoginModal = (props) => {
   const [email_address, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [file, setFile] = useState("");
-  const [Url, setUrl] = useState("");
+  // const [Url, setUrl] = useState("");
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isRecording, setIsRecording] = useState(false);
-  const [isBlocked, setIsBlocked] = useState(false);
 
   /**************** MODAL TOGGLERS ******************** */
 
@@ -78,7 +72,7 @@ const CustomerLoginModal = (props) => {
 
   const handleChangeFile = (e) => {
     setFile(e.target.files[0]);
-    console.log(file);
+    console.log(e.target.files[0]);
   };
 
   /**************** FORM SUBMISSION ******************** */
@@ -138,56 +132,7 @@ const CustomerLoginModal = (props) => {
     }
   }, [error, handleToggle, isAuthenticated, modal]);
 
-  useEffect(() => {
-    // React-Mic Permissions Check
-    navigator.getUserMedia(
-      { audio: true },
-      () => {
-        console.log("\nLogin Permission Granted");
-        setIsBlocked(false);
-      },
-      () => {
-        console.log("\nLogin Permission Denied");
-        setIsBlocked(false);
-      }
-    );
-  }, []);
-
-  /**************** AUDIO RECORDING ******************** */
-
-  // Start the recording of audio
-  const start = () => {
-    if (isBlocked) {
-      console.log("Login Permission Denied");
-    } else {
-      Mp3Recorder.start()
-        .then(() => {
-          setIsRecording(true);
-        })
-        .catch((e) => console.error(e));
-    }
-  };
-
-  // Stop the recording of audio
-  const stop = (e) => {
-    Mp3Recorder.stop()
-      .getMp3()
-      .then(([buffer, blob]) => {
-        const data = new File(buffer, "audio.mp3", {
-          type: blob.type,
-          lastModified: Date.now(),
-        });
-        const fileLink = URL.createObjectURL(blob);
-        setUrl(fileLink);
-        setFile(data);
-        setIsRecording(false);
-        console.log(file);
-      })
-      .catch((e) => console.log(e));
-  };
-
   /************************* RENDER ***************************** */
-
   return (
     <div>
       {/* <NavLink onClick={handleToggle} href="#">
@@ -311,30 +256,18 @@ const CustomerLoginModal = (props) => {
                   <Card>
                     <h3>Audio</h3>
                     <CardImg src={Audio} alt={Icon} height="50%" />
-
-                    <div className="audio-css">
-                      <Button
-                        onClick={start}
-                        disabled={isRecording}
-                        type="button"
-                      >
-                        Record
-                      </Button>
-
-                      <Button
-                        onClick={stop}
-                        disabled={!isRecording}
-                        type="button"
-                      >
-                        Stop
-                      </Button>
-                      <audio
-                        id="file"
-                        name="file"
-                        src={Url}
-                        controls="controls"
-                      />
-                    </div>
+                    <Input
+                      name="file"
+                      id="file"
+                      type="file"
+                      onChange={handleChangeFile}
+                    />
+                    <audio
+                      id="file"
+                      name="file"
+                      src={file}
+                      controls="controls"
+                    />
                   </Card>
                 </ModalBody>
 

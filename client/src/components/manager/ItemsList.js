@@ -1,16 +1,5 @@
 import React, { Component } from "react";
-import {
-  Container,
-  ListGroup,
-  ListGroupItem,
-  Button,
-  // NavItem,
-  CardHeader,
-  CardTitle,
-  Card,
-  CardBody,
-  Alert,
-} from "reactstrap";
+import { Container, ListGroup, ListGroupItem, Button, Alert } from "reactstrap";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import "../../css/ItemsListStyle.css";
 import axios from "axios";
@@ -28,7 +17,6 @@ class ItemsList extends Component {
     this.state = {
       items: [],
       id: "",
-      item: [],
       isLoaded: false,
       deleteModalVisible: false,
       editModalVisible: false,
@@ -51,22 +39,6 @@ class ItemsList extends Component {
 
   getId = (_id) => {
     this.setState({ id: _id });
-  };
-
-  /*********  Request One File For One Item ***************/
-
-  requestDetail = (id, field) => {
-    console.log(`Request Details for Item ${id}`);
-    //Request Items
-    axios
-      .get(`/menu_item/${id}/${field}`)
-      .then((res) => {
-        console.log(res);
-        this.setState({ item: res.data });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
   };
 
   /*****************  Delete Request for One Item ***************/
@@ -117,24 +89,24 @@ class ItemsList extends Component {
   }
 
   render() {
-    // Destructure item
-    const { _id, item_name, category, cost } = this.state.item;
-
     return (
       <div>
         {/*********** Display all items here ********* */}
 
         <Container>
           <h1>Status: {this.props.loggedInStatus}</h1>
+
           <Link to="/add">
             <Button className="mt-4 mb-3" color="dark">
               ADD ITEM
             </Button>
           </Link>
+
           {/* Error display */}
           {this.state.msg ? (
             <Alert color="danger">{this.state.msg}</Alert>
           ) : null}
+
           <ListGroup>
             <TransitionGroup className="items-list">
               {this.state.items.map((items) => (
@@ -161,6 +133,7 @@ class ItemsList extends Component {
                     >
                       <UpdateModal id={this.state.id} />
                     </Button>
+                    {/* VIEW MENU ITEM FILES */}
                     <Button
                       className="remove-btn"
                       color="danger"

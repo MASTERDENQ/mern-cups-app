@@ -17,15 +17,6 @@ import {
   CardImg,
   Form,
   Alert,
-  // DropdownItem,
-  // Dropdown,
-  // UncontrolledDropdown,
-  // DropdownMenu,
-  // DropdownToggle,
-  // CardText,
-  // CardBody,
-  // CardTitle,
-  // CardSubtitle,
   Row,
   Col,
 } from "reactstrap";
@@ -175,6 +166,7 @@ const AddItem = (props) => {
         .then((res) => {
           console.log(res);
           console.log(res.data);
+          setError(null);
           setMsg("New menu item was successfully added.");
         })
         .catch((err) => {

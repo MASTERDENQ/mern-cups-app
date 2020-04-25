@@ -6,16 +6,10 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  Container,
-  Alert,
   CardImg,
   Card,
 } from "reactstrap";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const ViewFile = (props) => {
   /**************** COMPONENT STATES ******************** */
@@ -24,8 +18,8 @@ const ViewFile = (props) => {
   const [nestedASL, setNestedASL] = useState(false);
   const [nestedAudio, setNestedAudio] = useState(false);
   const [file, setFile] = useState("");
-  const [field, setField] = useState("");
-  const [msg, setMsg] = useState("");
+  const [Url, setUrl] = useState("");
+  const [msg, setMsg] = useState(null);
 
   /**************** MODAL TOGGLERS ******************** */
   // Main Toggle
@@ -49,20 +43,15 @@ const ViewFile = (props) => {
     setNestedAudio(!nestedAudio);
   };
 
-  /**************** STATE HANDLERS ******************** */
-  const setFieldValue = (field) => setField(field);
-
   /**************** FORM SUBMISSION ******************** */
-  const onSubmit = (e) => {
-    // Prevent Default
-    e.preventDefault();
-
+  const onSubmit = (field) => {
     // Making Request
     axios
       .get(`/menu_item/${props.id}/${field}`)
       .then((res) => {
         console.log(res);
-        console.log(res.data);
+        setFile(res);
+        setUrl(`http://localhost:5000/menu_item/${props.id}/${field}`);
         setMsg("LOADED_SUCCESSFULLY");
         console.log(msg);
         // Close modal
@@ -74,11 +63,7 @@ const ViewFile = (props) => {
         setMsg(err.response.data);
       });
   };
-};
 
-if (msg === "LOADED_SUCCESSFULLY") {
-  return <Redirect to="/list" />;
-} else {
   return (
     <div>
       <Link to="#" onClick={toggle}>
@@ -92,11 +77,10 @@ if (msg === "LOADED_SUCCESSFULLY") {
         <ModalBody>
           <Button
             color="dark"
-            style={{ marginTop: "2rem" }}
             block
             onClick={() => {
               toggleImage();
-              setFieldValue("item_photo");
+              onSubmit("item_photo");
             }}
           >
             Item Photo
@@ -107,7 +91,7 @@ if (msg === "LOADED_SUCCESSFULLY") {
             block
             onClick={() => {
               toggleASL();
-              setFieldValue("asl_photo");
+              onSubmit("asl_photo");
             }}
           >
             Sign Language Photo
@@ -119,7 +103,7 @@ if (msg === "LOADED_SUCCESSFULLY") {
             block
             onClick={() => {
               toggleAudio();
-              setFieldValue("item_audio");
+              onSubmit("item_audio");
             }}
           >
             Item Audio
@@ -134,7 +118,7 @@ if (msg === "LOADED_SUCCESSFULLY") {
         <ModalBody>
           <Card>
             <h3>ITEM PHOTO</h3>
-            <CardImg src={file} alt={"Error"} height="50%" />
+            <CardImg src={Url} alt={"Error"} height="50%" />
           </Card>
         </ModalBody>
         <ModalFooter>
@@ -151,7 +135,7 @@ if (msg === "LOADED_SUCCESSFULLY") {
         <ModalBody>
           <Card>
             <h3>AMERICAN SIGN LANGUAGE</h3>
-            <CardImg src={file} alt={"Error"} height="50%" />
+            <CardImg src={Url} alt={"Error"} height="50%" />
           </Card>
         </ModalBody>
         <ModalFooter>
@@ -168,7 +152,7 @@ if (msg === "LOADED_SUCCESSFULLY") {
         <ModalBody>
           <Card>
             <h3>ITEM AUDIO</h3>
-            <audio src={file} alt={"Error"} height="50%" controls="controls" />
+            <audio src={Url} alt={"Error"} height="50%" controls="controls" />
           </Card>
         </ModalBody>
         <ModalFooter>
@@ -179,6 +163,6 @@ if (msg === "LOADED_SUCCESSFULLY") {
       </Modal>
     </div>
   );
-}
+};
 
 export default ViewFile;
