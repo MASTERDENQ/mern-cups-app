@@ -28,68 +28,39 @@ class Chart extends Component {
     };
   }
 
-  componentDidMount() {
-    console.log();
-    //Request Items
-    axios
-      .get("/list_items")
-      .then((res) => {
-        console.log(res);
-        this.setState({ items: res.data });
-        console.log(this.state.items[0].item_name);
-      })
-      .catch((err) => {
-        console.log(err);
+  populateChart = () => {
+    console.log(this.state.items);
+
+    for (let i = 0; i < 2; i++) {
+      // console.log(this.state.items[i]);
+      this.setState({
+        name: [...this.state.name, this.state.items[i].item_name],
+        cost: [...this.state.cost, this.state.items[i].cost],
+        stock: [...this.state.stock, this.state.items[i].stock],
       });
-    // ************* TRYING MAP ********************** i failed
-    // let stock = this.state.items.map((items) => {
-    //   console.log(items.stock);
-    // });
+    }
 
-    // let cost = this.state.items.map((items) => {
-    //   console.log(items.cost);
-    // });
-
-    // let name = this.state.items.map((items) => {
-    //   console.log(items.item_name);
-    // });
-
-    //**************** */ TRYINF FOR LOOP ******************** i failed
-    // for (let i = 0; i < 2; i++) {
-    //   this.setState({ name: this.state.items[i].item_name });
-    //   this.setState({ cost: this.state.items[i].item_cost });
-    // }
+    console.log("NAMES: ", this.state.name);
+    console.log("COST: ", this.state.cost);
+    console.log("STOCK: ", this.state.stock);
 
     this.setState({
       chartData: {
-        labels:
-          // this.state.name,
-          // [name],
-          [
-            "Boston",
-            "Worcester",
-            "Springfield",
-            "Lowell",
-            "Cambridge",
-            "New Bedford",
-          ],
+        labels: this.state.name,
+
         datasets: [
           {
             label: "Population",
-            data:
-              // this.state.cost,
-              // [cost],
-              [617594, 181045, 153060, 106519, 105162, 95072],
-            backgroundColor: "green",
-            // backgroundColor: [
-            //   "rgba(255, 99, 132, 0.6)",
-            //   "rgba(54, 162, 235, 0.6)",
-            //   "rgba(255, 206, 86, 0.6)",
-            //   "rgba(75, 192, 192, 0.6)",
-            //   "rgba(153, 102, 255, 0.6)",
-            //   "rgba(255, 159, 64, 0.6)",
-            //   "rgba(255, 99, 132, 0.6)",
-            // ],
+            data: this.state.stock,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.6)",
+              "rgba(54, 162, 235, 0.6)",
+              "rgba(255, 206, 86, 0.6)",
+              "rgba(75, 192, 192, 0.6)",
+              "rgba(153, 102, 255, 0.6)",
+              "rgba(255, 159, 64, 0.6)",
+              "rgba(255, 99, 132, 0.6)",
+            ],
             borderWidth: 1,
             borderColor: "#777",
             hoverBorderWidth: 3,
@@ -98,6 +69,21 @@ class Chart extends Component {
         ],
       },
     });
+  };
+
+  componentDidMount() {
+    console.log();
+    //Request Items
+    axios
+      .get("/list_items")
+      .then((res) => {
+        console.log(res);
+        this.setState({ items: res.data });
+        this.populateChart();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
   render() {
@@ -131,6 +117,15 @@ class Chart extends Component {
               },
               tooltips: {
                 enabled: true,
+              },
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: true,
+                    },
+                  },
+                ],
               },
             }}
           />
