@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 const path = require("path");
 const crypto = require("crypto");
 
-//replace methods and uninstall this
 const mongo = require("mongodb");
 
 const multer = require("multer");
@@ -308,113 +307,96 @@ router.post("/add_menu_item", menuItemUpload, (req, res) => {
     }
   });
 });
-/*
+
 //adds order after validating customer
-router.post('/confirm_order/:email_address', upload.single('file'), (req, res) => {
-    let email = req.params.email_address;
+router.post(
+  "/confirm_order",
+  (req, res, next) => {
+    let itemCosts = new Array();
+    let totalCost = 0;
 
-    let numberOfItems = req.body.number_of_items;
-    var itemId = new Array();
-    var amountSold = new Array();
-
-    for (i = 0; i < numberOfItems; i++) {
-        itemId.push(req.body.item_id[i]);
-        amountSold.push(req.body.quantity[i]);
+    if (
+      !req.body.item_id ||
+      !req.body.amount_sold ||
+      !req.body.account_balance ||
+      !req.body.email_address ||
+      req.body.item_id.length != req.body.amount_sold.length
+    ) {
+      return res.status(400).send("Invalid user input");
     }
 
-    if (!numberOfItems || !itemId || !amountSold ||
-        itemId.length <= numberOfItems || amountSold <= numberOfItems) {
-        return res.status(400).send('Invalid user input');
+    for (i = 0; i < req.body.item_id.length; i++) {
+      let itemId = req.body.item_id[i];
+
+      menuItemModel.findById(itemId, (err, item) => {
+        if (err) {
+          return res.status(500).send("Unexpected server error");
+        } else if (!item) {
+          return res.status(404).send("Item on order does not exist");
+        } else if (item.stock < req.body.amount_sold.length) {
+          return res.status(400).send("Order amount exceeds item stock");
+        }
+
+        itemCosts.push(item.cost * req.body.amount_sold[i]);
+        totalCost += itemCosts[i];
+      });
     }
 
-    if (!req.file || req.file.length == 0) {
-        let password = req.body.password;
-
-        var query = { email_address: email, password: password };
-
-        //searches for customer record based on query
-        customerModel.findOne(query, (err, customer) => {
-            if (err) {
-                return res.status(500).send('Unexpected server error');
-            }
-            else if (!customer) {
-                return res.status(404).send('Failed to verify customer');
-            }
-            else {
-                res.status(200).send('Customer successfully validated');
-            }
-        });
-    }
-    else {
-        var query = { email_address: email };
-
-        //searches for customer record based on query
-        customerModel.findOne(query, (err, customer) => {
-            if (err) {
-                return res.status(500).send('Unexpected error');
-            }
-            else if (!customer) {
-                return res.status(404).send('Incorrect login credentials');
-            }
-            else {
-                //if record matching query is found then an object id is created based on digital id field
-                let fileId = new mongo.ObjectID(customer.digital_id);
-
-                //uses above fileId to search file database collection 
-                gfs.files.findOne({ _id: fileId }, (err, file) => {
-                    if (err)
-                        return res.status(500).send('Unexpected server error');
-
-                    else if (!file || file.length == 0) {
-                        return res.status(404).send('Customer ID not found');
-                    }
-
-                    else {
-                        //md5 hash of file uploaded by client is generated for comparison
-                        fileHash = crypto.createHash('md5').update(req.file.buffer).digest('hex');
-
-                        //checks if hash of file uploaded by client is the same as file object found from query
-                        if (file.md5 == fileHash) {
-                            res.status(200).send('Customer successfully validated');
-                        }
-                        else
-                            return res.status(404).send('Failed to verify customer');
-                    }
-                });
-            }
-        });
+    if (req.body.account_balance < totalCost) {
+      return res.status(422).send("Insufficient account balance");
     }
 
-    //saves order made
-    saveOrder(itemId, amountSold, numberOfItems);
-});
-//use next() and save variables to local.res or something / just return status to main router
-function saveOrder(idArr, amountArr, n) {
-    var itemCosts = [];
+    res.locals.idArr = req.body.item_id;
+    res.locals.amountArr = req.body.amount_sold;
+    res.locals.itemCosts = itemCosts;
 
-    (req, res) => {
-        for (i = 0; i < n; i++) {
-            let itemId = idArr[i];
+    res.locals.email = req.body.email_address;
+    res.locals.bill = totalCost;
 
-            menuItemModel.findById(itemId, (err, foundItem) => {
-                if (err) {
-                    return res.status(500).send('Unexpected server error');
-                }
-                else if (!foundItem) {
-                    return res.status(404).send('Item on order does not exist');
-                }
-                itemCosts.push(foundItem.cost * amountArr[i])
+    next();
+  },
+  (req, res) => {
+    for (i = 0; i < res.locals.idArr.length; i++) {
+      let itemId = res.locals.idArr[i];
+      let amntSold = res.locals.amountArr[i];
+      let itemCost = res.locals.itemCosts[i];
+
+      orderModel.findOneAndUpdate(
+        { item_id: itemId },
+        { $inc: { quantity_sold: amntSold, total_sales: itemCost } },
+        (err, foundOrder) => {
+          if (err) {
+            let newOrderModel = new orderModel();
+            newOrderModel.item_id = itemId;
+            newOrderModel.quantity_sold = amntSold;
+            newOrderModel.total_sales = res.locals.bill;
+
+            newOrderModel.save((err) => {
+              if (err) return res.status(500).send("Failed to update order");
             });
+          }
         }
-        for(i = 0; i < n; i++){
-            let itemId = idArr[i];
+      );
 
-            orderModel.findOneAndUpdate({ item_id: itemId }, )
-
+      menuItemModel.findByIdAndUpdate(
+        itemId,
+        { $inc: { quantity_sold: -amntSold } },
+        (err) => {
+          if (err) throw err;
         }
+      );
     }
-}
-*/
+
+    customerModel.findOneAndUpdate(
+      { email_address: res.locals.email },
+      { $inc: { account_balance: -res.locals.bill } },
+      (err) => {
+        if (err) throw err;
+      }
+    );
+  }
+);
+
 /*****VALIDATION REQUESTS ******/
 
 //validates manager login
@@ -578,7 +560,7 @@ router.post("/delete_menu_item/:id", (req, res) => {
         gfs.remove({ _id: aslPhotoId, root: "uploads" });
         gfs.remove({ _id: itemAudioId, root: "uploads" });
       } catch (error) {
-        res.write("Error deleting files");
+        res.write("Error deleting item files");
       }
 
       res.status(200).send("Item successfully deleted");

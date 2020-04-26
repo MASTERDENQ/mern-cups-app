@@ -18,8 +18,6 @@ class ItemsList extends Component {
       items: [],
       id: "",
       isLoaded: false,
-      deleteModalVisible: false,
-      editModalVisible: false,
       msg: null,
     };
   }
@@ -57,22 +55,7 @@ class ItemsList extends Component {
       });
   };
 
-  /*********  Request to edit one Item ***************/
-
-  // updateItem = (body, field) => {
-  //   console.log(`Edit Request for the ${field} of item ${id}`);
-  //   axios
-  //     .post(`testdb/edit_item/${field}`, body)
-  //     .then(res => {
-  //       console.log(res);
-  //       console.log(res.data);
-  //     })
-  //     .catch(err => {
-  //       console.log(err);
-  //     });
-  // };
-
-  /************** Request To Retrieve All Items Names ***************** */
+  /************** Request To Retrieve All Items ***************** */
 
   componentDidMount() {
     console.log();
@@ -142,9 +125,15 @@ class ItemsList extends Component {
                     >
                       <ViewFile id={this.state.id} />
                     </Button>
-                    NAME: {items.item_name} ** &emsp; CATEGORY: {items.category}{" "}
-                    ** &emsp; STOCK: {items.stock} ** &emsp; COST: ${items.cost}{" "}
-                    **
+                    <b>
+                      <i>
+                        <u>
+                          NAME: {items.item_name} ** &emsp; CATEGORY:{" "}
+                          {items.category} ** &emsp; STOCK: {items.stock} **
+                          &emsp; COST: ${items.cost} **
+                        </u>
+                      </i>
+                    </b>
                   </ListGroupItem>
                 </CSSTransition>
               ))}

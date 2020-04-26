@@ -9,6 +9,7 @@ import CustomerMenu from "./components/customer/CustomerMenu";
 import AddItemTest from "./components/manager/AddItemTest";
 import ManagerControlCenter from "./components/manager/ManagerControlCenter";
 import Chart from "./components/manager/Chart";
+import ConfirmOrder from "./components/customer/ConfirmOrder";
 
 const NotFound = () => (
   <div>
@@ -112,6 +113,17 @@ class App extends React.Component {
               path={"/control"}
               render={(props) => (
                 <ManagerControlCenter
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
+
+            <Route
+              exact
+              path={"/confirm"}
+              render={(props) => (
+                <ConfirmOrder
                   {...props}
                   loggedInStatus={this.state.loggedInStatus}
                 />

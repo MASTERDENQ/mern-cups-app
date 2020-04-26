@@ -68,7 +68,7 @@ const ViewFile = (props) => {
         to="#"
         onClick={toggle}
         style={{ color: "white" }}
-        activeStyle={{ color: "red" }}
+        activestyle={{ color: "red" }}
       >
         MEDIA
       </Link>
