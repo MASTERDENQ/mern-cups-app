@@ -127,7 +127,7 @@ class ItemsList extends Component {
                     {/* <Link to="update" onClick={this.onClick}></Link> */}
                     <Button
                       className="remove-btn"
-                      color="danger"
+                      color="primary"
                       size="sm"
                       onClick={this.getId.bind(this, items._id)}
                     >
@@ -136,7 +136,7 @@ class ItemsList extends Component {
                     {/* VIEW MENU ITEM FILES */}
                     <Button
                       className="remove-btn"
-                      color="danger"
+                      color="success"
                       size="sm"
                       onClick={this.getId.bind(this, items._id)}
                     >

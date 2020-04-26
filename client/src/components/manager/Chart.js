@@ -1,17 +1,35 @@
 import React, { Component } from "react";
-import { Bar, Line, Pie } from "react-chartjs-2";
-import { Container } from "reactstrap";
+import {
+  Bar,
+  // Line,
+  // Pie
+} from "react-chartjs-2";
+import { Container, Card, Label } from "reactstrap";
 import axios from "axios";
 
 class Chart extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      chartData: {
+      costChartData: {
         labels: [],
         datasets: [
           {
-            label: "Population",
+            label: "",
+            data: [],
+            backgroundColor: "",
+            borderWidth: "",
+            borderColor: "",
+            hoverBorderWidth: "",
+            hoverBorderColor: "",
+          },
+        ],
+      },
+      stockChartData: {
+        labels: [],
+        datasets: [
+          {
+            label: "",
             data: [],
             backgroundColor: "",
             borderWidth: "",
@@ -25,32 +43,68 @@ class Chart extends Component {
       name: [],
       stock: [],
       cost: [],
+      // type: "Bar",
     };
   }
 
-  populateChart = () => {
-    console.log(this.state.items);
+  populateCostChart = () => {
+    console.log("populateChart", this.state.items);
+    console.log("ARRAY LENGTH", this.state.items.length);
 
-    for (let i = 0; i < 2; i++) {
-      // console.log(this.state.items[i]);
+    let size = this.state.items.length;
+    for (let i = 0; i < size; i++) {
       this.setState({
         name: [...this.state.name, this.state.items[i].item_name],
         cost: [...this.state.cost, this.state.items[i].cost],
-        stock: [...this.state.stock, this.state.items[i].stock],
       });
     }
 
     console.log("NAMES: ", this.state.name);
     console.log("COST: ", this.state.cost);
-    console.log("STOCK: ", this.state.stock);
 
     this.setState({
-      chartData: {
+      costChartData: {
         labels: this.state.name,
 
         datasets: [
           {
-            label: "Population",
+            label: "Total Sales in dollars($)",
+            data: this.state.cost,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.6)",
+              "rgba(54, 162, 235, 0.6)",
+              "rgba(255, 206, 86, 0.6)",
+              "rgba(75, 192, 192, 0.6)",
+              "rgba(153, 102, 255, 0.6)",
+              "rgba(255, 159, 64, 0.6)",
+              "rgba(255, 99, 132, 0.6)",
+            ],
+            borderWidth: 1,
+            borderColor: "#777",
+            hoverBorderWidth: 3,
+            hoverBorderColor: "#000",
+          },
+        ],
+      },
+    });
+  };
+
+  populateStockChart = () => {
+    let size = this.state.items.length;
+    for (let i = 0; i < size; i++) {
+      this.setState({
+        stock: [...this.state.stock, this.state.items[i].stock],
+      });
+    }
+    console.log("STOCK: ", this.state.stock);
+
+    this.setState({
+      stockChartData: {
+        labels: this.state.name,
+
+        datasets: [
+          {
+            label: "Total Amount Sold",
             data: this.state.stock,
             backgroundColor: [
               "rgba(255, 99, 132, 0.6)",
@@ -71,6 +125,15 @@ class Chart extends Component {
     });
   };
 
+  // onChangeHandler = (e) =>
+  //   useCallback(() => {
+  //     this.setState({ type: e.target.value });
+  //     console.log(this.state.type);
+  //   }, [this.state.type]);
+  // this.setState({ type: e.target.value });
+  // console.log(this.state.type);
+  // };
+
   componentDidMount() {
     console.log();
     //Request Items
@@ -79,7 +142,8 @@ class Chart extends Component {
       .then((res) => {
         console.log(res);
         this.setState({ items: res.data });
-        this.populateChart();
+        this.populateCostChart();
+        this.populateStockChart();
       })
       .catch((err) => {
         console.log(err);
@@ -89,15 +153,28 @@ class Chart extends Component {
   render() {
     return (
       <Container>
-        <div className="chart">
+        <h1 style={{ textAlign: "center" }}>CUPS APPLICATION CHARTS</h1>
+
+        {/* <Label>Select Chart Type</Label>
+        <select id="chart" name="chart" onChange={this.onChangeHandler}>
+          <option hidden>Chat Type</option>
+          <option defaultChecked>Pie</option>
+          <option>Line</option>
+          <option>Bar</option>
+        </select>
+        <br />
+        <br /> */}
+
+        <Card style={{ marginTop: "3rem", marginBottom: "3rem" }}>
           <Bar
-            data={this.state.chartData}
+            data={this.state.costChartData}
             // width={100}
             // height={50}
             options={{
               title: {
                 display: true,
-                text: "Title String",
+                text:
+                  "Chart showing the total sales (in dollars) for each menu item",
                 fontSize: 25,
               },
               legend: {
@@ -129,7 +206,50 @@ class Chart extends Component {
               },
             }}
           />
-        </div>
+        </Card>
+
+        <Card style={{ marginTop: "3rem", marginBottom: "6rem" }}>
+          <Bar
+            data={this.state.stockChartData}
+            // width={100}
+            // height={50}
+            options={{
+              title: {
+                display: true,
+                text:
+                  "Chart showing the total sales (i.e.count of items) for each menu item",
+                fontSize: 25,
+              },
+              legend: {
+                display: true,
+                position: "right",
+                labels: {
+                  fontColor: "#000",
+                },
+              },
+              layout: {
+                padding: {
+                  left: 50,
+                  right: 0,
+                  bottom: 0,
+                  top: 0,
+                },
+              },
+              tooltips: {
+                enabled: true,
+              },
+              scales: {
+                yAxes: [
+                  {
+                    ticks: {
+                      beginAtZero: true,
+                    },
+                  },
+                ],
+              },
+            }}
+          />
+        </Card>
       </Container>
     );
   }

@@ -84,7 +84,12 @@ const UpdateModal = (props) => {
   } else {
     return (
       <div>
-        <Link to="#" onClick={toggle}>
+        <Link
+          to="#"
+          onClick={toggle}
+          style={{ color: "white" }}
+          activeStyle={{ color: "red" }}
+        >
           UPDATE
         </Link>
 
