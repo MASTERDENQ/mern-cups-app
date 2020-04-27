@@ -118,11 +118,7 @@ const ConfirmOrder = (props) => {
       })
       .catch((err) => {
         console.log("err", err);
-        console.log("\nResponse");
-        console.log(err.response);
-        console.log("\nStatus Response");
-        console.log(err.response.status);
-        setMsg(err.response.data);
+        console.log("Err data", err.response);
       });
   };
 
