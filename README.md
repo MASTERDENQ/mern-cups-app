@@ -3,6 +3,31 @@
 The application has local mongodb connection string already in place. However, if you wish to
 connect to your desired database change connection string in server/config/keys.js file.
 
+If you wish to use local mongo, ensure it is installed first. If it is not install follow
+mongo installation instructions below.
+
+## Mongo installation (Optional):
+
+### Setup 1: Install on machance
+
+First, update the packages list to have the most recent version of the repository listings:
+
+```bash
+$ sudo apt update
+```
+
+Now install the MongoDB package itself:
+
+```bash
+$ sudo apt install -y mongodb
+```
+
+### Step 2: Checking the Service and Database
+
+```bash
+$ sudo systemctl status mongodb
+```
+
 ## Install dependency:
 
 Install all the required dependencies and devDependencies for both frontend and backend.
@@ -27,7 +52,7 @@ $ npm run mern
 | ---------- | --------------- | ---------------- |
 | 1706903    | Tyrone Wallace  | Integration Lead |
 | 1801488    | Dimitri Russell | Backend Lead     |
-| 1803640    | Reinaldo Pino   | UI Lead          |
+| 1803640    | Reinaldo Pino   | Research Lead    |
 
 # Links of Project Design:
 
