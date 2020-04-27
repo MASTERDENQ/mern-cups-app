@@ -2,8 +2,9 @@ import React, { Component } from "react";
 // import '../css/CustomerMenuStyle.css'
 import {} from "react-router-dom";
 import ReviewOrder from "./ReviewOrder";
-import { Container, Card, Label, Button, Alert } from "reactstrap";
+import { Container, ListGroup, ListGroupItem, Button, Alert } from "reactstrap";
 import SearchMenu from "./SearchMenu";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 class CustomerMenu extends Component {
   constructor(props) {
@@ -93,34 +94,47 @@ class CustomerMenu extends Component {
             </div>
 
             <Alert color="danger">{this.state.msg}</Alert>
-
-            {this.state.items.map((items) => (
-              <div key={items._id} className="MenuItem">
-                <input
-                  name="quantity"
-                  id={items._id}
-                  placeholder="0"
-                  type="number"
-                  min="0"
-                  onChange={() => {
-                    this.changeHandler(
-                      items._id,
-                      items.item_name,
-                      document.getElementById(items._id).value
-                    );
-                  }}
-                />
-                <b>
-                  <i>
-                    <u>
-                      NAME: {items.item_name} ** &emsp; CATEGORY:{" "}
-                      {items.category} ** &emsp; STOCK: {items.stock} ** &emsp;
-                      COST: ${items.cost} **
-                    </u>
-                  </i>
-                </b>
-              </div>
-            ))}
+            <ListGroup>
+              <TransitionGroup className="items-list">
+                {this.state.items.map((items) => (
+                  <CSSTransition
+                    key={items._id}
+                    timeout={500}
+                    classNames="fade"
+                    color="dark"
+                  >
+                    <ListGroupItem
+                      className="container"
+                      style={{ marginRight: "4rem" }}
+                    >
+                      <input
+                        name="quantity"
+                        id={items._id}
+                        placeholder="0"
+                        type="number"
+                        min="0"
+                        onChange={() => {
+                          this.changeHandler(
+                            items._id,
+                            items.item_name,
+                            document.getElementById(items._id).value
+                          );
+                        }}
+                      />
+                      <b>
+                        <i>
+                          <u>
+                            NAME: {items.item_name} ** &emsp; CATEGORY:{" "}
+                            {items.category} ** &emsp; STOCK: {items.stock} **
+                            &emsp; COST: ${items.cost} **
+                          </u>
+                        </i>
+                      </b>
+                    </ListGroupItem>
+                  </CSSTransition>
+                ))}
+              </TransitionGroup>
+            </ListGroup>
 
             <Button
               onClick={() => {

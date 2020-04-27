@@ -90,7 +90,7 @@ router.get("/search_items/:field", getFile.single("file"), (req, res, next) => {
       if (err) {
         return next(err);
       } else if (!item) {
-        res.status(404).json("No item found");
+        res.status(404).json(query);
       } else {
         item.item_photo = undefined;
         item.asl_photo = undefined;

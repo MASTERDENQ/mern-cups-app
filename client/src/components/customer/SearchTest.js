@@ -46,7 +46,7 @@ const SearchTest = (props) => {
     var formData = new FormData();
     formData.append("item_name", item_name);
     formData.append("file", file);
-    console.log(formData);
+    console.log(item_name);
 
     // Making Request
     axios({
@@ -54,6 +54,9 @@ const SearchTest = (props) => {
       url: `/search_items/${type}`,
       encType: "multipart/form-data",
       data: formData,
+      header: {
+        contentType: "multipart/form-data",
+      },
     })
       .then((res) => {
         console.log(res);

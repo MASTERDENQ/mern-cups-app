@@ -16,6 +16,7 @@ import {
   Card,
   CardImg,
   Form,
+  FormGroup,
   Alert,
   Row,
   Col,
@@ -136,14 +137,14 @@ const AddItem = (props) => {
       !item_audio
     ) {
       setError(`Sorry you have missing requirement(s).
-       You have the following fields missing:\n
-       ${item_name ? "" : "---Item Name---"}\n
-       ${category ? "" : "---Category---"}\n
-       ${stock ? "" : "---Stock---"}\n
-       ${cost ? "" : "---Cost---"}\n
-       ${item_image ? "" : "---Upload Photo---"}\n
-       ${sign_language ? "" : "---Upload ASL---"}\n
-       ${item_audio ? "" : "---Audio---"}.`);
+       You have the following fields missing:
+       ${item_name ? "" : "|---Item Name---"}\n
+       ${category ? "" : "|---Category---"}\n
+       ${stock ? "" : "|---Stock---"}\n
+       ${cost ? "" : "|---Cost---"}\n
+       ${item_image ? "" : "|---Upload Photo---"}\n
+       ${sign_language ? "" : "|---Upload ASL---"}\n
+       ${item_audio ? "" : "|---Audio---|"}.`);
     } else {
       // Request body
       const formData = new FormData();
@@ -256,23 +257,24 @@ const AddItem = (props) => {
                   />
                   <InputGroupAddon addonType="append">.00</InputGroupAddon>
                 </InputGroup>
-                <br />
-                <br />
 
                 {/* Selection of category */}
-                <Label>Category</Label>
-                <select
-                  id="category"
-                  name="category"
-                  onChange={handleChangeCategory}
-                >
-                  <option hidden>Category</option>
-                  <option defaultChecked>Beverage</option>
-                  <option>Snack</option>
-                  <option>Daily Surprise</option>
-                </select>
-                <br />
-                <br />
+                <InputGroup>
+                  <InputGroupAddon addonType="prepend">
+                    <InputGroupText>Category</InputGroupText>
+                  </InputGroupAddon>
+                  <Input
+                    type="select"
+                    name="category"
+                    id="category"
+                    onChange={handleChangeCategory}
+                  >
+                    <option defaultChecked>Beverage</option>
+                    <option>Snack</option>
+                    <option>Daily Surprise</option>
+                  </Input>
+                </InputGroup>
+                <hr />
               </Container>
 
               {/* Selection of Photo */}

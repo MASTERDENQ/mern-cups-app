@@ -11,6 +11,7 @@ import ManagerControlCenter from "./components/manager/ManagerControlCenter";
 import Chart from "./components/manager/Chart";
 import ConfirmOrder from "./components/customer/ConfirmOrder";
 import SearchTest from "./components/customer/SearchTest";
+import "./index.css";
 
 const NotFound = () => (
   <div>
@@ -44,7 +45,7 @@ class App extends React.Component {
   render() {
     return (
       <Router>
-        <div className="App">
+        <div className="bg">
           {/* NavBar rendered always as header  */}
 
           <NavBar

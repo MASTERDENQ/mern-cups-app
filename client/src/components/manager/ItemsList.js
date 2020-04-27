@@ -93,7 +93,12 @@ class ItemsList extends Component {
           <ListGroup>
             <TransitionGroup className="items-list">
               {this.state.items.map((items) => (
-                <CSSTransition key={items._id} timeout={500} classNames="fade">
+                <CSSTransition
+                  key={items._id}
+                  timeout={500}
+                  classNames="fade"
+                  color="dark"
+                >
                   <ListGroupItem
                     className="container"
                     style={{ marginRight: "4rem" }}
