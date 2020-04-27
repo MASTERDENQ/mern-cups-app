@@ -53,5 +53,8 @@
     "typescript": "^3.8.3",
     "webrtc-adapter": "^4.1.1"
   },
-  "proxy": "http://localhost:5000"
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "react-docgen": "^5.3.0"
+  }
 }

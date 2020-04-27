@@ -2,7 +2,8 @@ import React, { Component } from "react";
 // import '../css/CustomerMenuStyle.css'
 import {} from "react-router-dom";
 import ReviewOrder from "./ReviewOrder";
-import { Container, Card, Label } from "reactstrap";
+import { Container, Card, Label, Button, Alert } from "reactstrap";
+import SearchMenu from "./SearchMenu";
 
 class CustomerMenu extends Component {
   constructor(props) {
@@ -12,6 +13,7 @@ class CustomerMenu extends Component {
       isLoaded: false,
       orderedItems: [],
       review: false,
+      msg: "Please charge values to add to chart",
     };
   }
 
@@ -32,10 +34,12 @@ class CustomerMenu extends Component {
   }
 
   changeView() {
-    this.setState({
-      review: !this.state.review,
-    });
-    console.log("CHANGE VIEW: ", this.state.review);
+    if (this.state.orderedItems) {
+      this.setState({
+        review: !this.state.review,
+      });
+      console.log("CHANGE VIEW: ", this.state.review);
+    }
   }
 
   changeHandler = (id, name, value) => {
@@ -81,7 +85,15 @@ class CustomerMenu extends Component {
       return this.state.review === false ? (
         <Container>
           <div id="MainBody">
-            <h1>CUSTOMER MENU</h1>
+            <h1 style={{ textAlign: "center", marginBottom: "3rem" }}>
+              CUSTOMER MENU
+            </h1>
+            <div style={{ marginBottom: "3rem" }} color="primary">
+              <SearchMenu />
+            </div>
+
+            <Alert color="danger">{this.state.msg}</Alert>
+
             {this.state.items.map((items) => (
               <div key={items._id} className="MenuItem">
                 <input
@@ -110,13 +122,16 @@ class CustomerMenu extends Component {
               </div>
             ))}
 
-            <button
+            <Button
               onClick={() => {
                 this.changeView();
               }}
+              style={{ marginTop: "3rem", marginBottom: "3rem" }}
+              color="success"
+              block
             >
-              Review Order
-            </button>
+              REVIEW ORDER
+            </Button>
           </div>
         </Container>
       ) : (

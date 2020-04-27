@@ -333,7 +333,7 @@ router.post(
           return res.status(500).send("Unexpected server error");
         } else if (!item) {
           return res.status(404).send("Item on order does not exist");
-        } else if (item.stock < req.body.amount_sold.length) {
+        } else if (item.stock < req.body.amount_sold[i]) {
           return res.status(400).send("Order amount exceeds item stock");
         }
 
@@ -364,6 +364,7 @@ router.post(
       orderModel.findOneAndUpdate(
         { item_id: itemId },
         { $inc: { quantity_sold: amntSold, total_sales: itemCost } },
+        { useFindAndModify: false },
         (err, foundOrder) => {
           if (err) {
             let newOrderModel = new orderModel();
@@ -381,6 +382,7 @@ router.post(
       menuItemModel.findByIdAndUpdate(
         itemId,
         { $inc: { quantity_sold: -amntSold } },
+        { useFindAndModify: false },
         (err) => {
           if (err) throw err;
         }
@@ -390,6 +392,7 @@ router.post(
     customerModel.findOneAndUpdate(
       { email_address: res.locals.email },
       { $inc: { account_balance: -res.locals.bill } },
+      { useFindAndModify: false },
       (err) => {
         if (err) throw err;
       }

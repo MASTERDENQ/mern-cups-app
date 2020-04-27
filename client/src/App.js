@@ -10,6 +10,7 @@ import AddItemTest from "./components/manager/AddItemTest";
 import ManagerControlCenter from "./components/manager/ManagerControlCenter";
 import Chart from "./components/manager/Chart";
 import ConfirmOrder from "./components/customer/ConfirmOrder";
+import SearchTest from "./components/customer/SearchTest";
 
 const NotFound = () => (
   <div>
@@ -135,6 +136,17 @@ class App extends React.Component {
               path={"/chart"}
               render={(props) => (
                 <Chart {...props} loggedInStatus={this.state.loggedInStatus} />
+              )}
+            />
+
+            <Route
+              exact
+              path={"/testS"}
+              render={(props) => (
+                <SearchTest
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
               )}
             />
 
