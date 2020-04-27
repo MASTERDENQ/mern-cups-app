@@ -33,7 +33,7 @@ app.use(apiRoute);
 //error handling middleware
 app.use(function (err, req, res, next) {
   console.log(err);
-  res.status(422).send({ error: err.message });
+  res.status(err.status || 500).send({ error: err.message });
 });
 
 //starts server

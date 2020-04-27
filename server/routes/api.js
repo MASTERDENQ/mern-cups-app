@@ -78,7 +78,7 @@ router.get("/", (req, res) => {
 /*****RETURN REQUESTS ******/
 
 //searches for menu item by text, american sign language equivalent or audio
-router.get("/search_items/:field", getFile.single("file"), (req, res) => {
+router.get("/search_items/:field", getFile.single("file"), (req, res, next) => {
   let searchBy = req.params.field;
 
   if (searchBy == "item_name") {
@@ -88,7 +88,7 @@ router.get("/search_items/:field", getFile.single("file"), (req, res) => {
 
     menuItemModel.findOne(query, (err, item) => {
       if (err) {
-        res.status(500).send("Unexpected server error");
+        return next(err);
       } else if (!item) {
         res.status(404).json("No item found");
       } else {
@@ -107,13 +107,15 @@ router.get("/search_items/:field", getFile.single("file"), (req, res) => {
       fileHash = crypto.createHash("md5").update(req.file.buffer).digest("hex");
 
       gfs.files.findOne({ md5: fileHash }, (err, file) => {
-        if (err) return res.status(500).send("Unexpected server error");
-        else if (!file || file.length == 0) {
+        if (err) {
+          return next(err);
+        } else if (!file || file.length == 0) {
           return res.status(404).send("No file found");
         } else {
           menuItemModel.findOne({ [searchBy]: file._id }, (err, item) => {
-            if (err) return res.status(500).send("Unexpected server error");
-            else if (!item) {
+            if (err) {
+              return next(err);
+            } else if (!item) {
               return res.status(404).send("No item found");
             } else {
               res.status(200).json(item);
@@ -126,14 +128,14 @@ router.get("/search_items/:field", getFile.single("file"), (req, res) => {
 });
 
 //returns all menu items
-router.get("/list_items", (req, res) => {
+router.get("/list_items", (req, res, next) => {
   //fields to be omitted from found objects
   let excludeFields = { item_photo: 0, asl_photo: 0, item_audio: 0, __v: 0 };
 
   //finds and returns all stored menu items
   menuItemModel.find({}, excludeFields, (err, item) => {
     if (err) {
-      res.status(500).send("Unexpected server error");
+      return next(err);
     }
     //checks if object is undefined or an empty array
     else if (!item || item.length == 0) {
@@ -148,7 +150,7 @@ router.get("/list_items", (req, res) => {
 //to get menu item image use route '/menu_item/<item object id>/item_photo'
 //to get menu item sign language representation use route '/menu_item/<item object id>/asl_photo'
 //to get menu item audio use route '/menu_item/<item object id>/item_audio'
-router.get("/menu_item/:id/:field", (req, res) => {
+router.get("/menu_item/:id/:field", (req, res, next) => {
   let field = req.params.field;
 
   //checks if correct field was sent from client
@@ -159,7 +161,7 @@ router.get("/menu_item/:id/:field", (req, res) => {
     menuItemModel.findById(itemId, (err, item) => {
       //error generated if item not found
       if (err) {
-        res.status(404).send("Item not found");
+        return next(err);
       } else {
         //generates object id from menu item field
         let fileId = new mongo.ObjectID(item[field]);
@@ -167,7 +169,7 @@ router.get("/menu_item/:id/:field", (req, res) => {
         //searches for file in database
         gfs.files.findOne({ _id: fileId }, (err, file) => {
           if (err) {
-            return res.status(500).send("Unexpected server error");
+            return next(err);
           }
           //checks for undefined file or empty array
           else if (!file || file.length === 0) {
@@ -183,10 +185,28 @@ router.get("/menu_item/:id/:field", (req, res) => {
   }
 });
 
+//returns all menu item orders
+router.get("item_orders", (req, res, next) => {
+  let excludeFields = { __v: 0 };
+
+  //finds and returns all item orders
+  orderModel.find({}, excludeFields, (err, orders) => {
+    if (err) {
+      return next(err);
+    }
+    //checks if object is undefined or an empty array
+    else if (!orders || orders.length == 0) {
+      res.status(404).json(orders);
+    } else {
+      res.status(200).json(orders);
+    }
+  });
+});
+
 /*****ADD REQUESTS ******/
 
 //manager registration
-router.post("/add_manager", (req, res) => {
+router.post("/add_manager", (req, res, next) => {
   //initializes object based on manager database schema
   let newManager = new managerModel();
 
@@ -196,7 +216,7 @@ router.post("/add_manager", (req, res) => {
   //saves manager object to database
   newManager.save((err) => {
     if (err) {
-      res.status(400).send("Error saving manager");
+      return next(err);
     } else {
       //omits field from object when sent to client
       newManager.password = undefined;
@@ -207,7 +227,7 @@ router.post("/add_manager", (req, res) => {
 });
 
 //customer registration
-router.post("/add_customer", upload.single("file"), (req, res) => {
+router.post("/add_customer", upload.single("file"), (req, res, next) => {
   //initializes new object based on customer database schema
   let newCustomer = new customerModel();
 
@@ -234,9 +254,7 @@ router.post("/add_customer", upload.single("file"), (req, res) => {
       //removes uploaded file from database if error encountered while saving record
       if (req.file) gfs.remove({ _id: req.file.id, root: "uploads" });
 
-      res
-        .status(400)
-        .send("Email address already in use / Required field missing");
+      return next(err);
     } else {
       res.status(201).send("Customer successfully created...");
     }
@@ -251,7 +269,7 @@ var menuItemUpload = upload.fields([
 ]);
 
 //adds a menu item
-router.post("/add_menu_item", menuItemUpload, (req, res) => {
+router.post("/add_menu_item", menuItemUpload, (req, res, next) => {
   //checks if client request has all necessary data
   if (
     !req.files["item_image"] ||
@@ -295,7 +313,7 @@ router.post("/add_menu_item", menuItemUpload, (req, res) => {
       if (req.files["item_audio"] && req.files["item_audio"].length != 0)
         gfs.remove({ _id: req.files["item_audio"][0].id, root: "uploads" });
 
-      res.status(400).send("Invalid user input");
+      return next(err);
     } else {
       //omits fields from object sent back to client
       newMenuItem.item_photo = undefined;
@@ -373,7 +391,7 @@ router.post(
             newOrderModel.total_sales = res.locals.bill;
 
             newOrderModel.save((err) => {
-              if (err) return res.status(500).send("Failed to update order");
+              if (err) return next(err);
             });
           }
         }
@@ -384,7 +402,7 @@ router.post(
         { $inc: { quantity_sold: -amntSold } },
         { useFindAndModify: false },
         (err) => {
-          if (err) throw err;
+          if (err) return next(err);
         }
       );
     }
@@ -394,7 +412,7 @@ router.post(
       { $inc: { account_balance: -res.locals.bill } },
       { useFindAndModify: false },
       (err) => {
-        if (err) throw err;
+        if (err) return next(err);
       }
     );
   }
@@ -413,7 +431,7 @@ router.post("/login_manager", (req, res, next) => {
   //searches for and returns manager record based on query
   managerModel.findOne(query, (err, manager) => {
     if (err) {
-      res.status(500).send("Unexpected error");
+      return next(err);
     } else if (!manager) {
       res.status(404).send("Incorrect login credentials");
     } else res.status(200).send(manager.username);
@@ -421,7 +439,7 @@ router.post("/login_manager", (req, res, next) => {
 });
 
 //validates customer login
-router.post("/login_customer", getFile.single("file"), (req, res) => {
+router.post("/login_customer", getFile.single("file"), (req, res, next) => {
   let email = req.body.email_address;
 
   //checks if file was sent in request to decide what type of query to use
@@ -433,7 +451,7 @@ router.post("/login_customer", getFile.single("file"), (req, res) => {
     //searches for customer record based on query
     customerModel.findOne(query, (err, customer) => {
       if (err) {
-        res.status(500).send("Unexpected error");
+        return next(err);
       } else if (!customer) {
         res.status(404).send("Incorrect login credentials");
       } else {
@@ -451,7 +469,7 @@ router.post("/login_customer", getFile.single("file"), (req, res) => {
     //searches for customer record based on query
     customerModel.findOne(query, (err, customer) => {
       if (err) {
-        res.status(500).send("Unexpected error");
+        return next(err);
       } else if (!customer) {
         res.status(404).send("Incorrect login credentials");
       } else {
@@ -460,7 +478,7 @@ router.post("/login_customer", getFile.single("file"), (req, res) => {
 
         //uses above fileId to search file database collection
         gfs.files.findOne({ _id: fileId }, (err, file) => {
-          if (err) return res.status(500).send("Unexpected server error");
+          if (err) return next(err);
 
           if (!file || file.length == 0) {
             return res.status(404).send("Incorrect login credentials");
@@ -495,7 +513,7 @@ router.post("/login_customer", getFile.single("file"), (req, res) => {
 //to modify cost use route '/edit_item/cost'
 //to modify stock use route '/edit_item/stock'
 
-router.post("/edit_item/:field", (req, res) => {
+router.post("/edit_item/:field", (req, res, next) => {
   let field = req.params.field;
 
   //checks if correct fields were sent in request url
@@ -510,7 +528,7 @@ router.post("/edit_item/:field", (req, res) => {
       { useFindAndModify: false },
       (err, item) => {
         if (err) {
-          res.status(404).send("Item not found");
+          return next(err);
         } else {
           //omits fields from object sent back to client
           item.item_photo = undefined;
@@ -528,7 +546,7 @@ router.post("/edit_item/:field", (req, res) => {
 /*****DELETE REQUESTS ******/
 
 //deletes manager record
-router.post("/delete_manager", (req, res) => {
+router.post("/delete_manager", (req, res, next) => {
   let username = req.body.username;
   let password = req.body.password;
 
@@ -537,7 +555,7 @@ router.post("/delete_manager", (req, res) => {
   //searches for and deletes a single record matching the above query
   managerModel.findOneAndDelete(query, function (err, manager) {
     if (err) {
-      res.status(404).send("Record not found");
+      return next(err);
     } else {
       res.status(200).send("Manager account deleted");
     }
@@ -545,13 +563,13 @@ router.post("/delete_manager", (req, res) => {
 });
 
 //deletes menu item
-router.post("/delete_menu_item/:id", (req, res) => {
+router.post("/delete_menu_item/:id", (req, res, next) => {
   let itemId = req.params.id;
 
   //searches for and deletes menu item matching above uploaded id
   menuItemModel.findByIdAndDelete(itemId, (err, menuItem) => {
     if (err) {
-      res.status(404).send("Item not found");
+      return next(err);
     } else {
       let itemPhotoId = menuItem.item_photo;
       let aslPhotoId = menuItem.asl_photo;
@@ -563,7 +581,7 @@ router.post("/delete_menu_item/:id", (req, res) => {
         gfs.remove({ _id: aslPhotoId, root: "uploads" });
         gfs.remove({ _id: itemAudioId, root: "uploads" });
       } catch (error) {
-        res.write("Error deleting item files");
+        return next(err);
       }
 
       res.status(200).send("Item successfully deleted");

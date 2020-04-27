@@ -33,60 +33,71 @@ const SearchMenu = (props) => {
   };
 
   // Secondary Toggle
-  const toggleItemName = (type) => {
+  const toggleItemName = () => {
     setNestedItemName(!nestedItemName);
-    setType(type);
   };
 
   // Secondary Toggle
-  const toggleASL = (type) => {
+  const toggleASL = () => {
     setNestedASL(!nestedASL);
-    setType(type);
   };
 
   // Secondary Toggle
-  const toggleAudio = (type) => {
+  const toggleAudio = () => {
     setNestedAudio(!nestedAudio);
-    setType(type);
   };
 
   /**************** STATE HANDLERS ******************** */
 
-  const handleChangeItemName = (e) => setItemName(e.target.value);
+  const handleChangeItemName = (e) => {
+    setType(e.target.name);
+    setItemName(e.target.value);
+    console.log(e.target.name);
+  };
 
   const handleChangeFile = (e) => {
+    setType(e.target.name);
     setFile(e.target.files[0]);
     console.log(e.target.files[0]);
+    console.log("1", type);
   };
 
   /**************** FORM SUBMISSION ******************** */
-  const handleOnSubmit = async (e) => {
+  const handleOnSubmit = (e) => {
     e.preventDefault();
+    console.log("1");
+    console.log("1", type);
 
     // Check for empty fields
-    if (!item_name || !file) {
-      setMsg("Sorry you have missing requirement. Please select one.");
-    } else {
-      const formData = new FormData();
-      formData.append("item_name", item_name);
-      formData.append("file", file);
+    // if (!item_name || !file) {
+    //   setMsg("Sorry you have missing requirement. Please select one.");
+    // } else {
+    const formData = new FormData();
+    formData.append("item_name", item_name);
+    formData.append("file", file);
 
-      // Making Request
-      axios
-        .get(`/search_items/${type}`)
-        .then((res) => {
-          console.log(res);
-          setMsg("LOADED_SUCCESSFULLY");
-          console.log(msg);
-          // Close modal
-          toggle();
-        })
-        .catch((err) => {
-          console.log(err);
-          console.log(err.response);
-          setMsg(err.response.data);
-        });
-    }
+    // Making Request
+    axios({
+      method: "GET",
+      url: `/search_items/${type}`,
+      encType: "multipart/form-data",
+      data: formData,
+    })
+      .then((res) => {
+        console.log(res);
+        setMsg("LOADED_SUCCESSFULLY");
+        console.log(msg);
+        console.log("2");
+        // Close modal
+        toggle();
+      })
+      .catch((err) => {
+        console.log(err);
+        console.log(err.response);
+        setMsg("LOADING_FAILED. NOT FOUND");
+        console.log("3");
+      });
+    // }
   };
 
   return (
@@ -173,8 +184,8 @@ const SearchMenu = (props) => {
                     <Card>
                       <h3>AMERICAN SIGN LANGUAGE</h3>
                       <Input
-                        name="file"
-                        id="file"
+                        name="asl_photo"
+                        id="asl_photo"
                         type="file"
                         onChange={handleChangeFile}
                       />
@@ -195,8 +206,8 @@ const SearchMenu = (props) => {
                     <Card>
                       <h3>ITEM AUDIO</h3>
                       <Input
-                        name="file"
-                        id="file"
+                        name="item_audio"
+                        id="item_audio"
                         type="file"
                         onChange={handleChangeFile}
                       />

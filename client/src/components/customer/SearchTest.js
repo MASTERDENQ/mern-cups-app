@@ -19,8 +19,8 @@ const SearchTest = (props) => {
   /**************** COMPONENT STATES ******************** */
   const [item_name, setItemName] = useState("");
   const [file, setFile] = useState("");
-  const [msg, setMsg] = useState(null);
-  const [type, setType] = useState(null);
+  const [msg, setMsg] = useState("");
+  const [type, setType] = useState("");
 
   /**************** STATE HANDLERS ******************** */
 
@@ -34,40 +34,39 @@ const SearchTest = (props) => {
     setType(e.target.name);
     setFile(e.target.files[0]);
     console.log(e.target.files[0]);
+    console.log("1", type);
   };
 
   /**************** FORM SUBMISSION ******************** */
   const handleOnSubmit = (e) => {
     e.preventDefault();
     console.log("1");
-    // Check for empty fields
-    if (!item_name || !file) {
-      setMsg("Sorry you have missing requirement. Please select one.");
-    } else {
-      const formData = new FormData();
-      formData.append("item_name", item_name);
-      formData.append("file", file);
+    console.log("1", type);
 
-      // Making Request
-      fetch({
-        method: "GET",
-        url: `/search_items/${type}`,
-        encType: "multipart/form-data",
-        data: formData,
+    var formData = new FormData();
+    formData.append("item_name", item_name);
+    formData.append("file", file);
+    console.log(formData);
+
+    // Making Request
+    axios({
+      method: "GET",
+      url: `/search_items/${type}`,
+      encType: "multipart/form-data",
+      data: formData,
+    })
+      .then((res) => {
+        console.log(res);
+        setMsg("LOADED_SUCCESSFULLY");
+        console.log(res.data);
+        console.log("2");
       })
-        .then((res) => {
-          console.log(res);
-          setMsg("LOADED_SUCCESSFULLY");
-          console.log(res.data);
-          console.log("2");
-        })
-        .catch((err) => {
-          console.log(err);
-          console.log(err.response);
-          setMsg(err.response.data);
-          console.log("3");
-        });
-    }
+      .catch((err) => {
+        console.log(err);
+        console.log(err.response);
+        setMsg("LOADING_FAILED. NOT FOUND");
+        console.log("3");
+      });
   };
 
   return (
@@ -76,12 +75,7 @@ const SearchTest = (props) => {
       Serch by item name, asl or audio file
       {/* Error display */}
       {msg ? <Alert color="danger">{msg}</Alert> : null}
-      <form
-        // method="GET"
-        // url="/search_item/item_name"
-        // encType="multipart/form-data"
-        onSubmit={handleOnSubmit}
-      >
+      <Form onSubmit={handleOnSubmit}>
         <Card>
           <Input
             type="text"
@@ -96,8 +90,8 @@ const SearchTest = (props) => {
         <Card>
           <h3>AMERICAN SIGN LANGUAGE</h3>
           <Input
-            name="file"
-            id="file"
+            name="asl_photo"
+            id="asl_photo"
             type="file"
             onChange={handleChangeFile}
           />
@@ -105,8 +99,8 @@ const SearchTest = (props) => {
         <Card>
           <h3>ITEM AUDIO</h3>
           <Input
-            name="file"
-            id="file"
+            name="item_audio"
+            id="item_audio"
             type="file"
             onChange={handleChangeFile}
           />
@@ -121,7 +115,7 @@ const SearchTest = (props) => {
         >
           SUBMIT
         </Button>
-      </form>
+      </Form>
     </Container>
   );
 };

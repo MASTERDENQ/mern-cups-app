@@ -141,7 +141,7 @@ class App extends React.Component {
 
             <Route
               exact
-              path={"/testS"}
+              path={"/search"}
               render={(props) => (
                 <SearchTest
                   {...props}
