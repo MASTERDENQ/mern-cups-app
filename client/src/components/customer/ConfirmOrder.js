@@ -181,7 +181,7 @@ const ConfirmOrder = (props) => {
         handleToggle();
       }
     }
-  }, [error, handleToggle, isAuthenticated, modal]);
+  }, [error, handleToggle, isAuthenticated, modal, props]);
 
   /************************* RENDER ***************************** */
   if (attempts === 1) {

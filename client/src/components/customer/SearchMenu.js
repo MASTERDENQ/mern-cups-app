@@ -6,14 +6,14 @@ import {
   ModalHeader,
   ModalFooter,
   ModalBody,
-  CardImg,
+  // CardImg,
   Card,
   Form,
   Input,
   FormGroup,
   Alert,
 } from "reactstrap";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 const SearchMenu = (props) => {
   /**************** COMPONENT STATES ******************** */

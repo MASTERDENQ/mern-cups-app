@@ -4,7 +4,7 @@ import {
   // Line,
   // Pie
 } from "react-chartjs-2";
-import { Container, Card, Label } from "reactstrap";
+import { Container, Card } from "reactstrap";
 import axios from "axios";
 
 class Chart extends Component {
@@ -155,17 +155,12 @@ class Chart extends Component {
       <Container>
         <h1 style={{ textAlign: "center" }}>CUPS APPLICATION CHARTS</h1>
 
-        {/* <Label>Select Chart Type</Label>
-        <select id="chart" name="chart" onChange={this.onChangeHandler}>
-          <option hidden>Chat Type</option>
-          <option defaultChecked>Pie</option>
-          <option>Line</option>
-          <option>Bar</option>
-        </select>
-        <br />
-        <br /> */}
-
-        <Card style={{ marginTop: "3rem", marginBottom: "3rem" }}>
+        <Card
+          style={{ marginTop: "3rem", marginBottom: "3rem" }}
+          body
+          outline
+          color="primary"
+        >
           <Bar
             data={this.state.costChartData}
             // width={100}
@@ -208,7 +203,12 @@ class Chart extends Component {
           />
         </Card>
 
-        <Card style={{ marginTop: "3rem", marginBottom: "6rem" }}>
+        <Card
+          style={{ marginTop: "3rem", marginBottom: "6rem" }}
+          body
+          outline
+          color="info"
+        >
           <Bar
             data={this.state.stockChartData}
             // width={100}

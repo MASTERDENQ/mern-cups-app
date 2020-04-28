@@ -7,7 +7,6 @@ import Icon from "../../assets/icon.png";
 import "../../css/AddItemStyle.css";
 import {
   Container,
-  Label,
   Input,
   Button,
   InputGroup,
@@ -16,7 +15,6 @@ import {
   Card,
   CardImg,
   Form,
-  FormGroup,
   Alert,
   Row,
   Col,
@@ -201,7 +199,7 @@ const AddItem = (props) => {
           }}
         >
           {/* Title */}
-          <div className="title">
+          <div className="ml-3">
             <h1>Add Item</h1>
           </div>
           {/* Error display */}
@@ -279,8 +277,8 @@ const AddItem = (props) => {
 
               {/* Selection of Photo */}
               <Row>
-                <Col sm="4">
-                  <Card>
+                <Col sm="3">
+                  <Card body inverse color="dark" className="ml-2">
                     <h3>Upload Photo</h3>
                     <CardImg src={Photo} alt={Icon} />
                     <Input
@@ -293,8 +291,8 @@ const AddItem = (props) => {
                 </Col>
 
                 {/* ASL Selection */}
-                <Col sm="4">
-                  <Card>
+                <Col sm="3" className="left">
+                  <Card body inverse color="dark">
                     <h3>Upload ASL</h3>
                     <CardImg src={ASL} alt={Icon} />
                     <Input
@@ -307,8 +305,14 @@ const AddItem = (props) => {
                 </Col>
 
                 {/* Audio Recording */}
-                <Col sm="4">
-                  <Card>
+                <Col sm="3">
+                  <Card
+                    body
+                    inverse
+                    color="dark"
+                    // className="ml-2 mr-4"
+                    style={{ alignItems: "left" }}
+                  >
                     <h3>Audio</h3>
                     <CardImg src={Audio} alt={Icon} height="50%" />
                     <Input
@@ -322,12 +326,12 @@ const AddItem = (props) => {
               </Row>
 
               <Button
-                color="dark"
+                color="success"
                 type="submit"
                 style={{ marginTop: "2rem" }}
                 block
               >
-                <h4>ADD ITEM</h4>
+                <h5>ADD ITEM</h5>
               </Button>
 
               <Link to="/list">
@@ -337,7 +341,18 @@ const AddItem = (props) => {
                   style={{ marginTop: "2rem" }}
                   block
                 >
-                  <h4>VIEW ITEMS</h4>
+                  <h5>VIEW ITEMS</h5>
+                </Button>
+              </Link>
+
+              <Link to="/chart">
+                <Button
+                  color="primary"
+                  type="button"
+                  style={{ marginTop: "2rem" }}
+                  block
+                >
+                  <h5>VIEW CHARTS</h5>
                 </Button>
               </Link>
             </Form>

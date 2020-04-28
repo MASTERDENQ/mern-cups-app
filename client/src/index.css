@@ -14,12 +14,12 @@ code {
 
 body,
 html {
-  height: 100%;
+  height: auto;
 }
 .bg {
   background-image: url("https://mdbootstrap.com/img/Photos/Horizontal/Nature/full page/img(11).jpg");
-  height: 150vh;
+  height: 160vh;
   background-position: center;
-  background-repeat: no-repeat;
+  background-repeat: repeat;
   background-size: cover;
 }

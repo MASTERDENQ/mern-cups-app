@@ -1,19 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  Button,
-  Modal,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  CardImg,
-  Card,
-  Form,
-  Input,
-  FormGroup,
-  Alert,
-  Container,
-} from "reactstrap";
+import { Button, Card, Form, Input, Alert, Container } from "reactstrap";
 
 const SearchTest = (props) => {
   /**************** COMPONENT STATES ******************** */
@@ -28,20 +15,20 @@ const SearchTest = (props) => {
     setType(e.target.name);
     setItemName(e.target.value);
     console.log(e.target.name);
+    console.log("nameHandler", type);
   };
 
   const handleChangeFile = (e) => {
     setType(e.target.name);
     setFile(e.target.files[0]);
     console.log(e.target.files[0]);
-    console.log("1", type);
+    console.log("fileHandler", type);
   };
 
   /**************** FORM SUBMISSION ******************** */
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    console.log("1");
-    console.log("1", type);
+    console.log("submitHanderType", type);
 
     var formData = new FormData();
     formData.append("item_name", item_name);
