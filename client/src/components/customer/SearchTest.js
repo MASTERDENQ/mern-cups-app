@@ -37,7 +37,7 @@ const SearchTest = (props) => {
 
     // Making Request
     axios({
-      method: "GET",
+      method: "POST",
       url: `/search_items/${type}`,
       encType: "multipart/form-data",
       data: formData,
@@ -50,6 +50,7 @@ const SearchTest = (props) => {
         setMsg("LOADED_SUCCESSFULLY");
         console.log(res.data);
         console.log("2");
+        setFile(null);
       })
       .catch((err) => {
         console.log(err);
@@ -108,6 +109,24 @@ const SearchTest = (props) => {
       </Form>
     </Container>
   );
+
+  // return (
+  //   <div>
+  //     <form
+  //       encType="multipart/form-data"
+  //       method="POST"
+  //       action="/search_items/item_name"
+  //     >
+  //       <input type="text" id="item_name" name="item_name" value="Coffee" />
+  //       <input type="file" id="file" name="file" />
+  //       <input
+  //         type="submit"
+  //         defaultValue="Add Item"
+  //         className="btn btn-primary btn-block"
+  //       />
+  //     </form>
+  //   </div>
+  // );
 };
 
 export default SearchTest;

@@ -12,8 +12,12 @@ import {
   Input,
   FormGroup,
   Alert,
+  ListGroup,
+  ListGroupItem,
+  Row,
+  Col,
 } from "reactstrap";
-// import { Link } from "react-router-dom";
+import ViewFile from "../manager/itemModels/ViewFile";
 
 const SearchMenu = (props) => {
   /**************** COMPONENT STATES ******************** */
@@ -23,8 +27,10 @@ const SearchMenu = (props) => {
   const [nestedAudio, setNestedAudio] = useState(false);
   const [item_name, setItemName] = useState("");
   const [file, setFile] = useState("");
-  const [msg, setMsg] = useState(null);
+  const [msg, setMsg] = useState("Serch by item name, asl or audio file");
   const [type, setType] = useState(null);
+  const [found, setFound] = useState(false);
+  const [item, setItem] = useState([]);
 
   /**************** MODAL TOGGLERS ******************** */
   // Main Toggle
@@ -52,196 +58,202 @@ const SearchMenu = (props) => {
   const handleChangeItemName = (e) => {
     setType(e.target.name);
     setItemName(e.target.value);
-    console.log(e.target.name);
   };
 
   const handleChangeFile = (e) => {
     setType(e.target.name);
     setFile(e.target.files[0]);
     console.log(e.target.files[0]);
-    console.log("1", type);
   };
 
   /**************** FORM SUBMISSION ******************** */
   const handleOnSubmit = (e) => {
     e.preventDefault();
-    console.log("1");
-    console.log("1", type);
+    setItem(null);
 
     // Check for empty fields
-    // if (!item_name || !file) {
-    //   setMsg("Sorry you have missing requirement. Please select one.");
-    // } else {
-    const formData = new FormData();
-    formData.append("item_name", item_name);
-    formData.append("file", file);
+    if (!item_name && !file) {
+      setMsg("Sorry you have missing requirement. Please select one.");
+    } else {
+      const formData = new FormData();
+      formData.append("item_name", item_name);
+      formData.append("file", file);
 
-    // Making Request
-    axios({
-      method: "GET",
-      url: `/search_items/${type}`,
-      encType: "multipart/form-data",
-      data: formData,
-    })
-      .then((res) => {
-        console.log(res);
-        setMsg("LOADED_SUCCESSFULLY");
-        console.log(msg);
-        console.log("2");
-        // Close modal
-        toggle();
+      // Making Request
+      axios({
+        method: "POST",
+        url: `/search_items/${type}`,
+        encType: "multipart/form-data",
+        data: formData,
       })
-      .catch((err) => {
-        console.log(err);
-        console.log(err.response);
-        setMsg("LOADING_FAILED. NOT FOUND");
-        console.log("3");
-      });
-    // }
+        .then((res) => {
+          console.log(res);
+          setMsg("LOADED_SUCCESSFULLY");
+          setItem(res.data);
+          setFound(true);
+          // Close modal
+          toggle();
+        })
+        .catch((err) => {
+          console.log(err);
+          console.log(err.response);
+          setMsg("ITEM NOT FOUND");
+        });
+    }
   };
 
-  return (
-    <div>
-      <Button
-        onClick={toggle}
-        style={{ color: "white" }}
-        activestyle={{ color: "red" }}
-        block
-        color="primary"
-      >
-        SEARCH
-      </Button>
-
-      {/************************ PRIMARY: IMAGE MODAL********************* */}
-      <Modal isOpen={modal} toggle={toggle}>
-        <ModalHeader>SEARCH FOR MENU ITEM</ModalHeader>
-        <ModalBody>
-          Serch by item name, asl or audio file
-          {/* Error display */}
-          {msg ? <Alert color="danger">{msg}</Alert> : null}
-          <Form onSubmit={handleOnSubmit}>
-            <FormGroup>
-              <ModalBody>
-                <Button
-                  color="dark"
-                  block
-                  onClick={() => {
-                    toggleItemName("item_name");
-                  }}
-                >
-                  Item Name
+  if (found) {
+    return (
+      <div>
+        <div style={{ marginBottom: "1rem" }}>
+          <SearchMenu />
+        </div>
+        <ListGroup>
+          <ListGroupItem color="primary">
+            <Row>
+              <Col>
+                <b>RESULTS::</b>
+              </Col>
+              <Col>NAME: {item.item_name}</Col>
+              <Col>CATEGORY: {item.category}</Col>
+              <Col>STOCK: {item.stock} </Col>
+              <Col>COST: ${item.cost} </Col>
+              {/* VIEW MENU ITEM FILES */}
+              <Col>
+                <Button className="remove-btn" color="primary" size="sm">
+                  <ViewFile id={item._id} />
                 </Button>
-                <Button
-                  color="dark"
-                  style={{ marginTop: "2rem" }}
-                  block
-                  onClick={() => {
-                    toggleASL("asl_photo");
-                  }}
-                >
-                  Sign Language Photo
-                </Button>
+              </Col>
+            </Row>
+          </ListGroupItem>
+        </ListGroup>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <Button onClick={toggle} block color="primary">
+          SEARCH
+        </Button>
 
-                <Button
-                  color="dark"
-                  style={{ marginTop: "2rem" }}
-                  block
-                  onClick={() => {
-                    toggleAudio("item_audio");
-                  }}
-                >
-                  Item Audio
-                </Button>
+        {/************************ PRIMARY: IMAGE MODAL********************* */}
+        <Modal isOpen={modal} toggle={toggle}>
+          <ModalHeader>SEARCH FOR MENU ITEM</ModalHeader>
+          <ModalBody>
+            {/* Error display */}
+            {msg === "ITEM NOT FOUND" ? (
+              <Alert color="danger">{msg}</Alert>
+            ) : (
+              <Alert color="info">{msg}</Alert>
+            )}
+            <Form onSubmit={handleOnSubmit}>
+              <FormGroup>
+                <ModalBody>
+                  <Button color="dark" block onClick={toggleItemName}>
+                    Item Name
+                  </Button>
+                  <Button
+                    color="dark"
+                    style={{ marginTop: "2rem" }}
+                    block
+                    onClick={toggleASL}
+                  >
+                    Sign Language Photo
+                  </Button>
 
-                {/************************ SECONDARY: IMAGE MODAL********************* */}
-                <Modal isOpen={nestedItemName} toggle={toggleItemName}>
-                  {/* header */}
-                  <ModalHeader>ITEM NAME</ModalHeader>
-                  <ModalBody>
-                    <Card>
-                      <Input
-                        type="text"
-                        id="item_name"
-                        name="item_name"
-                        placeholder="Item Name"
-                        className="mb-3"
-                        onChange={handleChangeItemName}
-                      />
-                    </Card>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="primary" onClick={toggleItemName}>
-                      Done
-                    </Button>
-                  </ModalFooter>
-                </Modal>
+                  <Button
+                    color="dark"
+                    style={{ marginTop: "2rem" }}
+                    block
+                    onClick={toggleAudio}
+                  >
+                    Item Audio
+                  </Button>
 
-                {/************************ SECONDARY: IMAGE MODAL********************* */}
-                <Modal isOpen={nestedASL} toggle={toggleASL}>
-                  {/* header */}
-                  <ModalHeader>ASL</ModalHeader>
-                  <ModalBody>
-                    <Card>
-                      <h3>AMERICAN SIGN LANGUAGE</h3>
-                      <Input
-                        name="asl_photo"
-                        id="asl_photo"
-                        type="file"
-                        onChange={handleChangeFile}
-                      />
-                    </Card>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="primary" onClick={toggleASL}>
-                      Done
-                    </Button>
-                  </ModalFooter>
-                </Modal>
+                  {/************************ SECONDARY: IMAGE MODAL********************* */}
+                  <Modal isOpen={nestedItemName} toggle={toggleItemName}>
+                    {/* header */}
+                    <ModalHeader>ITEM NAME</ModalHeader>
+                    <ModalBody>
+                      <Card>
+                        <Input
+                          type="text"
+                          id="item_name"
+                          name="item_name"
+                          placeholder="Item Name"
+                          className="mb-3"
+                          onChange={handleChangeItemName}
+                        />
+                      </Card>
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button color="primary" onClick={toggleItemName}>
+                        Done
+                      </Button>
+                    </ModalFooter>
+                  </Modal>
 
-                {/************************ SECONDARY: IMAGE MODAL********************* */}
-                <Modal isOpen={nestedAudio} toggle={toggleAudio}>
-                  {/* header */}
-                  <ModalHeader>RECORDING</ModalHeader>
-                  <ModalBody>
-                    <Card>
-                      <h3>ITEM AUDIO</h3>
-                      <Input
-                        name="item_audio"
-                        id="item_audio"
-                        type="file"
-                        onChange={handleChangeFile}
-                      />
-                      <audio
-                        id="file"
-                        name="file"
-                        src={file}
-                        controls="controls"
-                      />
-                    </Card>
-                  </ModalBody>
-                  <ModalFooter>
-                    <Button color="primary" onClick={toggleAudio}>
-                      Done
-                    </Button>
-                  </ModalFooter>
-                </Modal>
+                  {/************************ SECONDARY: IMAGE MODAL********************* */}
+                  <Modal isOpen={nestedASL} toggle={toggleASL}>
+                    {/* header */}
+                    <ModalHeader>ASL</ModalHeader>
+                    <ModalBody>
+                      <Card>
+                        <h3>AMERICAN SIGN LANGUAGE</h3>
+                        <Input
+                          name="asl_photo"
+                          id="asl_photo"
+                          type="file"
+                          onChange={handleChangeFile}
+                        />
+                      </Card>
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button color="primary" onClick={toggleASL}>
+                        Done
+                      </Button>
+                    </ModalFooter>
+                  </Modal>
 
-                <Button
-                  block
-                  color="success"
-                  style={{ marginTop: "2rem" }}
-                  type="submit"
-                  onSubmit={handleOnSubmit}
-                >
-                  SUBMIT
-                </Button>
-              </ModalBody>
-            </FormGroup>
-          </Form>
-        </ModalBody>
-      </Modal>
-    </div>
-  );
+                  {/************************ SECONDARY: IMAGE MODAL********************* */}
+                  <Modal isOpen={nestedAudio} toggle={toggleAudio}>
+                    {/* header */}
+                    <ModalHeader>RECORDING</ModalHeader>
+                    <ModalBody>
+                      <Card>
+                        <h3>ITEM AUDIO</h3>
+                        <Input
+                          name="item_audio"
+                          id="item_audio"
+                          type="file"
+                          onChange={handleChangeFile}
+                        />
+                      </Card>
+                    </ModalBody>
+                    <ModalFooter>
+                      <Button color="primary" onClick={toggleAudio}>
+                        Done
+                      </Button>
+                    </ModalFooter>
+                  </Modal>
+
+                  <Button
+                    block
+                    color="success"
+                    style={{ marginTop: "2rem" }}
+                    type="submit"
+                    onSubmit={handleOnSubmit}
+                  >
+                    SUBMIT
+                  </Button>
+                </ModalBody>
+              </FormGroup>
+            </Form>
+          </ModalBody>
+        </Modal>
+      </div>
+    );
+  }
 };
 
 export default SearchMenu;

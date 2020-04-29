@@ -2,17 +2,28 @@ import React, { Component } from "react";
 // import '../css/CustomerMenuStyle.css'
 import {} from "react-router-dom";
 import ReviewOrder from "./ReviewOrder";
-import { Container, ListGroup, ListGroupItem, Button, Alert } from "reactstrap";
+import {
+  Container,
+  ListGroup,
+  ListGroupItem,
+  Button,
+  Alert,
+  Row,
+  Col,
+} from "reactstrap";
 import SearchMenu from "./SearchMenu";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
+import ViewFile from "../manager/itemModels/ViewFile";
 
 class CustomerMenu extends Component {
+  // **************** COMPONENT STATES *************************/
   constructor(props) {
     super(props);
     this.state = {
       items: [],
       isLoaded: false,
       orderedItems: [],
+      sumTotal: "",
       review: false,
       msg: "Please charge values to add to chart",
     };
@@ -34,6 +45,7 @@ class CustomerMenu extends Component {
       });
   }
 
+  // *************** CHANGE VIEW TO REVIEW COMPONENT *************/
   changeView() {
     if (this.state.orderedItems) {
       this.setState({
@@ -43,20 +55,39 @@ class CustomerMenu extends Component {
     }
   }
 
-  changeHandler = (id, name, value) => {
+  // *************** ORDER HANDLER *********************/
+  changeHandler = (id, name, cost, value) => {
+    var sum = 0;
+    var itemCost = 0;
+    var itemQty = 0;
     let res = this.state.orderedItems.find((item) => item.id === id);
+
+    var quantity = parseInt(value, 10);
 
     if (res === undefined) {
       let obj = {
         id,
         name,
-        value,
+        cost,
+        quantity,
+        total: cost * quantity,
       };
       console.log("IF: ", obj);
 
       this.setState({
         orderedItems: [...this.state.orderedItems, obj],
       });
+
+      // Calculate total cost of all items ordered
+
+      for (let i = 0; i < this.state.orderedItems.length; i++) {
+        itemCost = this.state.orderedItems[i].cost;
+        itemQty = this.state.orderedItems[i].quantity;
+        sum += itemCost * itemQty;
+      }
+
+      this.setState({ sumTotal: sum });
+      console.log("ORDER SUM: ", this.state.sumTotal);
     } else {
       let obj = this.state.orderedItems.splice(
         this.state.orderedItems.findIndex((item) => item.id === id),
@@ -64,7 +95,8 @@ class CustomerMenu extends Component {
       );
       console.log("ELSE: ", obj);
 
-      obj[0].value = value;
+      obj[0].quantity = quantity;
+      obj[0].total = cost * quantity;
 
       let temp = this.state.orderedItems;
       temp.push(...obj);
@@ -72,15 +104,26 @@ class CustomerMenu extends Component {
       this.setState({
         orderedItems: temp,
       });
+
+      // Calculate total cost of all items ordered
+
+      for (let i = 0; i < this.state.orderedItems.length; i++) {
+        itemCost = this.state.orderedItems[i].cost;
+        itemQty = this.state.orderedItems[i].quantity;
+        sum += itemCost * itemQty;
+      }
+
+      this.setState({ sumTotal: sum });
+      console.log("ORDER SUM: ", this.state.sumTotal);
     }
   };
 
   render() {
     if (!this.state.isLoaded) {
       return (
-        <div>
-          <h1>Loading Menu</h1>
-        </div>
+        <Container>
+          <h1>Loading....</h1>
+        </Container>
       );
     } else {
       return this.state.review === false ? (
@@ -89,11 +132,13 @@ class CustomerMenu extends Component {
             <h1 style={{ textAlign: "center", marginBottom: "3rem" }}>
               CUSTOMER MENU
             </h1>
-            <div style={{ marginBottom: "3rem" }} color="primary">
+
+            <div style={{ marginBottom: "1rem" }}>
               <SearchMenu />
             </div>
 
             <Alert color="danger">{this.state.msg}</Alert>
+
             <ListGroup>
               <TransitionGroup className="items-list">
                 {this.state.items.map((items) => (
@@ -107,28 +152,41 @@ class CustomerMenu extends Component {
                       className="container"
                       style={{ marginRight: "4rem" }}
                     >
-                      <input
-                        name="quantity"
-                        id={items._id}
-                        placeholder="0"
-                        type="number"
-                        min="0"
-                        onChange={() => {
-                          this.changeHandler(
-                            items._id,
-                            items.item_name,
-                            document.getElementById(items._id).value
-                          );
-                        }}
-                      />
                       <b>
-                        <i>
-                          <u>
-                            NAME: {items.item_name} ** &emsp; CATEGORY:{" "}
-                            {items.category} ** &emsp; STOCK: {items.stock} **
-                            &emsp; COST: ${items.cost} **
-                          </u>
-                        </i>
+                        <Row>
+                          <Col>
+                            <input
+                              name="quantity"
+                              id={items._id}
+                              placeholder="0"
+                              type="number"
+                              min="0"
+                              onChange={() => {
+                                this.changeHandler(
+                                  items._id,
+                                  items.item_name,
+                                  items.cost,
+                                  // item amount
+                                  document.getElementById(items._id).value
+                                );
+                              }}
+                            />
+                          </Col>
+                          <Col>NAME: {items.item_name}</Col>
+                          <Col>CATEGORY: {items.category}</Col>
+                          <Col>STOCK: {items.stock} </Col>
+                          <Col>COST: ${items.cost} </Col>
+                          {/* VIEW MENU ITEM FILES */}
+                          <Col>
+                            <Button
+                              className="remove-btn"
+                              color="primary"
+                              size="sm"
+                            >
+                              <ViewFile id={items._id} />
+                            </Button>
+                          </Col>
+                        </Row>
                       </b>
                     </ListGroupItem>
                   </CSSTransition>
@@ -152,6 +210,9 @@ class CustomerMenu extends Component {
         <ReviewOrder
           orderedItems={this.state.orderedItems}
           changeView={() => this.changeView()}
+          sumTotal={this.state.sumTotal}
+          username={this.props.username}
+          acc_bal={this.props.account_balance}
         />
       );
     }

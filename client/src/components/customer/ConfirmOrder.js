@@ -28,19 +28,15 @@ const ConfirmOrder = (props) => {
   const [nestedPassword, setNestedPassword] = useState(false);
   const [nestedImage, setNestedImage] = useState(false);
   const [nestedAudio, setNestedAudio] = useState(false);
-  // var [item_id, setItemId] = useState([]);
-  // var [amount_sold, setAmountSold] = useState([]);
   const [email_address, setEmailAddress] = useState("");
-  //   const [account_balance, setAccountBalance] = useState("");
   const [password, setPassword] = useState("");
   const [file, setFile] = useState("");
-  // const [Url, setUrl] = useState("");
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   var [attempts, setAttempts] = useState(0);
 
-  /**************** MODAL TOGGLERS ******************** */
+  /**************** MODALYou have 3 attempts to confirm TOGGLERS ******************** */
 
   // Main Toggle
   const handleToggle = useCallback(() => {

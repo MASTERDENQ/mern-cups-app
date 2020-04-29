@@ -102,7 +102,7 @@ const CustomerLoginModal = (props) => {
           console.log(res);
           console.log(res.data);
           setIsAuthenticated(true);
-          props.handleSuccessfulAuth(res.config.data, email_address);
+          props.handleSuccessfulAuth(res.data, res.data.first_name);
         })
         .catch((err) => {
           console.log("err", err);

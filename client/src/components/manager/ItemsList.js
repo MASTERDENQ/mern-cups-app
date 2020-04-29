@@ -121,6 +121,7 @@ class ItemsList extends Component {
                     >
                       <UpdateModal id={this.state.id} />
                     </Button>
+
                     {/* VIEW MENU ITEM FILES */}
                     <Button
                       className="remove-btn"

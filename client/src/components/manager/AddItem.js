@@ -191,16 +191,13 @@ const AddItem = (props) => {
     return (
       <Container>
         <div
-          className="MainDiv"
           style={{
-            // overflow: "auto",
-            // height: "inherit",
             display: "block",
           }}
         >
           {/* Title */}
-          <div className="ml-3">
-            <h1>Add Item</h1>
+          <div>
+            <h1>ADD MENU ITEM</h1>
           </div>
           {/* Error display */}
           {error ? (
@@ -267,7 +264,7 @@ const AddItem = (props) => {
                     id="category"
                     onChange={handleChangeCategory}
                   >
-                    <option defaultChecked>Beverage</option>
+                    <option>Beverage</option>
                     <option>Snack</option>
                     <option>Daily Surprise</option>
                   </Input>
@@ -277,8 +274,8 @@ const AddItem = (props) => {
 
               {/* Selection of Photo */}
               <Row>
-                <Col sm="3">
-                  <Card body inverse color="dark" className="ml-2">
+                <Col>
+                  <Card body inverse color="dark">
                     <h3>Upload Photo</h3>
                     <CardImg src={Photo} alt={Icon} />
                     <Input
@@ -291,7 +288,7 @@ const AddItem = (props) => {
                 </Col>
 
                 {/* ASL Selection */}
-                <Col sm="3" className="left">
+                <Col className="left">
                   <Card body inverse color="dark">
                     <h3>Upload ASL</h3>
                     <CardImg src={ASL} alt={Icon} />
@@ -305,7 +302,7 @@ const AddItem = (props) => {
                 </Col>
 
                 {/* Audio Recording */}
-                <Col sm="3">
+                <Col>
                   <Card
                     body
                     inverse
@@ -314,7 +311,7 @@ const AddItem = (props) => {
                     style={{ alignItems: "left" }}
                   >
                     <h3>Audio</h3>
-                    <CardImg src={Audio} alt={Icon} height="50%" />
+                    <CardImg src={Audio} alt={Icon} />
                     <Input
                       id="item_audio"
                       name="item_audio"

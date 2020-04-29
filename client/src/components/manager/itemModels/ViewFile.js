@@ -155,7 +155,7 @@ const ViewFile = (props) => {
         <ModalBody>
           <Card>
             <h3>ITEM AUDIO</h3>
-            <audio src={Url} alt={"Error"} height="50%" controls="controls" />
+            <audio src={Url} alt={"Error"} controls="controls" type="audo/*" />
           </Card>
         </ModalBody>
         <ModalFooter>

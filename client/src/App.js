@@ -11,13 +11,12 @@ import ManagerControlCenter from "./components/manager/ManagerControlCenter";
 import Chart from "./components/manager/Chart";
 import ConfirmOrder from "./components/customer/ConfirmOrder";
 import SearchTest from "./components/customer/SearchTest";
+import SearchMenu from "./components/customer/SearchMenu";
 import "./index.css";
 
 const NotFound = () => (
   <div>
-    <h1 style={{ textAlign: "center" }}>
-      This page connot be found. Error Code: 404
-    </h1>
+    <h1>This page connot be found. Error Code: 404</h1>
   </div>
 );
 
@@ -106,6 +105,8 @@ class App extends React.Component {
                 <CustomerMenu
                   {...props}
                   loggedInStatus={this.state.loggedInStatus}
+                  username={this.state.username}
+                  account_balance={this.state.user.account_balance}
                 />
               )}
             />
@@ -142,9 +143,20 @@ class App extends React.Component {
 
             <Route
               exact
-              path={"/search"}
+              path={"/searchTest"}
               render={(props) => (
                 <SearchTest
+                  {...props}
+                  loggedInStatus={this.state.loggedInStatus}
+                />
+              )}
+            />
+
+            <Route
+              exact
+              path={"/search"}
+              render={(props) => (
+                <SearchMenu
                   {...props}
                   loggedInStatus={this.state.loggedInStatus}
                 />

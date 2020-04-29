@@ -23,3 +23,7 @@ html {
   background-repeat: repeat;
   background-size: cover;
 }
+
+h1 {
+  text-align: center;
+}

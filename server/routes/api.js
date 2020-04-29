@@ -70,62 +70,73 @@ const upload = multer({ storage });
 //Alternative multer option that handles route files but does not store them to database
 const getFile = multer();
 
-/*****TEST CONNECTION******/
-router.get("/", (req, res) => {
+//Base connection
+router.get("/connect", (req, res) => {
   res.status(200).send("Connected...");
 });
 
 /*****RETURN REQUESTS ******/
 
 //searches for menu item by text, american sign language equivalent or audio
-router.get("/search_items/:field", getFile.single("file"), (req, res, next) => {
-  let searchBy = req.params.field;
+router.post(
+  "/search_items/:field",
+  getFile.single("file"),
+  (req, res, next) => {
+    let searchBy = req.params.field;
 
-  if (searchBy == "item_name") {
-    let itemName = req.body.item_name;
+    if (searchBy == "item_name") {
+      let itemName = req.body.item_name;
 
-    let query = { item_name: itemName };
+      let query = { item_name: itemName };
 
-    menuItemModel.findOne(query, (err, item) => {
-      if (err) {
-        return next(err);
-      } else if (!item) {
-        res.status(404).json(query);
-      } else {
-        item.item_photo = undefined;
-        item.asl_photo = undefined;
-        item.item_audio = undefined;
-        item.__v = undefined;
-
-        return res.status(200).json(item);
-      }
-    });
-  } else if (searchBy == "asl_photo" || searchBy == "item_audio") {
-    if (!req.file) {
-      return res.status(400).send("No file input found");
-    } else {
-      fileHash = crypto.createHash("md5").update(req.file.buffer).digest("hex");
-
-      gfs.files.findOne({ md5: fileHash }, (err, file) => {
+      menuItemModel.findOne(query, (err, item) => {
         if (err) {
           return next(err);
-        } else if (!file || file.length == 0) {
-          return res.status(404).send("No file found");
+        } else if (!item) {
+          res.status(404).json("No item found");
         } else {
-          menuItemModel.findOne({ [searchBy]: file._id }, (err, item) => {
-            if (err) {
-              return next(err);
-            } else if (!item) {
-              return res.status(404).send("No item found");
-            } else {
-              res.status(200).json(item);
-            }
-          });
+          item.item_photo = undefined;
+          item.asl_photo = undefined;
+          item.item_audio = undefined;
+          item.__v = undefined;
+
+          return res.status(200).json(item);
         }
       });
+    } else if (searchBy == "asl_photo" || searchBy == "item_audio") {
+      if (!req.file) {
+        return res.status(400).send("No file input found");
+      } else {
+        fileHash = crypto
+          .createHash("md5")
+          .update(req.file.buffer)
+          .digest("hex");
+
+        gfs.files.findOne({ md5: fileHash }, (err, file) => {
+          if (err) {
+            return next(err);
+          } else if (!file || file.length == 0) {
+            return res.status(404).send("No file found");
+          } else {
+            menuItemModel.findOne({ [searchBy]: file._id }, (err, item) => {
+              if (err) {
+                return next(err);
+              } else if (!item) {
+                return res.status(404).send("No item found");
+              } else {
+                res.status(200).json(item);
+              }
+            });
+          }
+        });
+      }
+    } else {
+      let err = new Error("Page not found");
+      err.status = 404;
+      next(err);
     }
   }
-});
+);
 
 //returns all menu items
 router.get("/list_items", (req, res, next) => {
@@ -182,6 +193,10 @@ router.get("/menu_item/:id/:field", (req, res, next) => {
         });
       }
     });
+  } else {
+    let err = new Error("Page not found");
+    err.status = 404;
+    next(err);
   }
 });
 
@@ -334,8 +349,6 @@ router.post(
     let totalCost = 0;
 
     if (
-      !req.body.item_id ||
-      !req.body.amount_sold ||
       !req.body.account_balance ||
       !req.body.email_address ||
       req.body.item_id.length != req.body.amount_sold.length
@@ -348,7 +361,7 @@ router.post(
 
       menuItemModel.findById(itemId, (err, item) => {
         if (err) {
-          return res.status(500).send("Unexpected server error");
+          return next(err);
         } else if (!item) {
           return res.status(404).send("Item on order does not exist");
         } else if (item.stock < req.body.amount_sold[i]) {
@@ -540,6 +553,10 @@ router.post("/edit_item/:field", (req, res, next) => {
         }
       }
     );
+  } else {
+    let err = new Error("Page not found");
+    err.status = 404;
+    next(err);
   }
 });
 

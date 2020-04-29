@@ -39,43 +39,41 @@ class Home extends Component {
   componentDidMount() {
     //Request Items
     axios
-      .get("/")
+      .get("/connect")
       .then((res) => {
         console.log("Conn to Database");
         console.log(res);
-        this.setState({ signal: "Conn to Database" });
+        this.setState({ signal: "Connected..." });
       })
       .catch((err) => {
         console.log(err);
-        this.setState({ signal: "Not Connected" });
+        this.setState({ signal: "Not Connected..." });
       });
   }
 
   render() {
     return (
-      <div className="Home">
-        <h1>{this.state.signal}</h1>
-        <h1 style={{ textAlign: "center" }}>HOME PAGE</h1>
-        <h1>Status: {this.props.loggedInStatus}</h1>
-        <h1>User: {this.props.username}</h1>
-        <Container className="mt-20">
-          <CustomerRegisterModal
-            handleSuccessfulAuth={this.handleSuccessfulCustomerAuth}
-          />
+      <Container className="mt-20">
+        <h1>Welcome to C.U.P.S Store</h1>
+        <p>{this.state.signal}</p>
+        <p>Status: {this.props.loggedInStatus}</p>
 
-          <CustomerLoginModal
-            handleSuccessfulAuth={this.handleSuccessfulCustomerAuth}
-          />
+        <CustomerRegisterModal
+          handleSuccessfulAuth={this.handleSuccessfulCustomerAuth}
+        />
 
-          <ManagerRegisterModal
-            handleSuccessfulAuth={this.handleSuccessfulManagerAuth}
-          />
+        <CustomerLoginModal
+          handleSuccessfulAuth={this.handleSuccessfulCustomerAuth}
+        />
 
-          <ManagerLoginModal
-            handleSuccessfulAuth={this.handleSuccessfulManagerAuth}
-          />
-        </Container>
-      </div>
+        <ManagerRegisterModal
+          handleSuccessfulAuth={this.handleSuccessfulManagerAuth}
+        />
+
+        <ManagerLoginModal
+          handleSuccessfulAuth={this.handleSuccessfulManagerAuth}
+        />
+      </Container>
     );
   }
 }

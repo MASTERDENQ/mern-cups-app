@@ -5,7 +5,7 @@ class Logout extends Component {
   render() {
     return (
       <div>
-        <NavLink href="/">Log out</NavLink>
+        <NavLink href="/">Logout</NavLink>
       </div>
     );
   }
