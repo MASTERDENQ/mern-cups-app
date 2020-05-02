@@ -13,6 +13,7 @@ import {
 import SearchMenu from "./SearchMenu";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 import ViewFile from "../manager/itemModels/ViewFile";
+import { Link } from "react-router-dom";
 
 class CustomerMenu extends Component {
   // **************** COMPONENT STATES *************************/
@@ -24,7 +25,8 @@ class CustomerMenu extends Component {
       orderedItems: [],
       sumTotal: "",
       review: false,
-      msg: "Please charge values to add to chart",
+      msg: "Please charge values to add to chart. Ensure numbers are valid",
+      error: "",
     };
   }
 
@@ -54,7 +56,7 @@ class CustomerMenu extends Component {
       });
 
       console.log("Change If", this.state.orderedItems);
-    } else {
+    } else if (status === "open") {
       this.setState({
         review: !this.state.review,
       });
@@ -63,13 +65,6 @@ class CustomerMenu extends Component {
       console.log("Change If", this.state.orderedItems);
     }
   }
-
-  // removeItem(index) {
-  //   const list = this.state.orderedItems;
-
-  //   list.splice(index, 1);
-  //   this.setState({ orderedItems: list });
-  // }
 
   calculateSumTotal = () => {
     // Variable to calculate total cost of order
@@ -86,20 +81,35 @@ class CustomerMenu extends Component {
 
     this.setState({ sumTotal: sum });
     console.log("ORDER SUM: ", this.state.sumTotal);
+
+    if (sum > this.props.account_balance) {
+      this.setState({
+        error:
+          "WARNING: Please re-evaluate your orders. Current cost of order exceeds balance. Thank you.",
+      });
+    } else {
+      this.changeView("open");
+    }
   };
 
   // *************** ORDER HANDLER *********************/
-  changeHandler = (id, name, cost, value) => {
+  changeHandler = (id, name, cost, value, stock) => {
     // Returns the item object if item exists and undefined otherwise.
     let res = this.state.orderedItems.find((item) => item.id === id);
     // console.log("Results: ", res);
     var quantity = parseInt(value, 10);
 
+    if (quantity > stock) {
+      this.setState({
+        error:
+          "WARNING: Please re-evaluate your orders. Quantity exceeds amount in stock. If you contine you will only got what is in stock Thank you.",
+      });
+    }
     // If order does not exist
-    // if quatity is 0
+    // if quatity is not 0
     // If quantity is a number
     // then make a new object to add to order array
-    if (res === undefined && quantity !== 0 && !isNaN(quantity)) {
+    else if (res === undefined && quantity !== 0 && !isNaN(quantity)) {
       let obj = {
         id,
         name,
@@ -107,36 +117,35 @@ class CustomerMenu extends Component {
         quantity,
         total: cost * quantity,
       };
-      console.log("NEW: ", obj);
+      console.log("NEW OBJECT: ", obj);
 
       // append new object to order array
       this.setState({
         orderedItems: [...this.state.orderedItems, obj],
       });
 
-      console.log("TEST QTY", quantity);
+      console.log("NEW QTY", quantity);
     }
-    // If quantity is 0 or Not-a-Number (NaN) then remove and update
+    // If quantity is 0 or Not-a-Number (NaN) then remove object and update
     else if (quantity === 0 || isNaN(quantity)) {
-      // Exception Handler to deal with initial entry being zero.
+      // Exception Handler to deal with initial entry being zero then cancelled
       if (res === undefined) {
         return 0;
       }
-      console.log("ELSE IF QTY", quantity);
 
       // Remove item object from array
       let obj = this.state.orderedItems.splice(
         this.state.orderedItems.findIndex((item) => item.id === id),
         1
       );
-      console.log("OBJECT REMOVED YES: ", obj);
+      console.log("OBJECT TO REMOVED: ", obj);
 
       let index = this.state.orderedItems.indexOf(id); // find index of quantity to remove
-      const list = Object.assign([], this.state.orderedItems);
-      list.splice(index, 1);
-      this.setState({ orderedItems: list });
-      console.log("LIST: Remove: ", list);
-      console.log("TEST QTY", quantity);
+      const list = Object.assign([], this.state.orderedItems); // copy state to update
+      list.splice(index, 1); // remove invalid item object from order array
+      this.setState({ orderedItems: list }); // update state with valid orders
+      console.log("UPDATED ORDERS: ", list);
+      console.log("NEW QTY", quantity);
     }
     // Else update order list with valid values
     else {
@@ -146,7 +155,7 @@ class CustomerMenu extends Component {
         1
       );
       console.log("OBJECT TO UPDATE", obj);
-      console.log("TEST QTY", quantity);
+      console.log("NEW QTY", quantity);
       // assign updated values to object
       obj[0].quantity = quantity;
       obj[0].total = cost * quantity;
@@ -163,8 +172,17 @@ class CustomerMenu extends Component {
   };
 
   render() {
-    // console.log("RENDER ()", this.state.orderedItems);
-    if (!this.state.isLoaded) {
+    const pass = this.props.loggedInStatus;
+
+    if (pass === "NOT_LOGGED_IN") {
+      return (
+        <div>
+          <h1>
+            YOU ARE NOT LOGGED IN. PLEASE <Link to="/">LOGIN</Link>
+          </h1>
+        </div>
+      );
+    } else if (!this.state.isLoaded) {
       return (
         <Container>
           <h1>Loading....</h1>
@@ -173,16 +191,31 @@ class CustomerMenu extends Component {
     } else {
       return this.state.review === false ? (
         <Container>
-          <div id="MainBody">
-            <h1 style={{ textAlign: "center", marginBottom: "3rem" }}>
-              CUSTOMER MENU
+          <div>
+            <h1 style={{ marginBottom: "3rem" }}>
+              <Alert color="dark">CUSTOMER MENU</Alert>
             </h1>
 
             <div style={{ marginBottom: "1rem" }}>
               <SearchMenu />
             </div>
 
-            <Alert color="danger">{this.state.msg}</Alert>
+            <Alert color="info">{this.state.msg}</Alert>
+
+            {this.state.error ? (
+              <Alert color="danger">{this.state.error}</Alert>
+            ) : (
+              ""
+            )}
+
+            <Alert>
+              <Row>
+                <Col>
+                  A/C BALANCE: ${this.props.account_balance}.00---------
+                </Col>
+                <Col> SUM TOTAL: ${this.state.sumTotal}.00---------</Col>
+              </Row>
+            </Alert>
 
             <ListGroup>
               <TransitionGroup className="items-list">
@@ -206,13 +239,16 @@ class CustomerMenu extends Component {
                               placeholder="0"
                               type="number"
                               min="1"
+                              max="1000"
+                              maxLength="3"
                               onChange={() => {
                                 this.changeHandler(
                                   items._id,
                                   items.item_name,
                                   items.cost,
                                   // item amount
-                                  document.getElementById(items._id).value
+                                  document.getElementById(items._id).value,
+                                  items.stock
                                 );
                               }}
                             />
@@ -220,7 +256,7 @@ class CustomerMenu extends Component {
                           <Col>NAME: {items.item_name}</Col>
                           <Col>CATEGORY: {items.category}</Col>
                           <Col>STOCK: {items.stock} </Col>
-                          <Col>COST: ${items.cost} </Col>
+                          <Col>UNIT COST: ${items.cost} </Col>
                           {/* VIEW MENU ITEM FILES */}
                           <Col>
                             <Button
@@ -244,13 +280,13 @@ class CustomerMenu extends Component {
                 color="success"
               >
                 <h3>
-                  Please enter the amount you want. Ensure numbers are valid
+                  Please enter the amount needed, then you will be able to
+                  confirm your order.
                 </h3>
               </Alert>
             ) : (
               <Button
                 onClick={() => {
-                  this.changeView("open");
                   this.calculateSumTotal();
                 }}
                 style={{ marginTop: "3rem", marginBottom: "3rem" }}

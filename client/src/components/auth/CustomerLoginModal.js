@@ -30,7 +30,6 @@ const CustomerLoginModal = (props) => {
   const [email_address, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [file, setFile] = useState("");
-  // const [Url, setUrl] = useState("");
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -66,10 +65,8 @@ const CustomerLoginModal = (props) => {
   };
 
   /**************** STATE HANDLERS ******************** */
-
   const handleChangeEmailAddress = (e) => setEmailAddress(e.target.value);
   const handleChangePassword = (e) => setPassword(e.target.value);
-
   const handleChangeFile = (e) => {
     setFile(e.target.files[0]);
     console.log(e.target.files[0]);
@@ -135,10 +132,6 @@ const CustomerLoginModal = (props) => {
   /************************* RENDER ***************************** */
   return (
     <div>
-      {/* <NavLink onClick={handleToggle} href="#">
-        Customer Login
-      </NavLink> */}
-
       <Button onClick={handleToggle} className="mt-4 mb-3" color="dark" block>
         <h1>Customer Login</h1>
       </Button>

@@ -6,12 +6,9 @@ import AddItem from "./components/manager/AddItem";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import ItemsList from "./components/manager/ItemsList";
 import CustomerMenu from "./components/customer/CustomerMenu";
-import AddItemTest from "./components/manager/AddItemTest";
 import ManagerControlCenter from "./components/manager/ManagerControlCenter";
 import Chart from "./components/manager/Chart";
 import ConfirmOrder from "./components/customer/ConfirmOrder";
-import SearchTest from "./components/customer/SearchTest";
-import SearchMenu from "./components/customer/SearchMenu";
 import "./index.css";
 
 const NotFound = () => (
@@ -78,17 +75,6 @@ class App extends React.Component {
 
             <Route
               exact
-              path={"/add1"}
-              render={(props) => (
-                <AddItemTest
-                  {...props}
-                  loggedInStatus={this.state.loggedInStatus}
-                />
-              )}
-            />
-
-            <Route
-              exact
               path={"/list"}
               render={(props) => (
                 <ItemsList
@@ -138,28 +124,6 @@ class App extends React.Component {
               path={"/chart"}
               render={(props) => (
                 <Chart {...props} loggedInStatus={this.state.loggedInStatus} />
-              )}
-            />
-
-            <Route
-              exact
-              path={"/searchTest"}
-              render={(props) => (
-                <SearchTest
-                  {...props}
-                  loggedInStatus={this.state.loggedInStatus}
-                />
-              )}
-            />
-
-            <Route
-              exact
-              path={"/search"}
-              render={(props) => (
-                <SearchMenu
-                  {...props}
-                  loggedInStatus={this.state.loggedInStatus}
-                />
               )}
             />
 

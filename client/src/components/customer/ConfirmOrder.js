@@ -17,7 +17,7 @@ import {
   CardImg,
   ModalFooter,
 } from "reactstrap";
-import { Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 /********************** COMPONENT ********************** */
 const ConfirmOrder = (props) => {
@@ -35,6 +35,7 @@ const ConfirmOrder = (props) => {
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   var [attempts, setAttempts] = useState(0);
+  const [success, setSuccess] = useState("");
 
   /**************** MODALYou have 3 attempts to confirm TOGGLERS ******************** */
 
@@ -84,12 +85,12 @@ const ConfirmOrder = (props) => {
 
     let size = props.order.length;
     for (let i = 0; i < size; i++) {
-      //   setItemId([...item_id, props.order[i].id]);
       tempId.push(props.order[i].id);
-      tempAmt.push(props.order[i].value);
-      //   tempAcc.push(props.order[i].);
+      tempAmt.push(props.order[i].quantity);
     }
-    console.log("ITEM ARRAY", tempAmt);
+
+    console.log("ITEM ARRAY: ID", tempId);
+    console.log("ITEM ARRAY: AMT", tempAmt);
 
     // Request body
     const body = {
@@ -111,6 +112,7 @@ const ConfirmOrder = (props) => {
       .then((res) => {
         console.log(res);
         console.log(res.data);
+        setSuccess("YES");
       })
       .catch((err) => {
         console.log("Error", err);
@@ -176,13 +178,33 @@ const ConfirmOrder = (props) => {
     }
   }, [error, handleToggle, isAuthenticated, modal, props]);
 
-  /************************* RENDER ***************************** */
-  if (attempts === 1) {
+  const pass = props.loggedInStatus;
+
+  /******************************* RENDER ******************************* */
+  if (pass === "NOT_LOGGED_IN") {
     return (
       <div>
-        <Redirect to="/menu" />
+        <h1 style={{ textAlign: "center" }}>
+          YOU ARE NOT LOGGED IN. PLEASE <Link to="/">LOGIN</Link>
+        </h1>
+      </div>
+    );
+  } else if (attempts === 1) {
+    return (
+      <div>
         <Alert color="danger" style={{ textAlign: "center" }}>
           You ONLY had 3 attempts. Order is cancelled
+        </Alert>
+      </div>
+    );
+  } else if (success === "YES") {
+    return (
+      <div>
+        <Alert
+          color="success"
+          style={{ textAlign: "center", marginTop: "3rem" }}
+        >
+          ORDERED SUCCESSFULLY
         </Alert>
       </div>
     );

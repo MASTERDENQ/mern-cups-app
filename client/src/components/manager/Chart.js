@@ -4,8 +4,9 @@ import {
   // Line,
   // Pie
 } from "react-chartjs-2";
-import { Container, Card } from "reactstrap";
+import { Container, Card, Row, Col, Button, Alert } from "reactstrap";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 class Chart extends Component {
   constructor(props) {
@@ -43,7 +44,6 @@ class Chart extends Component {
       name: [],
       stock: [],
       cost: [],
-      // type: "Bar",
     };
   }
 
@@ -125,15 +125,6 @@ class Chart extends Component {
     });
   };
 
-  // onChangeHandler = (e) =>
-  //   useCallback(() => {
-  //     this.setState({ type: e.target.value });
-  //     console.log(this.state.type);
-  //   }, [this.state.type]);
-  // this.setState({ type: e.target.value });
-  // console.log(this.state.type);
-  // };
-
   componentDidMount() {
     console.log();
     //Request Items
@@ -151,107 +142,140 @@ class Chart extends Component {
   }
 
   render() {
-    return (
-      <Container>
-        <h1 style={{ textAlign: "center" }}>CUPS APPLICATION CHARTS</h1>
+    const pass = this.props.loggedInStatus;
 
-        <Card
-          style={{ marginTop: "3rem", marginBottom: "3rem" }}
-          body
-          outline
-          color="primary"
-        >
-          <Bar
-            data={this.state.costChartData}
-            // width={100}
-            // height={50}
-            options={{
-              title: {
-                display: true,
-                text:
-                  "Chart showing the total sales (in dollars) for each menu item",
-                fontSize: 25,
-              },
-              legend: {
-                display: true,
-                position: "right",
-                labels: {
-                  fontColor: "#000",
-                },
-              },
-              layout: {
-                padding: {
-                  left: 50,
-                  right: 0,
-                  bottom: 0,
-                  top: 0,
-                },
-              },
-              tooltips: {
-                enabled: true,
-              },
-              scales: {
-                yAxes: [
-                  {
-                    ticks: {
-                      beginAtZero: true,
-                    },
-                  },
-                ],
-              },
-            }}
-          />
-        </Card>
+    if (pass === "NOT_LOGGED_IN") {
+      return (
+        <div>
+          <h1>
+            YOU ARE NOT LOGGED IN. PLEASE <Link to="/">LOGIN</Link>
+          </h1>
+        </div>
+      );
+    } else {
+      return (
+        <Container>
+          <h1>
+            <Alert color="dark">CUPS APPLICATION CHARTS</Alert>
+          </h1>
 
-        <Card
-          style={{ marginTop: "3rem", marginBottom: "6rem" }}
-          body
-          outline
-          color="info"
-        >
-          <Bar
-            data={this.state.stockChartData}
-            // width={100}
-            // height={50}
-            options={{
-              title: {
-                display: true,
-                text:
-                  "Chart showing the total sales (i.e.count of items) for each menu item",
-                fontSize: 25,
-              },
-              legend: {
-                display: true,
-                position: "right",
-                labels: {
-                  fontColor: "#000",
+          <Row>
+            <Col>
+              <Link to="/list">
+                <Button className="mt-4 mb-3" color="dark" block>
+                  VIEW/EDIT ITEMS
+                </Button>
+              </Link>
+            </Col>
+            <Col>
+              <Link to="/add">
+                <Button className="mt-4 mb-3" color="dark" block>
+                  ADD ITEM
+                </Button>
+              </Link>
+            </Col>
+          </Row>
+
+          <Card
+            style={{ marginTop: "1rem", marginBottom: "3rem" }}
+            body
+            outline
+            color="primary"
+          >
+            <Bar
+              data={this.state.costChartData}
+              options={{
+                title: {
+                  display: true,
+                  text:
+                    "Chart showing the total sales (in dollars) for each menu item",
+                  fontSize: 25,
                 },
-              },
-              layout: {
-                padding: {
-                  left: 50,
-                  right: 0,
-                  bottom: 0,
-                  top: 0,
-                },
-              },
-              tooltips: {
-                enabled: true,
-              },
-              scales: {
-                yAxes: [
-                  {
-                    ticks: {
-                      beginAtZero: true,
-                    },
+                legend: {
+                  display: true,
+                  position: "right",
+                  labels: {
+                    fontColor: "#000",
                   },
-                ],
-              },
-            }}
-          />
-        </Card>
-      </Container>
-    );
+                },
+                layout: {
+                  padding: {
+                    left: 50,
+                    right: 0,
+                    bottom: 0,
+                    top: 0,
+                  },
+                },
+                tooltips: {
+                  enabled: true,
+                },
+                scales: {
+                  yAxes: [
+                    {
+                      ticks: {
+                        beginAtZero: true,
+                      },
+                    },
+                  ],
+                },
+              }}
+            />
+          </Card>
+
+          <Card
+            style={{ marginTop: "3rem", marginBottom: "3rem" }}
+            body
+            outline
+            color="info"
+          >
+            <Bar
+              data={this.state.stockChartData}
+              options={{
+                title: {
+                  display: true,
+                  text:
+                    "Chart showing the total sales (i.e.count of items) for each menu item",
+                  fontSize: 25,
+                },
+                legend: {
+                  display: true,
+                  position: "right",
+                  labels: {
+                    fontColor: "#000",
+                  },
+                },
+                layout: {
+                  padding: {
+                    left: 50,
+                    right: 0,
+                    bottom: 0,
+                    top: 0,
+                  },
+                },
+                tooltips: {
+                  enabled: true,
+                },
+                scales: {
+                  yAxes: [
+                    {
+                      ticks: {
+                        beginAtZero: true,
+                      },
+                    },
+                  ],
+                },
+              }}
+            />
+          </Card>
+
+          <Link to="/control">
+            <Button color="dark" block>
+              MANAGER CONTROL CENTER
+            </Button>
+          </Link>
+        </Container>
+      );
+    }
   }
 }
 

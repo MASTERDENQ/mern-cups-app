@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
-// import { Link } from "react-router-dom";
-import ItemsList from "../manager/ItemsList";
+
 import {
   Button,
   Modal,
@@ -11,10 +10,8 @@ import {
   FormGroup,
   Label,
   Input,
-  // NavLink,
   Alert,
 } from "reactstrap";
-import NavBar from "../NavBar";
 
 const ManagerLoginModal = (props) => {
   /**************** COMPONENT STATES ******************** */
@@ -64,13 +61,13 @@ const ManagerLoginModal = (props) => {
           console.log(res);
           console.log(res.data);
           setIsAuthenticated(true);
-          props.handleSuccessfulAuth(res.config.data, username);
+          props.handleSuccessfulAuth(res.data, username);
         })
         .catch((err) => {
-          console.log("\nData Response");
+          console.log("\nLogin Error : ");
+          console.log(err);
+          console.log("\nError Response: ");
           console.log(err.response.data);
-          console.log("\nStatus Response");
-          console.log(err.response.status);
           setError("LOGIN_FAIL");
           setMsg(err.response.data);
         });
@@ -89,8 +86,6 @@ const ManagerLoginModal = (props) => {
     if (modal) {
       if (isAuthenticated) {
         handleToggle();
-        // localStorage.setItem("isAuthenticated", true);
-        // localStorage.getItem("username", username);
       }
     }
   }, [error, handleToggle, isAuthenticated, modal]);
@@ -98,10 +93,6 @@ const ManagerLoginModal = (props) => {
   /************************** RENDER ************************ */
   return (
     <div>
-      {/* <NavLink onClick={handleToggle} href="#">
-        Manager Login
-      </NavLink> */}
-
       <Button onClick={handleToggle} className="mt-4 mb-3" color="dark" block>
         <h1>Manager Login</h1>
       </Button>
@@ -110,8 +101,6 @@ const ManagerLoginModal = (props) => {
         <ModalHeader toggle={handleToggle}>Manager Login</ModalHeader>
         <ModalBody>
           {msg ? <Alert color="danger">{msg}</Alert> : null}
-          {isAuthenticated ? <NavBar isAuthenticated /> : null}
-          {isAuthenticated ? <ItemsList /> : null}
           <Form>
             <FormGroup>
               <Label for="email">Username</Label>

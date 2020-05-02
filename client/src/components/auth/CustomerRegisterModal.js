@@ -32,14 +32,11 @@ const CustomerRegisterModal = (props) => {
   const [email_address, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [file, setFile] = useState("");
-  // const [filename, setFilename] = useState("Choose File");
-  // const [uploadedFile, setUploadedFile] = useState({});
   const [msg, setMsg] = useState(null);
   const [error, setError] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   /**************** MODAL TOGGLERS ******************** */
-
   // Main Toggle
   const handleToggle = useCallback(() => {
     // Clear errors
@@ -78,8 +75,6 @@ const CustomerRegisterModal = (props) => {
   const handleChangeFile = (e) => {
     setFile(e.target.files[0]);
     console.log(file);
-    // setFilename(e.target.files[0].name);
-    // console.log(filename);
   };
 
   /**************** FORM SUBMISSION ******************** */
@@ -118,7 +113,7 @@ const CustomerRegisterModal = (props) => {
           console.log("Data Response");
           console.log(err.response.data);
           setError("REGISTER_FAIL");
-          setMsg(err.response.data);
+          setMsg("Username already exist");
         });
     }
   };
@@ -142,10 +137,6 @@ const CustomerRegisterModal = (props) => {
   /************************** RENDER ************************ */
   return (
     <div>
-      {/* <NavLink onClick={handleToggle} href="#" color="dark">
-        Customer Register
-      </NavLink> */}
-
       <Button onClick={handleToggle} className="mt-4 mb-3" color="dark" block>
         <h1>Customer Register</h1>
       </Button>

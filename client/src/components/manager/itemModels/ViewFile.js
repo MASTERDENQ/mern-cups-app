@@ -64,12 +64,7 @@ const ViewFile = (props) => {
 
   return (
     <div>
-      <Link
-        to="#"
-        onClick={toggle}
-        style={{ color: "white" }}
-        activestyle={{ color: "red" }}
-      >
+      <Link to="#" onClick={toggle} style={{ color: "white" }}>
         MEDIA
       </Link>
 

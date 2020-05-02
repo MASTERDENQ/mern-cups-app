@@ -36,6 +36,7 @@ const UpdateModal = (props) => {
   };
 
   /**************** STATE HANDLERS ******************** */
+
   const onChange = (e) => setNewValue(e.target.value);
   const setFieldValue = (field) => setField(field);
 
@@ -44,7 +45,7 @@ const UpdateModal = (props) => {
     // Prevent Default
     e.preventDefault();
 
-    if (!new_value && new_value < 0) {
+    if (!new_value && new_value < 0 && new_value > 1000) {
       setMsg("Sorry, incorrect entry. Try again");
     } else {
       // Header a.k.a config info
@@ -84,12 +85,7 @@ const UpdateModal = (props) => {
   } else {
     return (
       <div>
-        <Link
-          to="#"
-          onClick={toggle}
-          style={{ color: "white" }}
-          activestyle={{ color: "red" }}
-        >
+        <Link to="#" onClick={toggle} style={{ color: "white" }}>
           UPDATE
         </Link>
 

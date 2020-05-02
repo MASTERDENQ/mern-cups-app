@@ -99,14 +99,14 @@ const AddItem = (props) => {
     let err = "";
 
     // list allow mime type
-    const types = ["audio/x-m4a", "audio/mpeg"];
+    const types = ["audio/wav", "audio/mpeg", "audio/ogg"];
 
     // compare file type find doesn't match
     if (types.every((type) => file.type !== type)) {
       // create error message and assign to container
       err +=
         file.type +
-        " is not supported. Supported Image Formats: ---png---jpg--jpeg---gif---";
+        " is not supported. Supported Image Formats: ---WAV---MP3---OGG---";
     }
 
     // if message not same old that mean has error
@@ -179,7 +179,7 @@ const AddItem = (props) => {
   const pass = props.loggedInStatus;
 
   /******************************* RENDER ******************************* */
-  if (pass === "NOT_ LOGGED_IN") {
+  if (pass === "NOT_LOGGED_IN") {
     return (
       <div>
         <h1 style={{ textAlign: "center" }}>
@@ -196,9 +196,27 @@ const AddItem = (props) => {
           }}
         >
           {/* Title */}
-          <div>
-            <h1>ADD MENU ITEM</h1>
-          </div>
+          <h1>
+            <Alert color="dark">ADD MENU ITEM</Alert>
+          </h1>
+
+          <Row>
+            <Col>
+              <Link to="/chart">
+                <Button className="mt-4 mb-3" color="dark" block>
+                  VIEW CHARTS
+                </Button>
+              </Link>
+            </Col>
+            <Col>
+              <Link to="/list">
+                <Button className="mt-4 mb-3" color="dark" block>
+                  VIEW/EDIT ITEMS
+                </Button>
+              </Link>
+            </Col>
+          </Row>
+
           {/* Error display */}
           {error ? (
             <Alert color="danger">{error}</Alert>
@@ -264,6 +282,7 @@ const AddItem = (props) => {
                     id="category"
                     onChange={handleChangeCategory}
                   >
+                    <option></option>
                     <option>Beverage</option>
                     <option>Snack</option>
                     <option>Daily Surprise</option>
@@ -330,31 +349,15 @@ const AddItem = (props) => {
               >
                 <h5>ADD ITEM</h5>
               </Button>
-
-              <Link to="/list">
-                <Button
-                  color="primary"
-                  type="button"
-                  style={{ marginTop: "2rem" }}
-                  block
-                >
-                  <h5>VIEW ITEMS</h5>
-                </Button>
-              </Link>
-
-              <Link to="/chart">
-                <Button
-                  color="primary"
-                  type="button"
-                  style={{ marginTop: "2rem" }}
-                  block
-                >
-                  <h5>VIEW CHARTS</h5>
-                </Button>
-              </Link>
             </Form>
           </div>
         </div>
+
+        <Link to="/control">
+          <Button className="mt-4 mb-3" color="dark" block>
+            MANAGER CONTROL CENTER
+          </Button>
+        </Link>
       </Container>
     );
   }

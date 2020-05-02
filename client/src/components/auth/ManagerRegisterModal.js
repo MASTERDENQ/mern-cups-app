@@ -9,7 +9,6 @@ import {
   FormGroup,
   Label,
   Input,
-  // NavLink,
   Alert,
 } from "reactstrap";
 
@@ -62,12 +61,13 @@ const ManagerRegisterModal = (props) => {
         props.handleSuccessfulAuth(res.config.data, username);
       })
       .catch((err) => {
+        console.log("ERROR", err);
         console.log("Data Response");
         console.log(err.response.data);
         console.log("Status Response");
         console.log(err.response.status);
         setError("REGISTER_FAIL");
-        setMsg(err.response.data);
+        setMsg("Username already exist");
       });
   };
 
@@ -83,19 +83,14 @@ const ManagerRegisterModal = (props) => {
     if (modal) {
       if (isAuthenticated) {
         handleToggle();
-        // localStorage.setItem("isAuthenticated", true);
-        // localStorage.getItem("username", username);
       }
     }
   }, [error, handleToggle, isAuthenticated, modal, username]);
+
   /************************** RENDER ************************ */
 
   return (
     <div>
-      {/* <NavLink onClick={handleToggle} href="#">
-        Manager Register
-      </NavLink> */}
-
       <Button onClick={handleToggle} className="mt-4 mb-3" color="dark" block>
         <h1>Manager Register</h1>
       </Button>
