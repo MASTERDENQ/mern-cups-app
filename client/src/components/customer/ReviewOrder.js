@@ -8,61 +8,61 @@ import {
   ListGroupItem,
   Row,
   Col,
+  Alert,
 } from "reactstrap";
-import { Link } from "react-router-dom";
 
 const ReviewOrder = (props) => {
   console.log(props);
-
   return (
     <Container>
+      <Alert color="dark">
+        <h1>CHART REVIEW</h1>
+      </Alert>
       <ListGroup className="mb-3">
         <ListGroupItem>
           <Row>
             <Col>USER: {props.username}</Col>
-            <Col>A/C BALANCE: {props.acc_bal}</Col>
-            <Col>SUM TOTAL: {props.sumTotal}</Col>
+            <Col>A/C BALANCE: ${props.acc_bal}</Col>
+            <Col>SUM TOTAL: ${props.sumTotal}</Col>
           </Row>
         </ListGroupItem>
       </ListGroup>
 
-      <ListGroup>
-        <ListGroupItem>
-          <div>
-            {props.orderedItems.map((order) => (
-              <div key={order.id}>
+      <div>
+        {props.orderedItems.map((order) => (
+          <div key={order.id}>
+            <ListGroup>
+              <ListGroupItem>
                 <Row>
                   {/* <Col>&times;</Col> */}
                   <Col>NAME: {order.name}</Col>
                   <Col>AMT: {order.quantity}</Col>
-                  <Col>COST: {order.cost}</Col>
-                  <Col>TOTAL: {order.total}</Col>
-                  {/* <Col>{order.cost}</Col> */}
+                  <Col>UNIT COST: ${order.cost}</Col>
+                  <Col>TOTAL COST: ${order.total}</Col>
                 </Row>
-              </div>
-            ))}
+              </ListGroupItem>
+            </ListGroup>
           </div>
-        </ListGroupItem>
-      </ListGroup>
-      <Row></Row>
+        ))}
+      </div>
 
       <div>
         <ConfirmOrder order={props.orderedItems} />
       </div>
 
       <div>
-        <Link to="/menu">
-          <Button
-            className="mt-4 mb-3"
-            color="dark"
-            block
-            onClick={() => {
-              props.changeView();
-            }}
-          >
-            CANCEL
-          </Button>
-        </Link>
+        {/* <Link to="/menu"> */}
+        <Button
+          className="mt-4 mb-3"
+          color="danger"
+          block
+          onClick={() => {
+            props.changeView("clear");
+          }}
+        >
+          CANCEL
+        </Button>
+        {/* </Link> */}
       </div>
     </Container>
   );

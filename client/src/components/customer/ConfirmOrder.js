@@ -113,8 +113,8 @@ const ConfirmOrder = (props) => {
         console.log(res.data);
       })
       .catch((err) => {
-        console.log("err", err);
-        console.log("Err data", err.response);
+        console.log("Error", err);
+        console.log("Error Response", err.response);
       });
   };
 
@@ -145,15 +145,12 @@ const ConfirmOrder = (props) => {
           console.log(res);
           console.log(res.data);
           setIsAuthenticated(true);
-          //   setAccountBalance(res.data.account_balance);
           sendOrder(res.data.account_balance);
         })
         .catch((err) => {
-          console.log("err", err);
-          console.log("\nResponse");
-          console.log(err.response);
-          console.log("\nStatus Response");
-          console.log(err.response.status);
+          console.log("Error", err);
+          console.log("Error Response", err.response);
+          console.log("\nStatus Response", err.response.status);
           setError("LOGIN_FAIL");
           setMsg(err.response.data);
           setAttempts(attempts++);
@@ -169,7 +166,7 @@ const ConfirmOrder = (props) => {
     if (!(error === "LOGIN_FAIL")) {
       setMsg(null);
     }
-    console.log("CONFIRM", props);
+    console.log("CONFIRMATION PROPS: ", props);
 
     // If authenticated, close modal
     if (modal) {
@@ -192,13 +189,15 @@ const ConfirmOrder = (props) => {
   } else {
     return (
       <div>
-        {/* <NavLink onClick={handleToggle} href="#">
-            Confirm Order
-          </NavLink> */}
         <Alert color="primary" style={{ textAlign: "center" }}>
           You have 3 attempts to confirm
         </Alert>
-        <Button onClick={handleToggle} className="mt-4 mb-3" color="dark" block>
+        <Button
+          onClick={handleToggle}
+          className="mt-4 mb-3"
+          color="success"
+          block
+        >
           CONFIRM ORDER
         </Button>
         {/* ***************** PRIMARY MODAL *********************** */}
@@ -336,12 +335,12 @@ const ConfirmOrder = (props) => {
                 </Modal>
 
                 <Button
-                  color="dark"
+                  color="success"
                   style={{ marginTop: "2rem" }}
                   block
                   onClick={handleOnSubmit}
                 >
-                  Login
+                  CONFIRM
                 </Button>
               </FormGroup>
             </Form>

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 // import '../css/CustomerMenuStyle.css'
-import {} from "react-router-dom";
 import ReviewOrder from "./ReviewOrder";
 import {
   Container,
@@ -46,25 +45,61 @@ class CustomerMenu extends Component {
   }
 
   // *************** CHANGE VIEW TO REVIEW COMPONENT *************/
-  changeView() {
-    if (this.state.orderedItems) {
+  changeView(status) {
+    if (status === "clear") {
+      this.setState({
+        orderedItems: [],
+        sumTotal: "",
+        review: !this.state.review,
+      });
+
+      console.log("Change If", this.state.orderedItems);
+    } else {
       this.setState({
         review: !this.state.review,
       });
+
       console.log("CHANGE VIEW: ", this.state.review);
+      console.log("Change If", this.state.orderedItems);
     }
   }
 
-  // *************** ORDER HANDLER *********************/
-  changeHandler = (id, name, cost, value) => {
+  // removeItem(index) {
+  //   const list = this.state.orderedItems;
+
+  //   list.splice(index, 1);
+  //   this.setState({ orderedItems: list });
+  // }
+
+  calculateSumTotal = () => {
+    // Variable to calculate total cost of order
     var sum = 0;
     var itemCost = 0;
     var itemQty = 0;
-    let res = this.state.orderedItems.find((item) => item.id === id);
 
+    // Calculate total cost of all items ordered
+    for (let i = 0; i < this.state.orderedItems.length; i++) {
+      itemCost = this.state.orderedItems[i].cost;
+      itemQty = this.state.orderedItems[i].quantity;
+      sum += itemCost * itemQty;
+    }
+
+    this.setState({ sumTotal: sum });
+    console.log("ORDER SUM: ", this.state.sumTotal);
+  };
+
+  // *************** ORDER HANDLER *********************/
+  changeHandler = (id, name, cost, value) => {
+    // Returns the item object if item exists and undefined otherwise.
+    let res = this.state.orderedItems.find((item) => item.id === id);
+    // console.log("Results: ", res);
     var quantity = parseInt(value, 10);
 
-    if (res === undefined) {
+    // If order does not exist
+    // if quatity is 0
+    // If quantity is a number
+    // then make a new object to add to order array
+    if (res === undefined && quantity !== 0 && !isNaN(quantity)) {
       let obj = {
         id,
         name,
@@ -72,53 +107,63 @@ class CustomerMenu extends Component {
         quantity,
         total: cost * quantity,
       };
-      console.log("IF: ", obj);
+      console.log("NEW: ", obj);
 
+      // append new object to order array
       this.setState({
         orderedItems: [...this.state.orderedItems, obj],
       });
 
-      // Calculate total cost of all items ordered
-
-      for (let i = 0; i < this.state.orderedItems.length; i++) {
-        itemCost = this.state.orderedItems[i].cost;
-        itemQty = this.state.orderedItems[i].quantity;
-        sum += itemCost * itemQty;
+      console.log("TEST QTY", quantity);
+    }
+    // If quantity is 0 or Not-a-Number (NaN) then remove and update
+    else if (quantity === 0 || isNaN(quantity)) {
+      // Exception Handler to deal with initial entry being zero.
+      if (res === undefined) {
+        return 0;
       }
+      console.log("ELSE IF QTY", quantity);
 
-      this.setState({ sumTotal: sum });
-      console.log("ORDER SUM: ", this.state.sumTotal);
-    } else {
+      // Remove item object from array
       let obj = this.state.orderedItems.splice(
         this.state.orderedItems.findIndex((item) => item.id === id),
         1
       );
-      console.log("ELSE: ", obj);
+      console.log("OBJECT REMOVED YES: ", obj);
 
+      let index = this.state.orderedItems.indexOf(id); // find index of quantity to remove
+      const list = Object.assign([], this.state.orderedItems);
+      list.splice(index, 1);
+      this.setState({ orderedItems: list });
+      console.log("LIST: Remove: ", list);
+      console.log("TEST QTY", quantity);
+    }
+    // Else update order list with valid values
+    else {
+      // Remove item object and update all values
+      let obj = this.state.orderedItems.splice(
+        this.state.orderedItems.findIndex((item) => item.id === id),
+        1
+      );
+      console.log("OBJECT TO UPDATE", obj);
+      console.log("TEST QTY", quantity);
+      // assign updated values to object
       obj[0].quantity = quantity;
       obj[0].total = cost * quantity;
 
+      // Copy state array
       let temp = this.state.orderedItems;
+      // Update array
       temp.push(...obj);
-
+      // Reassign copy to state
       this.setState({
         orderedItems: temp,
       });
-
-      // Calculate total cost of all items ordered
-
-      for (let i = 0; i < this.state.orderedItems.length; i++) {
-        itemCost = this.state.orderedItems[i].cost;
-        itemQty = this.state.orderedItems[i].quantity;
-        sum += itemCost * itemQty;
-      }
-
-      this.setState({ sumTotal: sum });
-      console.log("ORDER SUM: ", this.state.sumTotal);
     }
   };
 
   render() {
+    // console.log("RENDER ()", this.state.orderedItems);
     if (!this.state.isLoaded) {
       return (
         <Container>
@@ -160,7 +205,7 @@ class CustomerMenu extends Component {
                               id={items._id}
                               placeholder="0"
                               type="number"
-                              min="0"
+                              min="1"
                               onChange={() => {
                                 this.changeHandler(
                                   items._id,
@@ -193,26 +238,37 @@ class CustomerMenu extends Component {
                 ))}
               </TransitionGroup>
             </ListGroup>
-
-            <Button
-              onClick={() => {
-                this.changeView();
-              }}
-              style={{ marginTop: "3rem", marginBottom: "3rem" }}
-              color="success"
-              block
-            >
-              REVIEW ORDER
-            </Button>
+            {this.state.orderedItems.length === 0 ? (
+              <Alert
+                style={{ marginTop: "3rem", marginBottom: "3rem" }}
+                color="success"
+              >
+                <h3>
+                  Please enter the amount you want. Ensure numbers are valid
+                </h3>
+              </Alert>
+            ) : (
+              <Button
+                onClick={() => {
+                  this.changeView("open");
+                  this.calculateSumTotal();
+                }}
+                style={{ marginTop: "3rem", marginBottom: "3rem" }}
+                color="success"
+                block
+              >
+                REVIEW ORDER
+              </Button>
+            )}
           </div>
         </Container>
       ) : (
         <ReviewOrder
           orderedItems={this.state.orderedItems}
-          changeView={() => this.changeView()}
           sumTotal={this.state.sumTotal}
           username={this.props.username}
           acc_bal={this.props.account_balance}
+          changeView={() => this.changeView("clear")}
         />
       );
     }
