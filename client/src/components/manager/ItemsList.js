@@ -30,43 +30,30 @@ class ItemsList extends Component {
     };
   }
 
-  onClick = (e) => {
-    if (!this.state.id) {
-      e.preventDefault();
-    }
-  };
-
   /*********  Retrieve id for Single Request ***************/
-
-  showItem = (_id) => {
-    this.setState({ id: _id });
-    this.requestDetail(_id);
-  };
-
   getId = (_id) => {
     this.setState({ id: _id });
   };
 
-  /*****************  Delete Request for One Item ***************/
+  // /*****************  Delete Request for One Item ***************/
 
-  deleteItem = (_id) => {
-    console.log(`Delete Request for Item ${_id}`);
-    axios
-      .post(`/delete_menu_item/${_id}`)
-      .then((res) => {
-        console.log(res);
-        console.log("RESULTS DATA: ", res.data);
-      })
-      .catch((err) => {
-        console.log(err.response);
-        this.setState({ msg: err.response.data });
-      });
-  };
+  // deleteItem = (_id) => {
+  //   console.log(`Delete Request for Item ${_id}`);
+  //   axios
+  //     .post(`/delete_menu_item/${_id}`)
+  //     .then((res) => {
+  //       console.log(res);
+  //       console.log("RESULTS DATA: ", res.data);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err.response);
+  //       this.setState({ msg: err.response.data });
+  //     });
+  // };
 
   /************** Request To Retrieve All Items ***************** */
 
   componentDidMount() {
-    console.log();
     //Request Items
     axios
       .get("/list_items")
@@ -82,7 +69,7 @@ class ItemsList extends Component {
   render() {
     const pass = this.props.loggedInStatus;
 
-    if (pass === "NOT_LOGGED_IN") {
+    if (pass === "NOT _LOGGED_IN") {
       return (
         <div>
           <h1>
@@ -90,7 +77,7 @@ class ItemsList extends Component {
           </h1>
         </div>
       );
-    } else if (this.state.id) {
+    } else {
       return (
         <div>
           {/*********** Display all items here ********* */}

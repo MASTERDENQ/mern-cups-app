@@ -73,8 +73,8 @@ class Home extends Component {
 
           <hr />
           <h6>
-            Note: the use of the browser reload will log you out. So use
-            application buttons to maneuver.{" "}
+            Note: the use of the browser reloader will log you out. So use
+            application buttons to maneuver. Unless otherwise told.
           </h6>
 
           <hr />
