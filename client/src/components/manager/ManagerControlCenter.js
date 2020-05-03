@@ -7,6 +7,43 @@ import graph from "../../assets/graph.png";
 import { Link } from "react-router-dom";
 import { Container, Card, CardImg, Col, Row, Alert } from "reactstrap";
 
+var ControlCenterButton = (linkName, imgSrc, buttonText) => {
+  return (
+    <Col>
+      <Link to={"/" + linkName}>
+        <Card>
+          <CardImg src={imgSrc} alt="Avatar" />
+          <div>
+            <h4>
+              <b>{buttonText}</b>
+            </h4>
+          </div>
+        </Card>
+      </Link>
+    </Col>
+  );
+};
+
+var ControlCenterButton = (linkName, imgSrc, buttonTextOne, buttonTextTwo) => {
+  return (
+    <Col>
+      <Link to={"/" + linkName}>
+        <Card>
+          <CardImg src={imgSrc} alt="Avatar" />
+          <div>
+            <h4>
+              <b>{buttonTextOne}</b>
+            </h4>
+            <h4>
+              <b>{buttonTextTwo}</b>
+            </h4>
+          </div>
+        </Card>
+      </Link>
+    </Col>
+  );
+};
+
 const ManagerControlCenter = (props) => {
   const pass = props.loggedInStatus;
 
@@ -26,51 +63,17 @@ const ManagerControlCenter = (props) => {
           <h1>MANAGER CONTROL CENTER</h1>
         </Alert>
         <Row>
-          <Col>
-            {" "}
-            {/* Add Button */}
-            <Link to="/add">
-              <Card>
-                <CardImg src={add} alt="Avatar" />
-                <div>
-                  <h4>
-                    <b>ADD MENU ITEM</b>
-                  </h4>
-                </div>
-              </Card>
-            </Link>
-          </Col>
-
-          <Col>
-            {" "}
-            {/* Edit Button */}
-            <Link to="/list">
-              <Card>
-                <CardImg src={viewEdit} alt="Avatar" />
-
-                <div>
-                  <h4>
-                    <b>VIEW/EDIT MENU ITEM</b>
-                  </h4>
-                </div>
-              </Card>
-            </Link>
-          </Col>
-
-          <Col>
-            {/* Gragh Button */}
-            <Link to="/chart">
-              <Card>
-                <CardImg src={graph} alt="Avatar" />
-
-                <div>
-                  <h4>
-                    <b>VIEW CHARTS</b>
-                  </h4>
-                </div>
-              </Card>
-            </Link>
-          </Col>
+          {" "}
+          {/* Add Button */}
+          {ControlCenterButton("add", add, "ADD MENU ITEM")} {/* Edit Button */}
+          {ControlCenterButton(
+            "list",
+            viewEdit,
+            "VIEW/EDIT",
+            " MENU ITEM"
+          )}{" "}
+          {/* Graph Button */}
+          {ControlCenterButton("chart", graph, "VIEW CHARTS")}
         </Row>
       </Container>
     );
