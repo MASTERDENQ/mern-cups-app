@@ -271,7 +271,10 @@ router.post("/add_customer", upload.single("file"), (req, res, next) => {
 
       return next(err);
     } else {
-      res.status(201).send("Customer successfully created...");
+      newCustomer.password = undefined;
+      newCustomer.__v = undefined;
+
+      res.status(201).json(newCustomer);
     }
   });
 });

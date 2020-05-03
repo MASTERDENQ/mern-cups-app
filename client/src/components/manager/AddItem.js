@@ -146,7 +146,7 @@ const AddItem = (props) => {
     } else {
       // Request body
       const formData = new FormData();
-      formData.append("item_name", item_name);
+      formData.append("item_name", item_name.toString().toLowerCase());
       formData.append("category", category);
       formData.append("stock", stock);
       formData.append("cost", cost);

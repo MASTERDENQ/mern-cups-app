@@ -106,7 +106,7 @@ const CustomerRegisterModal = (props) => {
           console.log(res);
           console.log(res.data);
           setIsAuthenticated(true);
-          props.handleSuccessfulAuth(res.config.data, first_name);
+          props.handleSuccessfulAuth(res.data, first_name);
         })
         .catch((err) => {
           console.log(err);

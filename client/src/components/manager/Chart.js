@@ -42,8 +42,8 @@ class Chart extends Component {
       },
       items: [],
       name: [],
-      stock: [],
-      cost: [],
+      quantity_sold: [],
+      total_sales: [],
     };
   }
 
@@ -55,12 +55,15 @@ class Chart extends Component {
     for (let i = 0; i < size; i++) {
       this.setState({
         name: [...this.state.name, this.state.items[i].item_name],
-        cost: [...this.state.cost, this.state.items[i].cost],
+        total_sales: [
+          ...this.state.total_sales,
+          this.state.items[i].total_sales,
+        ],
       });
     }
 
     console.log("NAMES: ", this.state.name);
-    console.log("COST: ", this.state.cost);
+    console.log("TOTAL SALES: ", this.state.total_sales);
 
     this.setState({
       costChartData: {
@@ -69,7 +72,7 @@ class Chart extends Component {
         datasets: [
           {
             label: "Total Sales in dollars($)",
-            data: this.state.cost,
+            data: this.state.total_sales,
             backgroundColor: [
               "rgba(255, 99, 132, 0.6)",
               "rgba(54, 162, 235, 0.6)",
@@ -93,10 +96,13 @@ class Chart extends Component {
     let size = this.state.items.length;
     for (let i = 0; i < size; i++) {
       this.setState({
-        stock: [...this.state.stock, this.state.items[i].stock],
+        quantity_sold: [
+          ...this.state.quantity_sold,
+          this.state.items[i].quantity_sold,
+        ],
       });
     }
-    console.log("STOCK: ", this.state.stock);
+    console.log("QUANTITY SOLD: ", this.state.quantity_sold);
 
     this.setState({
       stockChartData: {
@@ -105,7 +111,7 @@ class Chart extends Component {
         datasets: [
           {
             label: "Total Amount Sold",
-            data: this.state.stock,
+            data: this.state.quantity_sold,
             backgroundColor: [
               "rgba(255, 99, 132, 0.6)",
               "rgba(54, 162, 235, 0.6)",
