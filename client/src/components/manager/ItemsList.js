@@ -26,7 +26,6 @@ class ItemsList extends Component {
       items: [],
       id: "",
       isLoaded: false,
-      msg: null,
     };
   }
 
@@ -34,22 +33,6 @@ class ItemsList extends Component {
   getId = (_id) => {
     this.setState({ id: _id });
   };
-
-  // /*****************  Delete Request for One Item ***************/
-
-  // deleteItem = (_id) => {
-  //   console.log(`Delete Request for Item ${_id}`);
-  //   axios
-  //     .post(`/delete_menu_item/${_id}`)
-  //     .then((res) => {
-  //       console.log(res);
-  //       console.log("RESULTS DATA: ", res.data);
-  //     })
-  //     .catch((err) => {
-  //       console.log(err.response);
-  //       this.setState({ msg: err.response.data });
-  //     });
-  // };
 
   /************** Request To Retrieve All Items ***************** */
 
@@ -104,10 +87,10 @@ class ItemsList extends Component {
               </Col>
             </Row>
 
-            {/* Error display */}
-            {this.state.msg ? (
-              <Alert color="danger">{this.state.msg}</Alert>
-            ) : null}
+            <Alert color="info">
+              If you do decide to edit, please use browser reloader to RELOAD to
+              view changes.
+            </Alert>
 
             <ListGroup>
               <TransitionGroup className="items-list">

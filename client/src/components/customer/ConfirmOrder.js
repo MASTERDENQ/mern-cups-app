@@ -82,20 +82,24 @@ const ConfirmOrder = (props) => {
   const sendOrder = (balance) => {
     var tempId = [];
     var tempAmt = [];
+    var tempItemCost = [];
 
     let size = props.order.length;
     for (let i = 0; i < size; i++) {
       tempId.push(props.order[i].id);
       tempAmt.push(props.order[i].quantity);
+      tempItemCost.push(props.order[i].cost);
     }
 
     console.log("ITEM ARRAY: ID", tempId);
     console.log("ITEM ARRAY: AMT", tempAmt);
+    console.log("ITEM ARRAY: UNIT COST", tempItemCost);
 
     // Request body
     const body = {
       item_id: tempId,
       amount_sold: tempAmt,
+      item_costs: tempItemCost,
       account_balance: balance,
       email_address,
     };

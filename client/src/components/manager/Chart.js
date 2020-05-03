@@ -129,7 +129,7 @@ class Chart extends Component {
     console.log();
     //Request Items
     axios
-      .get("/list_items")
+      .get("/item_orders")
       .then((res) => {
         console.log(res);
         this.setState({ items: res.data });
@@ -144,7 +144,7 @@ class Chart extends Component {
   render() {
     const pass = this.props.loggedInStatus;
 
-    if (pass === "NOT_LOGGED_IN") {
+    if (pass === "NOT _LOGGED_IN") {
       return (
         <div>
           <h1>

@@ -201,8 +201,8 @@ router.get("/menu_item/:id/:field", (req, res, next) => {
 });
 
 //returns all menu item orders
-router.get("item_orders", (req, res, next) => {
-  let excludeFields = { __v: 0 };
+router.get("/item_orders", (req, res, next) => {
+  let excludeFields = { __v: 0, _id: 0 };
 
   //finds and returns all item orders
   orderModel.find({}, excludeFields, (err, orders) => {
@@ -341,6 +341,33 @@ router.post("/add_menu_item", menuItemUpload, (req, res, next) => {
   });
 });
 
+router.post("/test_customer", (req, res, next) => {
+  orderModel.findOneAndUpdate(
+    { item_id: req.body.id },
+    { $inc: { quantity_sold: req.body.sold, total_sales: req.body.cost } },
+    { useFindAndModify: false, upsert: true },
+    (err, order) => {
+      if (err) {
+        return next(err);
+      } else if (!order) {
+        res.status(404).send("Not at all bredda");
+      } else {
+        res.status(200).json(order);
+      }
+    }
+  );
+});
+
+router.post("/test_array", (req, res, next) => {
+  try {
+    test();
+  } catch (error) {
+    return next(error);
+  }
+
+  console.log("Still running");
+});
+
 //adds order after validating customer
 router.post(
   "/confirm_order",
@@ -351,68 +378,71 @@ router.post(
     if (
       !req.body.account_balance ||
       !req.body.email_address ||
-      req.body.item_id.length != req.body.amount_sold.length
+      req.body.item_names.length != req.body.amount_sold.length
     ) {
       return res.status(400).send("Invalid user input");
     }
 
-    for (i = 0; i < req.body.item_id.length; i++) {
-      let itemId = req.body.item_id[i];
+    for (i = 0; i < req.body.item_names.length; i++) {
+      let itemName = req.body.item_names[i];
+      let amountSold = req.body.amount_sold[i];
 
-      menuItemModel.findById(itemId, (err, item) => {
+      menuItemModel.findOne({ item_name: itemName }, (err, item) => {
         if (err) {
           return next(err);
         } else if (!item) {
           return res.status(404).send("Item on order does not exist");
-        } else if (item.stock < req.body.amount_sold[i]) {
-          return res.status(400).send("Order amount exceeds item stock");
         }
-
-        itemCosts.push(item.cost * req.body.amount_sold[i]);
-        totalCost += itemCosts[i];
+        // else if (item.stock < amountSold) {
+        //     return res.status(400).send('Order amount exceeds item stock');
+        // }
       });
+
+      let sale = amountSold * req.body.item_costs[i];
+
+      itemCosts.push(sale);
+      totalCost += sale;
     }
+
+    // console.log('Item Cost : ' + itemCosts);
+    // console.log('Total Cost : ' + totalCost);
 
     if (req.body.account_balance < totalCost) {
       return res.status(422).send("Insufficient account balance");
     }
 
-    res.locals.idArr = req.body.item_id;
-    res.locals.amountArr = req.body.amount_sold;
-    res.locals.itemCosts = itemCosts;
+    res.locals.nameArr = req.body.item_names.concat();
+    res.locals.amountArr = req.body.amount_sold.concat();
+    res.locals.itemCosts = itemCosts.concat();
 
     res.locals.email = req.body.email_address;
     res.locals.bill = totalCost;
 
+    //console.log(res.locals.idArr, res.locals.amountArr, res.locals.itemCosts, res.locals.email, res.locals.bill);
+
     next();
   },
-  (req, res) => {
-    for (i = 0; i < res.locals.idArr.length; i++) {
-      let itemId = res.locals.idArr[i];
+  (req, res, next) => {
+    for (i = 0; i < res.locals.nameArr.length; i++) {
+      let itemName = res.locals.nameArr[i];
       let amntSold = res.locals.amountArr[i];
       let itemCost = res.locals.itemCosts[i];
 
       orderModel.findOneAndUpdate(
-        { item_id: itemId },
+        { item_name: itemName },
         { $inc: { quantity_sold: amntSold, total_sales: itemCost } },
-        { useFindAndModify: false },
-        (err, foundOrder) => {
+        { useFindAndModify: false, upsert: true },
+        (err) => {
           if (err) {
-            let newOrderModel = new orderModel();
-            newOrderModel.item_id = itemId;
-            newOrderModel.quantity_sold = amntSold;
-            newOrderModel.total_sales = res.locals.bill;
-
-            newOrderModel.save((err) => {
-              if (err) return next(err);
-            });
+            return next(err);
           }
         }
       );
 
-      menuItemModel.findByIdAndUpdate(
-        itemId,
-        { $inc: { quantity_sold: -amntSold } },
+      //works
+      menuItemModel.findOneAndUpdate(
+        { item_name: itemName },
+        { $inc: { stock: -amntSold } },
         { useFindAndModify: false },
         (err) => {
           if (err) return next(err);
@@ -428,6 +458,8 @@ router.post(
         if (err) return next(err);
       }
     );
+
+    return res.status(200).send("Order successfully placed");
   }
 );
 
@@ -538,7 +570,7 @@ router.post("/edit_item/:field", (req, res, next) => {
     menuItemModel.findByIdAndUpdate(
       itemId,
       { $set: { [field]: newValue } },
-      { useFindAndModify: false },
+      { useFindAndModify: false, new: true },
       (err, item) => {
         if (err) {
           return next(err);

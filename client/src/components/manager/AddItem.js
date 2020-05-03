@@ -179,7 +179,7 @@ const AddItem = (props) => {
   const pass = props.loggedInStatus;
 
   /******************************* RENDER ******************************* */
-  if (pass === "NOT_LOGGED_IN") {
+  if (pass === "NOT _LOGGED_IN") {
     return (
       <div>
         <h1 style={{ textAlign: "center" }}>
