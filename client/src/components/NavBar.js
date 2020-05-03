@@ -9,7 +9,7 @@ import {
   NavItem,
   Container,
 } from "reactstrap";
-import Logout from "./auth/Logout";
+import Logout from "./auth/logout/Logout";
 
 const NavBar = (props) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -39,7 +39,7 @@ const NavBar = (props) => {
       </NavItem>
 
       <NavItem>
-        <Logout />
+        <Logout label="Logout" />
       </NavItem>
     </Fragment>
   );

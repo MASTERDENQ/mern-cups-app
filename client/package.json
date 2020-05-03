@@ -4,8 +4,6 @@
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^6.15.0",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
@@ -28,6 +26,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "docs": "./node_modules/.bin/jsdoc -c jsdoc.json",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -55,6 +54,11 @@
   },
   "proxy": "http://localhost:5000",
   "devDependencies": {
-    "react-docgen": "^5.3.0"
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "jest-dom": "^4.0.0",
+    "jsdoc": "^3.6.4",
+    "react-docgen": "^5.3.0",
+    "react-test-renderer": "^16.13.1"
   }
 }

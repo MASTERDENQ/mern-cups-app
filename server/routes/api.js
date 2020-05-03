@@ -344,39 +344,13 @@ router.post("/add_menu_item", menuItemUpload, (req, res, next) => {
   });
 });
 
-router.post("/test_customer", (req, res, next) => {
-  orderModel.findOneAndUpdate(
-    { item_id: req.body.id },
-    { $inc: { quantity_sold: req.body.sold, total_sales: req.body.cost } },
-    { useFindAndModify: false, upsert: true },
-    (err, order) => {
-      if (err) {
-        return next(err);
-      } else if (!order) {
-        res.status(404).send("Not at all bredda");
-      } else {
-        res.status(200).json(order);
-      }
-    }
-  );
-});
-
-router.post("/test_array", (req, res, next) => {
-  try {
-    test();
-  } catch (error) {
-    return next(error);
-  }
-
-  console.log("Still running");
-});
-
 //adds order after validating customer
 router.post(
   "/confirm_order",
   (req, res, next) => {
     let itemCosts = new Array();
     let totalCost = 0;
+    let foundItems;
 
     if (
       !req.body.account_balance ||
@@ -386,44 +360,42 @@ router.post(
       return res.status(400).send("Invalid user input");
     }
 
-    for (i = 0; i < req.body.item_names.length; i++) {
-      let itemName = req.body.item_names[i];
-      let amountSold = req.body.amount_sold[i];
-
-      menuItemModel.findOne({ item_name: itemName }, (err, item) => {
-        if (err) {
-          return next(err);
-        } else if (!item) {
-          return res.status(404).send("Item on order does not exist");
+    menuItemModel
+      .find({ item_name: { $in: req.body.item_names } })
+      .then((item) => {
+        if (!item || item.length < req.body.item_names.length) {
+          throw new Error("Item on order does not exist");
         }
-        // else if (item.stock < amountSold) {
-        //     return res.status(400).send('Order amount exceeds item stock');
-        // }
+        foundItems = item;
+      })
+      .then(() => {
+        for (i = 0; i < req.body.item_names.length; i++) {
+          if (foundItems[i].stock < req.body.amount_sold[i]) {
+            throw new Error("Order amount exceeds item stock");
+          }
+
+          let sale = req.body.amount_sold[i] * req.body.item_costs[i];
+
+          itemCosts.push(sale);
+          totalCost += sale;
+        }
+
+        if (req.body.account_balance < totalCost) {
+          throw new Error("Insufficient account balance");
+        }
+
+        res.locals.nameArr = req.body.item_names.concat();
+        res.locals.amountArr = req.body.amount_sold.concat();
+        res.locals.itemCosts = itemCosts.concat();
+
+        res.locals.email = req.body.email_address;
+        res.locals.bill = totalCost;
+
+        next();
+      })
+      .catch((err) => {
+        return next(err);
       });
-
-      let sale = amountSold * req.body.item_costs[i];
-
-      itemCosts.push(sale);
-      totalCost += sale;
-    }
-
-    // console.log('Item Cost : ' + itemCosts);
-    // console.log('Total Cost : ' + totalCost);
-
-    if (req.body.account_balance < totalCost) {
-      return res.status(422).send("Insufficient account balance");
-    }
-
-    res.locals.nameArr = req.body.item_names.concat();
-    res.locals.amountArr = req.body.amount_sold.concat();
-    res.locals.itemCosts = itemCosts.concat();
-
-    res.locals.email = req.body.email_address;
-    res.locals.bill = totalCost;
-
-    //console.log(res.locals.idArr, res.locals.amountArr, res.locals.itemCosts, res.locals.email, res.locals.bill);
-
-    next();
   },
   (req, res, next) => {
     for (i = 0; i < res.locals.nameArr.length; i++) {
@@ -441,8 +413,6 @@ router.post(
           }
         }
       );
-
-      //works
       menuItemModel.findOneAndUpdate(
         { item_name: itemName },
         { $inc: { stock: -amntSold } },

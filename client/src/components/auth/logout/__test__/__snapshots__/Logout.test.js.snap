@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`matches snapshot 1`] = `
+<div
+  data-testid="logout"
+>
+  <a
+    className="nav-link"
+    href="/"
+    onClick={[Function]}
+  >
+    save
+  </a>
+</div>
+`;
