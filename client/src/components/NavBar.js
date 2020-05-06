@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from "react";
-// import avatar from "../assets/avatar.jpg";
 import {
   Collapse,
   Navbar,

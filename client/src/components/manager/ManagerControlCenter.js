@@ -24,26 +24,6 @@ var ControlCenterButton = (linkName, imgSrc, buttonText) => {
   );
 };
 
-var ControlCenterButton = (linkName, imgSrc, buttonTextOne, buttonTextTwo) => {
-  return (
-    <Col>
-      <Link to={"/" + linkName}>
-        <Card>
-          <CardImg src={imgSrc} alt="Avatar" />
-          <div>
-            <h4>
-              <b>{buttonTextOne}</b>
-            </h4>
-            <h4>
-              <b>{buttonTextTwo}</b>
-            </h4>
-          </div>
-        </Card>
-      </Link>
-    </Col>
-  );
-};
-
 const ManagerControlCenter = (props) => {
   const pass = props.loggedInStatus;
 
@@ -51,7 +31,7 @@ const ManagerControlCenter = (props) => {
   if (pass === "NOT_LOGGED_IN") {
     return (
       <div>
-        <h1 style={{ textAlign: "center" }}>
+        <h1>
           YOU ARE NOT LOGGED IN. PLEASE <Link to="/">LOGIN</Link>
         </h1>
       </div>
@@ -62,16 +42,12 @@ const ManagerControlCenter = (props) => {
         <Alert color="dark" style={{ marginBottom: "3rem" }}>
           <h1>MANAGER CONTROL CENTER</h1>
         </Alert>
+
         <Row>
-          {" "}
           {/* Add Button */}
-          {ControlCenterButton("add", add, "ADD MENU ITEM")} {/* Edit Button */}
-          {ControlCenterButton(
-            "list",
-            viewEdit,
-            "VIEW/EDIT",
-            " MENU ITEM"
-          )}{" "}
+          {ControlCenterButton("add", add, "ADD MENU ITEMS")}
+          {/* Edit Button */}
+          {ControlCenterButton("list", viewEdit, "VIEW/EDIT MENU ITEMS")}
           {/* Graph Button */}
           {ControlCenterButton("chart", graph, "VIEW CHARTS")}
         </Row>

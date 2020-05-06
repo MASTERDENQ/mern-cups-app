@@ -1,7 +1,5 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Login from "./../Logout";
-import { isTSAanyKeyword } from "@babel/types";
 import Logout from "./../Logout";
 
 import { render, cleanup } from "@testing-library/react";
