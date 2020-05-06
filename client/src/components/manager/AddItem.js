@@ -182,7 +182,7 @@ const AddItem = (props) => {
   if (pass === "NOT _LOGGED_IN") {
     return (
       <div>
-        <h1 style={{ textAlign: "center" }}>
+        <h1>
           YOU ARE NOT LOGGED IN. PLEASE <Link to="/">LOGIN</Link>
         </h1>
       </div>
@@ -293,7 +293,7 @@ const AddItem = (props) => {
 
               {/* Selection of Photo */}
               <Row>
-                <Col>
+                <Col sm="3">
                   <Card body inverse color="dark">
                     <h3>Upload Photo</h3>
                     <CardImg src={Photo} alt={Icon} />
@@ -305,9 +305,10 @@ const AddItem = (props) => {
                     />
                   </Card>
                 </Col>
+                <Col> </Col>
 
                 {/* ASL Selection */}
-                <Col className="left">
+                <Col className="left" sm="3">
                   <Card body inverse color="dark">
                     <h3>Upload ASL</h3>
                     <CardImg src={ASL} alt={Icon} />
@@ -319,9 +320,10 @@ const AddItem = (props) => {
                     />
                   </Card>
                 </Col>
+                <Col> </Col>
 
                 {/* Audio Recording */}
-                <Col>
+                <Col sm="3">
                   <Card
                     body
                     inverse
@@ -344,7 +346,7 @@ const AddItem = (props) => {
               <Button
                 color="success"
                 type="submit"
-                style={{ marginTop: "2rem" }}
+                style={{ marginTop: "1rem" }}
                 block
               >
                 <h5>ADD ITEM</h5>
@@ -354,7 +356,7 @@ const AddItem = (props) => {
         </div>
 
         <Link to="/control">
-          <Button className="mt-4 mb-3" color="dark" block>
+          <Button className="mt-2 mb-3" color="dark" block>
             MANAGER CONTROL CENTER
           </Button>
         </Link>
