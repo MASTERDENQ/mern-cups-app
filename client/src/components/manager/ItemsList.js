@@ -52,7 +52,7 @@ class ItemsList extends Component {
   render() {
     const pass = this.props.loggedInStatus;
 
-    if (pass === "NOT _LOGGED_IN") {
+    if (pass === "NOT_LOGGED_IN") {
       return (
         <div>
           <h1>

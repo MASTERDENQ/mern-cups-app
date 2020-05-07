@@ -179,7 +179,7 @@ const AddItem = (props) => {
   const pass = props.loggedInStatus;
 
   /******************************* RENDER ******************************* */
-  if (pass === "NOT _LOGGED_IN") {
+  if (pass === "NOT_LOGGED_IN") {
     return (
       <div>
         <h1>
