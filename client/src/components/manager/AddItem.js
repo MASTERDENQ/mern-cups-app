@@ -171,7 +171,9 @@ const AddItem = (props) => {
         .catch((err) => {
           console.log(err);
           console.log(err.response);
-          setError(err.response.data);
+          setError(
+            "Item already is exist. Please click VIEW ITEM to see for yourself. Thank you."
+          );
         });
     }
   };

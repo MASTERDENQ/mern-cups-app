@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { Button, Modal, ModalHeader, ModalBody } from "reactstrap";
+import { Button, Modal, ModalHeader, ModalBody, Alert } from "reactstrap";
 import { Link } from "react-router-dom";
 
 const DeleteModal = (props) => {
   /**************** COMPONENT STATES ******************** */
   const [modal, setModal] = useState(false);
+  const [msg, setMsg] = useState("");
 
   /**************** MODAL TOGGLERS ******************** */
   const toggle = () => {
@@ -20,6 +21,7 @@ const DeleteModal = (props) => {
       .then((res) => {
         console.log(res);
         console.log("RESULTS DATA: ", res.data);
+        setMsg(res.data);
       })
       .catch((err) => {
         console.log(err.response);
@@ -34,14 +36,19 @@ const DeleteModal = (props) => {
 
       <Modal isOpen={modal} toggle={toggle}>
         <ModalHeader>DELETE MENU ITEM</ModalHeader>
-        <ModalBody>Are you sure you want to delete this item.</ModalBody>
+        {msg ? (
+          <Alert color="success">{msg}</Alert>
+        ) : (
+          <Alert color="danger">
+            Are you sure you want to delete this item.
+          </Alert>
+        )}
 
         <ModalBody>
           <Button
             color="dark"
             block
             onClick={() => {
-              toggle();
               deleteItem();
             }}
           >
